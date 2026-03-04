@@ -2,7 +2,7 @@ const std = @import("std");
 const ziglyph = @import("ziglyph");
 
 pub fn main() !void {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
 
@@ -47,7 +47,7 @@ pub fn main() !void {
     var resp = try req.receiveHead(receive_buffer);
 
     if (resp.head.status != .ok) {
-        std.debug.print("Response status: {}", .{resp.head.status});
+        std.debug.print("Response status: {s}\n", .{resp.head.bytes});
         return;
     }
 

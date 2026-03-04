@@ -7,7 +7,6 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/ziglyph.zig"),
         .target = target,
         .optimize = optimize,
-        .strip = true,
     });
 
     const exe = b.addExecutable(.{
@@ -16,7 +15,6 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
-            // .strip = true,
             .imports = &.{
                 .{
                     .name = "ziglyph",
@@ -26,6 +24,10 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
+    if (optimize == .ReleaseFast) {
+        mod.strip = true;
+        exe.root_module.strip = true;
+    }
     b.installArtifact(exe);
 
     const run_step = b.step("run", "Run the app");
