@@ -56,4 +56,20 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
+
+    const clean_up = b.addRemoveDirTree(b.path("zig-out"));
+    const clean_step = b.step("clean", "Clean up");
+    clean_step.dependOn(&clean_up.step);
+}
+
+fn remove_zig_out() !void {
+    const allocator = std.heap.page_allocator;
+    const zig_out_dir = "zig-out";
+
+    const dir = try std.fs.Dir.open(allocator, zig_out_dir, .{});
+    defer dir.close();
+
+    try dir.delete();
+
+    try std.fs.Dir.delete(zig_out_dir);
 }
