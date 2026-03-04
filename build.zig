@@ -55,25 +55,3 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
 }
-
-fn createHooksDirectory(hooks_path: []const u8) void {
-    std.fs.cwd().makeDir(hooks_path) catch |err| switch (err) {
-        error.PathAlreadyExists => return,
-        else => {
-            std.debug.print("Could not create directory: {}\n", .{err});
-        },
-    };
-}
-
-fn buildHooksPath(allocator: std.mem.Allocator) []const u8 {
-    const home = std.process.getEnvVarOwned(allocator, "HOME") catch |err| {
-        std.debug.panic("Could not find home directory: {}\n", .{err});
-    };
-    const hooks_path = std.fs.path.join(allocator, &[_][]const u8{
-        home,
-        ".git_hooks",
-    }) catch |err| {
-        std.debug.panic("Could not build hooks path: {}\n", .{err});
-    };
-    return hooks_path;
-}
