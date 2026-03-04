@@ -22,7 +22,7 @@ pub fn main() !void {
         \\}
     ;
 
-    if (api_key.len != 0 and client.read_buffer_size != 0 and body.len != 0 and uri.path.raw.len != 0) {
+    if (api_key.len != 0 and client.read_buffer_size != 0 and body.len != 0 and uri.scheme.len != 0) {
         std.debug.print("all ok!\n", .{});
     }
 
