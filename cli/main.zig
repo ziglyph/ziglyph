@@ -28,6 +28,7 @@ fn print_usage() void {
         \\Usage: zgl <command>
         \\Commands:
         \\  skeleton    Run skeleton module
+        \\
     , .{});
 }
 
