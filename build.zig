@@ -3,10 +3,21 @@ const std = @import("std");
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{ .default_target = .{ .cpu_model = .determined_by_arch_os } });
     const optimize = b.standardOptimizeOption(.{});
+
     const mod = b.addModule("ziglyph", .{
         .root_source_file = b.path("src/lib.zig"),
         .target = target,
         .optimize = optimize,
+    });
+
+    const shared = b.addLibrary(.{
+        .name = "ziglyph",
+        .linkage = .dynamic,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/lib.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     const exe = b.addExecutable(.{
@@ -26,15 +37,18 @@ pub fn build(b: *std.Build) void {
 
     if (optimize == .ReleaseFast) {
         mod.strip = true;
+        shared.root_module.strip = true;
         exe.root_module.strip = true;
     }
     b.installArtifact(exe);
 
-    const run_step = b.step("run", "Run the app");
+    const run_shared_lib_step = b.addInstallArtifact(shared, .{});
+    const shared_lib_step = b.step("shared", "Shared lib");
+    shared_lib_step.dependOn(&run_shared_lib_step.step);
 
+    const run_step = b.step("run", "Run the app");
     const run_cmd = b.addRunArtifact(exe);
     run_step.dependOn(&run_cmd.step);
-
     run_cmd.step.dependOn(b.getInstallStep());
 
     if (b.args) |args| {
