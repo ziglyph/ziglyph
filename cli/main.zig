@@ -24,9 +24,11 @@ pub fn main() !void {
 }
 
 fn print_usage() void {
-    std.debug.print("Usage: zgl <command>\n", .{});
-    std.debug.print("Commands:\n", .{});
-    std.debug.print("  skeleton    Run skeleton module\n", .{});
+    std.debug.print(
+        \\Usage: zgl <command>
+        \\Commands:
+        \\  skeleton    Run skeleton module
+    , .{});
 }
 
 fn run_skeleton(allocator: std.mem.Allocator) !void {
