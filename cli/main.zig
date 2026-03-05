@@ -15,6 +15,8 @@ pub fn main() !void {
     const cmd = args[1];
     if (std.mem.eql(u8, cmd, "skeleton")) {
         try run_skeleton(allocator);
+    } else if (std.mem.eql(u8, cmd, "detector")) {
+        try run_skeleton(allocator);
     } else {
         std.debug.print("Unknown command: {s}\n", .{cmd});
         print_usage();
@@ -28,6 +30,7 @@ fn print_usage() void {
         \\Usage: zgl <command>
         \\Commands:
         \\  skeleton    Run skeleton module
+        \\  detector    Run detector module
         \\
     , .{});
 }
