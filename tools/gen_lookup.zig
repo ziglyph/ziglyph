@@ -57,18 +57,23 @@ pub fn main() !void {
         }
     }
 
-    var file = try std.fs.cwd().createFile(output_file, .{});
+    var file = try std.fs.cwd().createFile(output_file, .{
+        .truncate = true,
+    });
     defer file.close();
 
-    var w = file.deprecatedWriter();
+    var file_write_buf: [2048]u8 = undefined;
+    var writer = file.writer(&file_write_buf);
+    const writer_interface = &writer.interface;
 
-    try w.writeAll("pub const table: [0x110000]u21 = .{\n");
+    try writer_interface.writeAll("pub const table: [0x110000]u21 = .{\n");
 
     for (table) |v| {
-        try w.print("0x{x},\n", .{v});
+        try writer_interface.print("0x{x},\n", .{v});
     }
 
-    try w.writeAll("};\n");
+    try writer_interface.writeAll("};\n");
+    try writer_interface.flush();
 }
 
 fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !void {
