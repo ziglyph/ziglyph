@@ -40,6 +40,10 @@ fn mapCodepoint(cp: u32) u32 {
 }
 
 test "basic skeleton mapping" {
+    try basicSkeletonMapingTest();
+}
+
+pub fn basicSkeletonMapingTest() !void {
     const testing = std.testing;
 
     var sk = Skeleton.init(testing.allocator);
