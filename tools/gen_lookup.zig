@@ -83,7 +83,7 @@ fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !vo
     defer file.close();
 
     var file_write_buf: [4096]u8 = undefined;
-    var file_writer = file.writer(&file_write_buf);
+    var file_writer = file.writerStreaming(&file_write_buf);
 
     var client = std.http.Client{ .allocator = allocator };
 
