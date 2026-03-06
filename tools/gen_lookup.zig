@@ -88,12 +88,14 @@ fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !vo
     var client = std.http.Client{ .allocator = allocator };
 
     const uri = try std.Uri.parse("https://www.unicode.org/Public/security/latest/confusables.txt");
-    const res = try client.fetch(.{
+    const res = client.fetch(.{
         .method = .GET,
         .location = .{ .uri = uri },
         .response_writer = &file_writer.interface,
-    });
+    }) catch |err| {
+        std.debug.panic("Error during fetch: {}\n", .{err});
+    };
     if (res.status != .ok) {
-        std.debug.print("Could not fetch comfusables.txt\n", .{});
+        std.debug.print("Could not fetch confusables.txt\n", .{});
     }
 }
