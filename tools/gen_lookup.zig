@@ -66,7 +66,7 @@ pub fn main() !void {
     var writer = file.writer(&file_write_buf);
     const writer_interface = &writer.interface;
 
-    try writer_interface.writeAll("pub const table: [0x110000]u21 = .{\n");
+    try writer_interface.print("pub const table: [0x{x}]u21 = .{{\n", .{MAX});
 
     for (table) |v| {
         try writer_interface.print("0x{x},\n", .{v});
