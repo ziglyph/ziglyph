@@ -63,7 +63,7 @@ pub fn main() !void {
     defer file.close();
 
     var file_write_buf: [4096]u8 = undefined;
-    var writer = file.writer(&file_write_buf);
+    var writer = file.writerStreaming(&file_write_buf);
     const writer_interface = &writer.interface;
 
     try writer_interface.print("pub const table: [0x{x}]u21 = .{{\n", .{MAX});
