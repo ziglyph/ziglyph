@@ -13,6 +13,8 @@ pub fn main() !void {
     const conf_file = args[1];
     const output_file = args[2];
 
+    try getConfusablesFile(allocator, conf_file);
+
     const data = try std.fs.cwd().readFileAlloc(allocator, conf_file, 20 * 1024 * 1024);
     defer allocator.free(data);
 
@@ -67,4 +69,26 @@ pub fn main() !void {
     }
 
     try w.writeAll("};\n");
+}
+
+fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !void {
+    var file = try std.fs.cwd().createFile(destination, .{
+        .truncate = true,
+    });
+    defer file.close();
+
+    var file_write_buf: [1024]u8 = undefined;
+    var file_writer = file.writer(&file_write_buf);
+
+    var client = std.http.Client{ .allocator = allocator };
+
+    const uri = try std.Uri.parse("https://www.unicode.org/Public/security/latest/confusables.txt");
+    const res = try client.fetch(.{
+        .method = .GET,
+        .location = .{ .uri = uri },
+        .response_writer = &file_writer.interface,
+    });
+    if (res.status != .ok) {
+        std.debug.print("Could not fetch comfusables.txt\n", .{});
+    }
 }
