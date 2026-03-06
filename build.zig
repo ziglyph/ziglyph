@@ -85,6 +85,7 @@ pub fn build(b: *std.Build) void {
     });
 
     const run_gen_lookup = b.addRunArtifact(gen_lookup);
+    run_gen_lookup.addArg("tools/confusables.txt");
     const generated_lookup_file = run_gen_lookup.addOutputFileArg("tools/unicode_table.zig");
 
     const write_file_gen_lookup = b.addUpdateSourceFiles();

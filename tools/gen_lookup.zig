@@ -8,10 +8,10 @@ pub fn main() !void {
     const allocator = arena.allocator();
 
     const args = try std.process.argsAlloc(allocator);
-    if (args.len < 2) std.debug.panic("wrong number of arguments", .{});
+    if (args.len < 3) std.debug.panic("wrong number of arguments", .{});
 
-    const conf_file = "tools/confusables.txt";
-    const output_file = args[1];
+    const conf_file = args[1];
+    const output_file = args[2];
 
     const data = try std.fs.cwd().readFileAlloc(allocator, conf_file, 20 * 1024 * 1024);
     defer allocator.free(data);
