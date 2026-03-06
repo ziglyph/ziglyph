@@ -92,8 +92,9 @@ fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !vo
         .method = .GET,
         .location = .{ .uri = uri },
         .response_writer = &file_writer.interface,
-    }) catch |err| {
-        std.debug.panic("Error during fetch: {}\n", .{err});
+    }) catch |err| switch (err) {
+        error.TemporaryNameServerFailure => return,
+        else => std.debug.panic("Error during fetch: {}\n", .{err}),
     };
     if (res.status != .ok) {
         std.debug.print("Could not fetch confusables.txt\n", .{});
