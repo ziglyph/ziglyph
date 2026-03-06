@@ -62,7 +62,7 @@ pub fn main() !void {
     });
     defer file.close();
 
-    var file_write_buf: [2048]u8 = undefined;
+    var file_write_buf: [4096]u8 = undefined;
     var writer = file.writer(&file_write_buf);
     const writer_interface = &writer.interface;
 
@@ -82,7 +82,7 @@ fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !vo
     });
     defer file.close();
 
-    var file_write_buf: [1024]u8 = undefined;
+    var file_write_buf: [4096]u8 = undefined;
     var file_writer = file.writer(&file_write_buf);
 
     var client = std.http.Client{ .allocator = allocator };
