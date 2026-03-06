@@ -1,5 +1,5 @@
 .zig-cache/
 zig-out/
 *.o
-src/confusable_lookup.zig
+# src/confusable_lookup.zig
 

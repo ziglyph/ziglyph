@@ -74,6 +74,24 @@ pub fn build(b: *std.Build) void {
     const clean_up = b.addRemoveDirTree(b.path("zig-out"));
     const clean_step = b.step("clean", "Clean up");
     clean_step.dependOn(&clean_up.step);
+
+    const gen_lookup = b.addExecutable(.{
+        .name = "gen_lookup",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/gen_lookup.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+
+    const run_gen_lookup = b.addRunArtifact(gen_lookup);
+    const generated_lookup_file = run_gen_lookup.addOutputFileArg("tools/unicode_table.zig");
+
+    const write_file_gen_lookup = b.addUpdateSourceFiles();
+    write_file_gen_lookup.addCopyFileToSource(generated_lookup_file, "src/unicode_table.zig");
+
+    const gen_lookup_step = b.step("gen", "Generate lookup table");
+    gen_lookup_step.dependOn(&write_file_gen_lookup.step);
 }
 
 fn remove_zig_out() !void {

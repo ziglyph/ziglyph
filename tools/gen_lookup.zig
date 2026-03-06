@@ -7,8 +7,11 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    const conf_file = "confusables.txt";
-    const output_file = "../src/confusable_lookup.zig";
+    const args = try std.process.argsAlloc(allocator);
+    if (args.len < 2) std.debug.panic("wrong number of arguments", .{});
+
+    const conf_file = "tools/confusables.txt";
+    const output_file = args[1];
 
     const data = try std.fs.cwd().readFileAlloc(allocator, conf_file, 20 * 1024 * 1024);
     defer allocator.free(data);
