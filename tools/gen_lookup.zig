@@ -13,7 +13,12 @@ pub fn main() !void {
     const conf_file = args[1];
     const output_file = args[2];
 
-    try getConfusablesFile(allocator, conf_file);
+    std.fs.cwd().access(conf_file, .{}) catch |err| switch (err) {
+        error.FileNotFound => try getConfusablesFile(allocator, conf_file),
+        else => {
+            std.debug.print("{}\n", .{err});
+        },
+    };
 
     const data = try std.fs.cwd().readFileAlloc(allocator, conf_file, 20 * 1024 * 1024);
     defer allocator.free(data);
@@ -21,7 +26,6 @@ pub fn main() !void {
     var table = try allocator.alloc(u21, MAX);
     defer allocator.free(table);
 
-    // identity mapping
     for (table, 0..) |*v, i| {
         v.* = @intCast(i);
     }
@@ -98,5 +102,21 @@ fn getConfusablesFile(allocator: std.mem.Allocator, destination: []const u8) !vo
     };
     if (res.status != .ok) {
         std.debug.print("Could not fetch confusables.txt\n", .{});
+    }
+}
+
+fn printFileLineByLineExceptCommentsAndEmptyLines(file_path: []const u8) !void {
+    const read_file = try std.fs.cwd().openFile(file_path, .{ .mode = .read_only });
+    defer read_file.close();
+
+    var read_buff: [4096]u8 = undefined;
+    var read_file_reader = read_file.reader(&read_buff);
+    const read_file_interface = &read_file_reader.interface;
+
+    while (try read_file_interface.takeDelimiter('\n')) |line_raw| {
+        const line = std.mem.trim(u8, line_raw, "\r");
+        if (line.len == 0) continue;
+        if (line[0] == '#') continue;
+        std.debug.print("{s}\n", .{line});
     }
 }
