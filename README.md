@@ -51,7 +51,7 @@ The CLI binary will be located at:
 
     zig-out/bin/zgl
 
-Build a shared library:
+If a shared library is needed:
 
 ``` bash
 git clone https://github.com/ziglyph/ziglyph.git
@@ -115,15 +115,19 @@ pub fn main() !void {
     ├── LICENSE
     ├── README.md
     ├── src
-    │   ├── confusable_lookup.zig
+    │   ├── confusables.zig
     │   ├── detector.zig
     │   ├── lib.zig
     │   ├── normalizer.zig
     │   ├── skeleton.zig
     │   └── unicode_table.zig
-    └── tools
-        ├── confusables.txt
-        └── gen_lookup.zig
+    ├── tools
+    │   ├── confusable_table_generator.zig
+    │   ├── normalizer_table_generator.zig
+    │   └── tools.zig
+    └── unicode
+        └── confusables.txt
+
 
 ------------------------------------------------------------------------
 
