@@ -1,5 +1,5 @@
 const std = @import("std");
-const lookup = @import("confusable_lookup.zig").table;
+const lookup = @import("confusables.zig").table;
 
 pub const Skeleton = struct {
     allocator: std.mem.Allocator,

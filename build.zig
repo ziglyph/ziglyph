@@ -86,10 +86,10 @@ pub fn build(b: *std.Build) void {
 
     const run_gen_lookup = b.addRunArtifact(gen_lookup);
     run_gen_lookup.addArg("unicode/confusables.txt");
-    const generated_lookup_file = run_gen_lookup.addOutputFileArg("confusable_lookup.zig");
+    const generated_lookup_file = run_gen_lookup.addOutputFileArg("confusables.zig");
 
     const write_file_gen_lookup = b.addUpdateSourceFiles();
-    write_file_gen_lookup.addCopyFileToSource(generated_lookup_file, "src/confusable_lookup.zig");
+    write_file_gen_lookup.addCopyFileToSource(generated_lookup_file, "src/confusables.zig");
 
     const gen_lookup_step = b.step("confusable", "Generate confusable lookup table");
     gen_lookup_step.dependOn(&write_file_gen_lookup.step);
