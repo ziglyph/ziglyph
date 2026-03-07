@@ -19,7 +19,8 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         }),
     });
-    // const header_install_step = b.addInstallHeaderFile(shared.getEmittedH(), "ziglyph.h");
+
+    // const header_install_step = b.addInstallFile(shared.getEmittedH(), "ziglyph.h");
 
     const exe = b.addExecutable(.{
         .name = "zgl",
