@@ -14,6 +14,7 @@ pub const Skeleton = struct {
 
     pub fn compute(self: *Skeleton, input: []const u8) ![]u8 {
         var out = try std.ArrayList(u8).initCapacity(self.allocator, input.len);
+        defer out.deinit(self.allocator);
 
         var it = std.unicode.Utf8Iterator{ .bytes = input, .i = 0 };
 

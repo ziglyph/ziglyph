@@ -51,6 +51,18 @@ The CLI binary will be located at:
 
     zig-out/bin/zgl
 
+Build a shared library:
+
+``` bash
+git clone https://github.com/ziglyph/ziglyph.git
+cd ziglyph
+zig build shared
+```
+
+The shared library will be located at:
+
+    zig-out/lib/libziglyph.so
+
 ------------------------------------------------------------------------
 
 ## CLI Usage
@@ -96,18 +108,22 @@ pub fn main() !void {
 
 ## Project Structure
 
-    ziglyph/
     ├── build.zig
     ├── build.zig.zon
-    ├── src/
-    │   ├── ziglyph.zig
-    │   ├── skeleton.zig
-    │   ├── homoglyph.zig
-    │   └── tables.zig
-    ├── cli/
-    │   └── main.zig
-    ├── tests/
-    └── README.md
+    ├── cli
+    │   └── main.zig
+    ├── LICENSE
+    ├── README.md
+    ├── src
+    │   ├── confusable_lookup.zig
+    │   ├── detector.zig
+    │   ├── lib.zig
+    │   ├── normalizer.zig
+    │   ├── skeleton.zig
+    │   └── unicode_table.zig
+    └── tools
+        ├── confusables.txt
+        └── gen_lookup.zig
 
 ------------------------------------------------------------------------
 
