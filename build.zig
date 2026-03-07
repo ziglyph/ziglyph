@@ -75,8 +75,8 @@ pub fn build(b: *std.Build) void {
     const clean_step = b.step("clean", "Clean up");
     clean_step.dependOn(&clean_up.step);
 
-    const gen_lookup = b.addExecutable(.{
-        .name = "gen_lookup",
+    const confusables_gen = b.addExecutable(.{
+        .name = "confusables_gen",
         .root_module = b.createModule(.{
             .root_source_file = b.path("tools/confusable_table_generator.zig"),
             .target = target,
@@ -84,15 +84,34 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    const run_gen_lookup = b.addRunArtifact(gen_lookup);
-    run_gen_lookup.addArg("unicode/confusables.txt");
-    const generated_lookup_file = run_gen_lookup.addOutputFileArg("confusables.zig");
+    const run_confusables_gen = b.addRunArtifact(confusables_gen);
+    run_confusables_gen.addArg("unicode/confusables.txt");
+    const generated_confusables_file = run_confusables_gen.addOutputFileArg("confusables.zig");
 
-    const write_file_gen_lookup = b.addUpdateSourceFiles();
-    write_file_gen_lookup.addCopyFileToSource(generated_lookup_file, "src/confusables.zig");
+    const write_file_confusables_gen = b.addUpdateSourceFiles();
+    write_file_confusables_gen.addCopyFileToSource(generated_confusables_file, "src/confusables.zig");
 
-    const gen_lookup_step = b.step("confusable", "Generate confusable lookup table");
-    gen_lookup_step.dependOn(&write_file_gen_lookup.step);
+    const confusables_gen_step = b.step("confusable", "Generate confusable lookup table");
+    confusables_gen_step.dependOn(&write_file_confusables_gen.step);
+
+    const unicode_data_gen = b.addExecutable(.{
+        .name = "unicode_data_gen",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/normalizer_table_generator.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+
+    const run_unicode_data_gen = b.addRunArtifact(unicode_data_gen);
+    run_unicode_data_gen.addArg("unicode/UnicodeData.txt");
+    const generated_unicode_data_file = run_unicode_data_gen.addOutputFileArg("unicode_table.zig");
+
+    const write_file_unicode_data_gen = b.addUpdateSourceFiles();
+    write_file_unicode_data_gen.addCopyFileToSource(generated_unicode_data_file, "src/unicode_table.zig");
+
+    const unicode_data_gen_step = b.step("unicode", "Generate unicode lookup table");
+    unicode_data_gen_step.dependOn(&write_file_unicode_data_gen.step);
 }
 
 fn remove_zig_out() !void {

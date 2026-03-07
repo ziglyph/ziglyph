@@ -1,11 +1,24 @@
 const std = @import("std");
+const tools = @import("tools.zig");
+const cwd = std.fs.cwd();
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
+    var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
 
-    const cwd = std.fs.cwd();
+    const args = try std.process.argsAlloc(allocator);
+    if (args.len < 3) std.debug.panic("wrong number of arguments", .{});
 
+    const unicode_data_file = args[1];
+    const output_file = args[2];
+
+    std.fs.cwd().access(unicode_data_file, .{}) catch |err| switch (err) {
+        error.FileNotFound => try getUnicodeDataFile(allocator, unicode_data_file),
+        else => {
+            std.debug.print("{}\n", .{err});
+        },
+    };
     const file = try cwd.openFile("UnicodeData.txt", .{});
     defer file.close();
 
@@ -61,4 +74,8 @@ pub fn main() !void {
     }
 
     try out.writer().print("});\n", .{});
+}
+
+fn getUnicodeDataFile(allocator: std.mem.Allocator, destination: []const u8) !void {
+    try tools.downloadFile(allocator, "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt", destination);
 }
