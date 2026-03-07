@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Homoglyph Attacks</title>
+
+<style>
+
+body{
+font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+margin:0;
+background:#0b0f19;
+color:#e6edf3;
+line-height:1.6;
+}
+
+header{
+background:#020617;
+padding:50px 20px;
+text-align:center;
+border-bottom:1px solid #1e293b;
+}
+
+h1{
+margin:0;
+font-size:2.6rem;
+}
+
+main{
+max-width:900px;
+margin:auto;
+padding:40px 20px;
+}
+
+section{
+margin-bottom:60px;
+}
+
+h2{
+color:#38bdf8;
+margin-bottom:10px;
+}
+
+.example{
+background:#020617;
+border:1px solid #1e293b;
+padding:18px;
+border-radius:6px;
+font-family:monospace;
+font-size:1.1rem;
+margin:20px 0;
+}
+
+.attack{
+background:#111827;
+border-left:4px solid #ef4444;
+padding:15px;
+margin:20px 0;
+}
+
+.demo{
+background:#020617;
+border:1px solid #1e293b;
+padding:25px;
+border-radius:6px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+background:#0f172a;
+border:1px solid #334155;
+color:white;
+border-radius:4px;
+}
+
+.output{
+margin-top:15px;
+font-family:monospace;
+background:#020617;
+padding:10px;
+border-radius:4px;
+border:1px solid #1e293b;
+}
+
+a{
+color:#7dd3fc;
+}
+
+footer{
+border-top:1px solid #1e293b;
+text-align:center;
+padding:40px;
+color:#94a3b8;
+}
+
+.video{
+margin-top:25px;
+}
+
+iframe{
+max-width:100%;
+border:none;
+border-radius:6px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>Homoglyph Attacks</h1>
+<p>Unicode look-alike characters used for phishing and impersonation</p>
+
+</header>
+
+<main>
+
+
+<section>
+
+<h2>What is a Homoglyph Attack?</h2>
+
+<p>
+A homoglyph attack exploits characters that look identical but belong to different writing systems.
+Unicode contains thousands of such characters across Latin, Cyrillic, Greek, Armenian and many other scripts.
+</p>
+
+<p>
+By substituting characters with visually identical ones, attackers can create identifiers that appear legitimate
+to humans while being completely different strings to computers.
+</p>
+
+</section>
+
+
+
+<section>
+
+<h2>Simple Example</h2>
+
+<div class="example">
+
+paypal.com  
+раураl.com
+
+</div>
+
+<p>
+The second line uses Cyrillic characters. Most people will read both lines as “paypal”.
+To software they are entirely different domain names.
+</p>
+
+</section>
+
+
+
+<section>
+
+<h2>Real World Attacks</h2>
+
+
+<div class="attack">
+
+<strong>IDN phishing domains</strong>
+
+<p>
+Internationalized Domain Names allow Unicode characters in domains.
+Attackers register domains visually identical to popular websites
+and use them for phishing pages that collect passwords or financial data.
+</p>
+
+</div>
+
+
+<div class="attack">
+
+<strong>Apple login spoof (2017)</strong>
+
+<p>
+Security researchers demonstrated a fake apple.com domain created with Cyrillic letters.
+Some browsers displayed the Unicode form instead of punycode,
+making the malicious site indistinguishable from the real one.
+</p>
+
+</div>
+
+
+<div class="attack">
+
+<strong>Open-source package impersonation</strong>
+
+<p>
+Malicious packages have been uploaded to package registries using names that visually match legitimate libraries.
+Developers installing dependencies can easily miss the subtle differences.
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<h2>Interactive Example</h2>
+
+<div class="demo">
+
+Type a domain or identifier below.  
+The page will show the Unicode codepoints and the punycode representation.
+
+<input id="textInput" placeholder="example: paypal">
+
+<div class="output" id="unicodeOutput"></div>
+<div class="output" id="punycodeOutput"></div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>Tools</h2>
+
+<p>
+If you want to detect or analyze homoglyph spoofing,
+see the Ziglyph project on GitHub.
+</p>
+
+<p>
+<a href="https://github.com/ziglyph/ziglyph">
+github.com/ziglyph/ziglyph
+</a>
+</p>
+
+</section>
+
+
+<section>
+
+<h2>Video Demonstration</h2>
+
+<p>
+Watch a demonstration of how homoglyph attacks work:
+</p>
+
+<a href="https://youtu.be/tJPjHB96bYQ" target="_blank">
+<img 
+src="https://img.youtube.com/vi/tJPjHB96bYQ/maxresdefault.jpg"
+alt="Homoglyph attack video"
+style="max-width:100%;border-radius:6px;border:1px solid #1e293b;">
+</a>
+
+<p>
+Click the image to watch on YouTube.
+</p>
+
+</section>
+
+
+</main>
+
+
+
+<footer>
+
+<p>
+Homoglyph attacks remain a common technique in phishing,
+domain impersonation, and software supply-chain attacks.
+</p>
+
+</footer>
+
+
+
+<script>
+
+const input = document.getElementById("textInput")
+const unicodeOutput = document.getElementById("unicodeOutput")
+const punycodeOutput = document.getElementById("punycodeOutput")
+
+function update(){
+
+let text = input.value
+
+let codes = []
+
+for (let c of text){
+
+codes.push("U+" + c.codePointAt(0).toString(16).toUpperCase())
+
+}
+
+unicodeOutput.textContent = "Unicode: " + codes.join(" ")
+
+try{
+
+let puny = new URL("http://" + text).hostname
+
+punycodeOutput.textContent = "Browser host: " + puny
+
+}catch{
+
+punycodeOutput.textContent = ""
+
+}
+
+}
+
+input.addEventListener("input",update)
+
+</script>
+
+</body>
+</html>
