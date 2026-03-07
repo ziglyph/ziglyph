@@ -78,20 +78,20 @@ pub fn build(b: *std.Build) void {
     const gen_lookup = b.addExecutable(.{
         .name = "gen_lookup",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("tools/gen_lookup.zig"),
+            .root_source_file = b.path("tools/confusable_table_generator.zig"),
             .target = target,
             .optimize = optimize,
         }),
     });
 
     const run_gen_lookup = b.addRunArtifact(gen_lookup);
-    run_gen_lookup.addArg("tools/confusables.txt");
+    run_gen_lookup.addArg("unicode/confusables.txt");
     const generated_lookup_file = run_gen_lookup.addOutputFileArg("confusable_lookup.zig");
 
     const write_file_gen_lookup = b.addUpdateSourceFiles();
     write_file_gen_lookup.addCopyFileToSource(generated_lookup_file, "src/confusable_lookup.zig");
 
-    const gen_lookup_step = b.step("gen", "Generate lookup table");
+    const gen_lookup_step = b.step("confusable", "Generate confusable lookup table");
     gen_lookup_step.dependOn(&write_file_gen_lookup.step);
 }
 
