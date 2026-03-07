@@ -37,9 +37,14 @@ pub fn main() !void {
 
     try writer_interface.writeAll("const std = @import(\"std\");\n\n");
 
-    try writer_interface.print(
-        "pub const compat_decomp = std.StaticHashMap(u21, []const u21).initComptime(.{{\n",
-        .{},
+    try writer_interface.writeAll(
+        \\pub const CompatEntry = struct {
+        \\    cp: u21,
+        \\    map: []const u21,
+        \\};
+        \\
+        \\pub const compat_decomp = [_]CompatEntry{
+        \\
     );
 
     while (try read_file_interface.takeDelimiter('\n')) |line| {
@@ -65,7 +70,7 @@ pub fn main() !void {
 
         _ = parts.next(); // skip <compat>
 
-        try writer_interface.print(" .{{ 0x{x}, &[_]u21{{", .{cp});
+        try writer_interface.print(" .{{ .cp = 0x{x}, .map = &[_]u21{{", .{cp});
 
         while (parts.next()) |p| {
             const v = try std.fmt.parseInt(u21, p, 16);
@@ -75,7 +80,7 @@ pub fn main() !void {
         try writer_interface.print("}} }},\n", .{});
     }
 
-    try writer_interface.writeAll("});\n");
+    try writer_interface.writeAll("};\n");
     try writer_interface.flush();
 }
 
