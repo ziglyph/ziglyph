@@ -115,6 +115,12 @@ pub fn build(b: *std.Build) void {
 
     const unicode_data_gen_step = b.step("unicode", "Generate unicode lookup table");
     unicode_data_gen_step.dependOn(&write_file_unicode_data_gen.step);
+
+    exe.step.dependOn(confusables_gen_step);
+    exe.step.dependOn(unicode_data_gen_step);
+
+    shared_lib_step.dependOn(confusables_gen_step);
+    shared_lib_step.dependOn(unicode_data_gen_step);
 }
 
 fn remove_zig_out() !void {
