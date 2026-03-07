@@ -19,28 +19,30 @@ pub fn main() !void {
             std.debug.print("{}\n", .{err});
         },
     };
-    const file = try std.fs.cwd().openFile(unicode_data_file, .{});
-    defer file.close();
+    const read_file = try std.fs.cwd().openFile(unicode_data_file, .{});
+    defer read_file.close();
 
-    var reader = std.Io.bufferedReader(file.reader());
-    const r = reader.reader();
+    var read_buff: [4096]u8 = undefined;
+    var read_file_reader = read_file.reader(&read_buff);
+    const read_file_interface = &read_file_reader.interface;
 
-    var out = try cwd.createFile("src/norm_tables.zig", .{});
-    defer out.close();
+    var generated_file = try std.fs.cwd().createFile(output_file, .{
+        .truncate = true,
+    });
+    defer generated_file.close();
 
-    try out.writer().print(
-        "const std = @import(\"std\");\n\n",
-        .{},
-    );
+    var file_write_buf: [4096]u8 = undefined;
+    var writer = generated_file.writerStreaming(&file_write_buf);
+    const writer_interface = &writer.interface;
 
-    try out.writer().print(
+    try writer_interface.writeAll("const std = @import(\"std\");\n\n");
+
+    try writer_interface.print(
         "pub const compat_decomp = std.StaticHashMap(u21, []const u21).initComptime(.{{\n",
         .{},
     );
 
-    var buf: [4096]u8 = undefined;
-
-    while (try r.readUntilDelimiterOrEof(&buf, '\n')) |line| {
+    while (try read_file_interface.takeDelimiter('\n')) |line| {
         var it = std.mem.splitScalar(u8, line, ';');
 
         const code_str = it.next() orelse continue;
@@ -63,17 +65,18 @@ pub fn main() !void {
 
         _ = parts.next(); // skip <compat>
 
-        try out.writer().print(" .{{ 0x{x}, &[_]u21{{", .{cp});
+        try writer_interface.print(" .{{ 0x{x}, &[_]u21{{", .{cp});
 
         while (parts.next()) |p| {
             const v = try std.fmt.parseInt(u21, p, 16);
-            try out.writer().print("0x{x},", .{v});
+            try writer_interface.print("0x{x},", .{v});
         }
 
-        try out.writer().print("}} }},\n", .{});
+        try writer_interface.print("}} }},\n", .{});
     }
 
-    try out.writer().print("});\n", .{});
+    try writer_interface.writeAll("});\n");
+    try writer_interface.flush();
 }
 
 fn getUnicodeDataFile(allocator: std.mem.Allocator, destination: []const u8) !void {
