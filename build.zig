@@ -19,6 +19,7 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         }),
     });
+    // const header_install_step = b.addInstallHeaderFile(shared.getEmittedH(), "ziglyph.h");
 
     const exe = b.addExecutable(.{
         .name = "zgl",
@@ -45,6 +46,7 @@ pub fn build(b: *std.Build) void {
     const run_shared_lib_step = b.addInstallArtifact(shared, .{});
     const shared_lib_step = b.step("shared", "Shared lib");
     shared_lib_step.dependOn(&run_shared_lib_step.step);
+    // shared_lib_step.dependOn(&header_install_step.step);
 
     const run_step = b.step("run", "Run the app");
     const run_cmd = b.addRunArtifact(exe);
