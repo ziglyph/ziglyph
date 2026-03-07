@@ -19,10 +19,10 @@ pub fn main() !void {
             std.debug.print("{}\n", .{err});
         },
     };
-    const file = try cwd.openFile("UnicodeData.txt", .{});
+    const file = try std.fs.cwd().openFile(unicode_data_file, .{});
     defer file.close();
 
-    var reader = std.io.bufferedReader(file.reader());
+    var reader = std.Io.bufferedReader(file.reader());
     const r = reader.reader();
 
     var out = try cwd.createFile("src/norm_tables.zig", .{});

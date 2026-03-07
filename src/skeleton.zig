@@ -12,7 +12,7 @@ pub const Skeleton = struct {
         _ = self;
     }
 
-    pub fn compute(self: *Skeleton, input: []const u8) ![]u8 {
+    pub export fn compute(self: *Skeleton, input: []const u8) ![]u8 {
         var out = try std.ArrayList(u8).initCapacity(self.allocator, input.len);
         defer out.deinit(self.allocator);
 
