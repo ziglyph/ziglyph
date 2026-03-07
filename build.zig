@@ -3,10 +3,21 @@ const std = @import("std");
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{ .default_target = .{ .cpu_model = .determined_by_arch_os } });
     const optimize = b.standardOptimizeOption(.{});
+
     const mod = b.addModule("ziglyph", .{
         .root_source_file = b.path("src/lib.zig"),
         .target = target,
         .optimize = optimize,
+    });
+
+    const shared = b.addLibrary(.{
+        .name = "ziglyph",
+        .linkage = .dynamic,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/lib.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     const exe = b.addExecutable(.{
@@ -26,15 +37,18 @@ pub fn build(b: *std.Build) void {
 
     if (optimize == .ReleaseFast) {
         mod.strip = true;
+        shared.root_module.strip = true;
         exe.root_module.strip = true;
     }
     b.installArtifact(exe);
 
-    const run_step = b.step("run", "Run the app");
+    const run_shared_lib_step = b.addInstallArtifact(shared, .{});
+    const shared_lib_step = b.step("shared", "Shared lib");
+    shared_lib_step.dependOn(&run_shared_lib_step.step);
 
+    const run_step = b.step("run", "Run the app");
     const run_cmd = b.addRunArtifact(exe);
     run_step.dependOn(&run_cmd.step);
-
     run_cmd.step.dependOn(b.getInstallStep());
 
     if (b.args) |args| {
@@ -60,6 +74,25 @@ pub fn build(b: *std.Build) void {
     const clean_up = b.addRemoveDirTree(b.path("zig-out"));
     const clean_step = b.step("clean", "Clean up");
     clean_step.dependOn(&clean_up.step);
+
+    const gen_lookup = b.addExecutable(.{
+        .name = "gen_lookup",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/confusable_table_generator.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+
+    const run_gen_lookup = b.addRunArtifact(gen_lookup);
+    run_gen_lookup.addArg("unicode/confusables.txt");
+    const generated_lookup_file = run_gen_lookup.addOutputFileArg("confusables.zig");
+
+    const write_file_gen_lookup = b.addUpdateSourceFiles();
+    write_file_gen_lookup.addCopyFileToSource(generated_lookup_file, "src/confusables.zig");
+
+    const gen_lookup_step = b.step("confusable", "Generate confusable lookup table");
+    gen_lookup_step.dependOn(&write_file_gen_lookup.step);
 }
 
 fn remove_zig_out() !void {
