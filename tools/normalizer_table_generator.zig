@@ -1,6 +1,8 @@
 const std = @import("std");
 const tools = @import("tools.zig");
-const cwd = std.fs.cwd();
+
+const debug = false;
+const MAX = 0x110000;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
@@ -19,28 +21,37 @@ pub fn main() !void {
             std.debug.print("{}\n", .{err});
         },
     };
-    const file = try cwd.openFile("UnicodeData.txt", .{});
-    defer file.close();
 
-    var reader = std.io.bufferedReader(file.reader());
-    const r = reader.reader();
+    const read_file = try std.fs.cwd().openFile(unicode_data_file, .{});
+    defer read_file.close();
 
-    var out = try cwd.createFile("src/norm_tables.zig", .{});
-    defer out.close();
+    var read_buff: [4096]u8 = undefined;
+    var read_file_reader = read_file.reader(&read_buff);
+    const read_file_interface = &read_file_reader.interface;
 
-    try out.writer().print(
-        "const std = @import(\"std\");\n\n",
-        .{},
-    );
+    var table = try allocator.alloc([]const u21, MAX);
+    defer allocator.free(table);
 
-    try out.writer().print(
-        "pub const compat_decomp = std.StaticHashMap(u21, []const u21).initComptime(.{{\n",
-        .{},
-    );
+    for (table, 0..MAX) |*v, i| {
+        const map = try allocator.dupe(u21, &[_]u21{@intCast(i)});
+        v.* = map;
+    }
 
-    var buf: [4096]u8 = undefined;
+    var generated_file = try std.fs.cwd().createFile(output_file, .{
+        .truncate = true,
+    });
+    defer generated_file.close();
 
-    while (try r.readUntilDelimiterOrEof(&buf, '\n')) |line| {
+    var file_write_buf: [4096]u8 = undefined;
+    var writer = generated_file.writerStreaming(&file_write_buf);
+    const writer_interface = &writer.interface;
+
+    var max_dest_i: usize = 0;
+
+    while (try read_file_interface.takeDelimiter('\n')) |line| {
+        if (line.len == 0) continue;
+        if (line[0] == '#') continue;
+
         var it = std.mem.splitScalar(u8, line, ';');
 
         const code_str = it.next() orelse continue;
@@ -63,17 +74,44 @@ pub fn main() !void {
 
         _ = parts.next(); // skip <compat>
 
-        try out.writer().print(" .{{ 0x{x}, &[_]u21{{", .{cp});
-
+        var dest: [25]u21 = undefined;
+        var dest_i: usize = 0;
         while (parts.next()) |p| {
-            const v = try std.fmt.parseInt(u21, p, 16);
-            try out.writer().print("0x{x},", .{v});
+            const trimmed = std.mem.trim(u8, p, " \t");
+            if (trimmed.len == 0) continue;
+
+            const v = try std.fmt.parseInt(u21, trimmed, 16);
+            dest[dest_i] = v;
+            dest_i += 1;
         }
 
-        try out.writer().print("}} }},\n", .{});
+        if (debug and dest_i > max_dest_i) {
+            max_dest_i = dest_i;
+            std.debug.print(
+                \\{s}
+                \\{s}, max_dest_i: {d}
+                \\
+            ,
+                .{ line, decomp, max_dest_i },
+            );
+        }
+
+        const map = try allocator.dupe(u21, dest[0..dest_i]);
+        table[cp] = map;
     }
 
-    try out.writer().print("});\n", .{});
+    try writer_interface.print("pub const compat_decomp =[_][]const u21{{\n", .{});
+
+    for (table) |v| {
+        try writer_interface.writeAll("&.{");
+        for (v) |vv| {
+            try writer_interface.print("0x{x},", .{vv});
+        }
+        try writer_interface.writeAll("},\n");
+    }
+
+    try writer_interface.writeAll("};\n");
+    try writer_interface.flush();
 }
 
 fn getUnicodeDataFile(allocator: std.mem.Allocator, destination: []const u8) !void {
