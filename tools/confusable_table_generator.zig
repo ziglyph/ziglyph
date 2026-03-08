@@ -21,19 +21,19 @@ pub fn main() !void {
         },
     };
 
-    var table = try allocator.alloc(u21, MAX);
-    defer allocator.free(table);
-
-    for (table, 0..) |*v, i| {
-        v.* = @intCast(i);
-    }
-
     const read_file = try std.fs.cwd().openFile(conf_file, .{});
     defer read_file.close();
 
     var read_buff: [4096]u8 = undefined;
     var read_file_reader = read_file.reader(&read_buff);
     const read_file_interface = &read_file_reader.interface;
+
+    var table = try allocator.alloc(u21, MAX);
+    defer allocator.free(table);
+
+    for (table, 0..) |*v, i| {
+        v.* = @intCast(i);
+    }
 
     while (try read_file_interface.takeDelimiter('\n')) |line| {
         if (line.len == 0) continue;

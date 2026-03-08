@@ -1,6 +1,7 @@
 const std = @import("std");
 const tools = @import("tools.zig");
-const cwd = std.fs.cwd();
+
+const MAX = 0x110000;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
@@ -19,12 +20,22 @@ pub fn main() !void {
             std.debug.print("{}\n", .{err});
         },
     };
+
     const read_file = try std.fs.cwd().openFile(unicode_data_file, .{});
     defer read_file.close();
 
     var read_buff: [4096]u8 = undefined;
     var read_file_reader = read_file.reader(&read_buff);
     const read_file_interface = &read_file_reader.interface;
+
+    var table = try allocator.alloc([]const u21, MAX);
+    defer allocator.free(table);
+
+    for (table, 0..) |*v, i| {
+        v.* = &[_]u21{
+            @intCast(i),
+        };
+    }
 
     var generated_file = try std.fs.cwd().createFile(output_file, .{
         .truncate = true,
@@ -35,19 +46,10 @@ pub fn main() !void {
     var writer = generated_file.writerStreaming(&file_write_buf);
     const writer_interface = &writer.interface;
 
-    try writer_interface.writeAll("const std = @import(\"std\");\n\n");
-
-    try writer_interface.writeAll(
-        \\pub const CompatEntry = struct {
-        \\    cp: u21,
-        \\    map: []const u21,
-        \\};
-        \\
-        \\pub const compat_decomp = [_]CompatEntry{
-        \\
-    );
-
     while (try read_file_interface.takeDelimiter('\n')) |line| {
+        if (line.len == 0) continue;
+        if (line[0] == '#') continue;
+
         var it = std.mem.splitScalar(u8, line, ';');
 
         const code_str = it.next() orelse continue;
@@ -70,15 +72,34 @@ pub fn main() !void {
 
         _ = parts.next(); // skip <compat>
 
-        try writer_interface.print(" .{{ .cp = 0x{x}, .map = &[_]u21{{", .{cp});
-
+        var dest: [256]u21 = undefined;
+        var dest_i: usize = 0;
         while (parts.next()) |p| {
-            const v = try std.fmt.parseInt(u21, p, 16);
-            try writer_interface.print("0x{x},", .{v});
+            const trimmed = std.mem.trim(u8, p, " \t");
+            if (trimmed.len == 0) continue;
+
+            const v = try std.fmt.parseInt(u21, trimmed, 16);
+            dest[dest_i] = v;
+            dest_i += 1;
         }
 
-        try writer_interface.print("}} }},\n", .{});
+        const map = try allocator.dupe(u21, dest[0..dest_i]);
+        table[cp] = map;
     }
+
+    try writer_interface.print("pub const compat_decomp: [0x{x}][]const u21 = .{{\n", .{MAX});
+
+    for (table) |v| {
+        try writer_interface.writeAll("&[_]u21{");
+        for (v) |vv| {
+            try writer_interface.print("0x{x},", .{vv});
+        }
+        try writer_interface.writeAll("},\n");
+    }
+
+    // try writer_interface.print(" .{{ .cp = 0x{x}, .map = &[_]u21{{", .{cp});
+    // try writer_interface.print("0x{x},", .{v});
+    // try writer_interface.print("}} }},\n", .{});
 
     try writer_interface.writeAll("};\n");
     try writer_interface.flush();
