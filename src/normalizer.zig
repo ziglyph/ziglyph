@@ -28,7 +28,7 @@ pub const Normalizer = struct {
         }
 
         var out = try std.ArrayList(u8).initCapacity(self.allocator, input.len);
-        errdefer out.deinit(self.allocator);
+        defer out.deinit(self.allocator);
 
         var it = std.unicode.Utf8Iterator{
             .bytes = input,
@@ -43,7 +43,7 @@ pub const Normalizer = struct {
         // canonical ordering
         // recomposition
 
-        return out.toOwnedSlice();
+        return out.toOwnedSlice(self.allocator);
     }
 
     fn decompose(
@@ -76,6 +76,7 @@ test "nfkc: ascii unchanged" {
     const input = "paypal";
 
     const out = try nm.nfkc(input);
+    defer std.testing.allocator.free(out);
 
     try std.testing.expectEqualStrings("paypal", out);
 }
@@ -90,6 +91,7 @@ test "nfkc: ligature decomposition" {
     const input = "oﬀice";
 
     const out = try nm.nfkc(input);
+    defer std.testing.allocator.free(out);
 
     try std.testing.expectEqualStrings("office", out);
 }
@@ -104,6 +106,7 @@ test "nfkc: compatibility character" {
     const input = "paypaℓ";
 
     const out = try nm.nfkc(input);
+    defer std.testing.allocator.free(out);
 
     try std.testing.expectEqualStrings("paypal", out);
 }
