@@ -12,6 +12,41 @@ pub const Skeleton = struct {
         _ = self;
     }
 
+    /// Transforms each Unicode codepoint in the input string by applying a mapping function
+    /// and returns a new string containing the mapped codepoints.
+    ///
+    /// This function processes the input UTF-8 text codepoint by codepoint, applying a
+    /// codepoint mapping (via `mapCodepoint`) to each character. Invalid codepoints that
+    /// map to values outside the Unicode range (> 0x10FFFF) are silently skipped.
+    ///
+    /// ## Parameters
+    ///   - `self`: Pointer to the Skeleton instance containing the allocator
+    ///   - `input`: A slice of UTF-8 encoded bytes to process
+    ///
+    /// ## Returns
+    ///   A new UTF-8 encoded string containing the mapped codepoints, owned by the caller
+    ///
+    /// ## Errors
+    ///   - `std.mem.Allocator.Error.OutOfMemory` if allocation fails
+    ///   - `std.unicode.Utf8EncodeError` if the mapped codepoint cannot be UTF-8 encoded
+    ///     (should not occur as we validate against Unicode range)
+    ///
+    /// ## Notes
+    ///   - The caller is responsible for freeing the returned memory using `self.allocator`
+    ///   - Input is processed sequentially; output length may differ from input length
+    ///     due to codepoint mapping and invalid codepoint filtering
+    ///   - Codepoints mapping to values > 0x10FFFF (outside Unicode range) are dropped
+    ///   - Uses the allocator stored in the Skeleton instance for all memory operations
+    ///
+    /// ## Example
+    /// ```
+    /// var skeleton = Skeleton.init(allocator);
+    /// defer skeleton.deinit();
+    ///
+    /// const input = "Hello, 世界!";
+    /// const output = try skeleton.compute(input);
+    /// defer allocator.free(output);
+    /// ```
     pub fn compute(self: *Skeleton, input: []const u8) ![]u8 {
         var out = try std.ArrayList(u8).initCapacity(self.allocator, input.len);
         defer out.deinit(self.allocator);
