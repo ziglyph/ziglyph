@@ -4,6 +4,8 @@ const tables = @import("unicode_table.zig");
 pub const Error = error{
     InvalidUtf8,
     OutOfMemory,
+    Utf8CannotEncodeSurrogateHalf,
+    CodepointTooLarge,
 };
 
 pub const Normalizer = struct {
@@ -34,7 +36,7 @@ pub const Normalizer = struct {
         };
 
         while (it.nextCodepoint()) |cp| {
-            try decompose(cp, &out);
+            try self.decompose(cp, &out);
         }
 
         // TODO
@@ -43,22 +45,27 @@ pub const Normalizer = struct {
 
         return out.toOwnedSlice();
     }
-};
 
-fn decompose(cp: u21, out: *std.ArrayList(u8)) !void {
-    for (tables.compat_decomp) |m| {
-        try appendCodepoint(out, m[cp]);
+    fn decompose(
+        self: *Normalizer,
+        cp: u21,
+        out: *std.ArrayList(u8),
+    ) !void {
+        for (tables.compat_decomp[cp]) |v| {
+            try self.appendCodepoint(out, v);
+        }
     }
-}
 
-fn appendCodepoint(
-    out: *std.ArrayList(u8),
-    cp: u21,
-) !void {
-    var buf: [4]u8 = undefined;
-    const len = try std.unicode.utf8Encode(cp, &buf);
-    try out.appendSlice(buf[0..len]);
-}
+    fn appendCodepoint(
+        self: *Normalizer,
+        out: *std.ArrayList(u8),
+        cp: u21,
+    ) !void {
+        var buf: [25]u8 = undefined;
+        const len = try std.unicode.utf8Encode(cp, &buf);
+        try out.appendSlice(self.allocator, buf[0..len]);
+    }
+};
 
 test "nfkc: ascii unchanged" {
     const testing = std.testing;

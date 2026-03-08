@@ -31,7 +31,7 @@ pub fn main() !void {
     var table = try allocator.alloc(u21, MAX);
     defer allocator.free(table);
 
-    for (table, 0..) |*v, i| {
+    for (table, 0..MAX) |*v, i| {
         v.* = @intCast(i);
     }
 

@@ -110,10 +110,6 @@ pub fn main() !void {
         try writer_interface.writeAll("},\n");
     }
 
-    // try writer_interface.print(" .{{ .cp = 0x{x}, .map = &[_]u21{{", .{cp});
-    // try writer_interface.print("0x{x},", .{v});
-    // try writer_interface.print("}} }},\n", .{});
-
     try writer_interface.writeAll("};\n");
     try writer_interface.flush();
 }
