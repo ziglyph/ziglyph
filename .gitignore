@@ -1,5 +1,6 @@
 .zig-cache/
 zig-out/
 *.o
+*.a
 # src/confusable_lookup.zig
 
