@@ -45,16 +45,9 @@ pub const Normalizer = struct {
     }
 };
 
-pub fn compatLookup(cp: u21) ?[]const u21 {
-    for (tables.compat_decomp) |e| {
-        if (e.cp == cp) return e.map;
-    }
-    return null;
-}
-
 fn decompose(cp: u21, out: *std.ArrayList(u8)) !void {
     for (tables.compat_decomp) |m| {
-        if (m.cp == cp) try appendCodepoint(out, m.map);
+        try appendCodepoint(out, m[cp]);
     }
 }
 

@@ -1,6 +1,7 @@
 const std = @import("std");
 const tools = @import("tools.zig");
 
+const debug = false;
 const MAX = 0x110000;
 
 pub fn main() !void {
@@ -32,9 +33,8 @@ pub fn main() !void {
     defer allocator.free(table);
 
     for (table, 0..) |*v, i| {
-        v.* = &[_]u21{
-            @intCast(i),
-        };
+        const map = try allocator.dupe(u21, &[_]u21{@intCast(i)});
+        v.* = map;
     }
 
     var generated_file = try std.fs.cwd().createFile(output_file, .{
@@ -45,6 +45,8 @@ pub fn main() !void {
     var file_write_buf: [4096]u8 = undefined;
     var writer = generated_file.writerStreaming(&file_write_buf);
     const writer_interface = &writer.interface;
+
+    var max_dest_i: usize = 0;
 
     while (try read_file_interface.takeDelimiter('\n')) |line| {
         if (line.len == 0) continue;
@@ -72,7 +74,7 @@ pub fn main() !void {
 
         _ = parts.next(); // skip <compat>
 
-        var dest: [256]u21 = undefined;
+        var dest: [25]u21 = undefined;
         var dest_i: usize = 0;
         while (parts.next()) |p| {
             const trimmed = std.mem.trim(u8, p, " \t");
@@ -81,6 +83,17 @@ pub fn main() !void {
             const v = try std.fmt.parseInt(u21, trimmed, 16);
             dest[dest_i] = v;
             dest_i += 1;
+        }
+
+        if (debug and dest_i > max_dest_i) {
+            max_dest_i = dest_i;
+            std.debug.print(
+                \\{s}
+                \\{s}, max_dest_i: {d}
+                \\
+            ,
+                .{ line, decomp, max_dest_i },
+            );
         }
 
         const map = try allocator.dupe(u21, dest[0..dest_i]);
