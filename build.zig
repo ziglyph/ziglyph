@@ -10,6 +10,16 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const static = b.addLibrary(.{
+        .name = "ziglyph",
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/lib.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+
     const shared = b.addLibrary(.{
         .name = "ziglyph",
         .linkage = .dynamic,
@@ -121,6 +131,14 @@ pub fn build(b: *std.Build) void {
 
     shared_lib_step.dependOn(confusables_gen_step);
     shared_lib_step.dependOn(unicode_data_gen_step);
+
+    const docs = b.addInstallDirectory(.{
+        .source_dir = static.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
+    const docs_step = b.step("docs", "Generate docs");
+    docs_step.dependOn(&docs.step);
 }
 
 fn remove_zig_out() !void {
