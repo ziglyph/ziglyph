@@ -21,9 +21,6 @@ pub fn main() !void {
         },
     };
 
-    const data = try std.fs.cwd().readFileAlloc(allocator, conf_file, 20 * 1024 * 1024);
-    defer allocator.free(data);
-
     var table = try allocator.alloc(u21, MAX);
     defer allocator.free(table);
 
@@ -31,9 +28,14 @@ pub fn main() !void {
         v.* = @intCast(i);
     }
 
-    var lines = std.mem.splitScalar(u8, data, '\n');
+    const read_file = try std.fs.cwd().openFile(conf_file, .{});
+    defer read_file.close();
 
-    while (lines.next()) |line| {
+    var read_buff: [4096]u8 = undefined;
+    var read_file_reader = read_file.reader(&read_buff);
+    const read_file_interface = &read_file_reader.interface;
+
+    while (try read_file_interface.takeDelimiter('\n')) |line| {
         if (line.len == 0) continue;
         if (line[0] == '#') continue;
 

@@ -26,7 +26,7 @@ pub const Normalizer = struct {
         }
 
         var out = try std.ArrayList(u8).initCapacity(self.allocator, input.len);
-        errdefer out.deinit();
+        errdefer out.deinit(self.allocator);
 
         var it = std.unicode.Utf8Iterator{
             .bytes = input,
@@ -53,12 +53,8 @@ pub fn compatLookup(cp: u21) ?[]const u21 {
 }
 
 fn decompose(cp: u21, out: *std.ArrayList(u8)) !void {
-    if (tables.compat_decomp.get(cp)) |mapping| {
-        for (mapping) |m| {
-            try appendCodepoint(out, m);
-        }
-    } else {
-        try appendCodepoint(out, cp);
+    for (tables.compat_decomp) |m| {
+        if (m.cp == cp) try appendCodepoint(out, m.map);
     }
 }
 
