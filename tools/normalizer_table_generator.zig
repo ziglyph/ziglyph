@@ -32,7 +32,7 @@ pub fn main() !void {
     var table = try allocator.alloc([]const u21, MAX);
     defer allocator.free(table);
 
-    for (table, 0..) |*v, i| {
+    for (table, 0..MAX) |*v, i| {
         const map = try allocator.dupe(u21, &[_]u21{@intCast(i)});
         v.* = map;
     }
@@ -100,10 +100,10 @@ pub fn main() !void {
         table[cp] = map;
     }
 
-    try writer_interface.print("pub const compat_decomp: [0x{x}][]const u21 = .{{\n", .{MAX});
+    try writer_interface.print("pub const compat_decomp =[_][]const u21{{\n", .{});
 
     for (table) |v| {
-        try writer_interface.writeAll("&[_]u21{");
+        try writer_interface.writeAll("&.{");
         for (v) |vv| {
             try writer_interface.print("0x{x},", .{vv});
         }
