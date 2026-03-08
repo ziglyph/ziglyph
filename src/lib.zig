@@ -34,3 +34,36 @@ export fn skeleton_compute(
 
     return 0;
 }
+
+export fn normalizer_nfkc(
+    input_ptr: [*]const u8,
+    input_len: usize,
+    output_ptr: [*]u8,
+    output_len: usize,
+    written: *usize,
+) callconv(.c) i32 {
+    const std = @import("std");
+
+    const input = input_ptr[0..input_len];
+
+    var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+
+    var nm = normalizer.Normalizer.init(allocator);
+    defer nm.deinit();
+
+    const result = nm.nfkc(input) catch {
+        return -1;
+    };
+    defer allocator.free(result);
+
+    if (result.len > output_len) {
+        return -1;
+    }
+
+    @memcpy(output_ptr[0..result.len], result);
+    written.* = result.len;
+
+    return 0;
+}
