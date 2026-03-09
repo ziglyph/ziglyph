@@ -1,7 +1,7 @@
 const std = @import("std");
 const tools = @import("tools.zig");
 
-const MAX = 0x110000;
+const debug = false;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
@@ -28,12 +28,26 @@ pub fn main() !void {
     var read_file_reader = read_file.reader(&read_buff);
     const read_file_interface = &read_file_reader.interface;
 
-    var table = try allocator.alloc(u21, MAX);
-    defer allocator.free(table);
+    var file = try std.fs.cwd().createFile(output_file, .{
+        .truncate = true,
+    });
+    defer file.close();
 
-    for (table, 0..) |*v, i| {
-        v.* = @intCast(i);
-    }
+    var file_write_buf: [4096]u8 = undefined;
+    var writer = file.writerStreaming(&file_write_buf);
+    const writer_interface = &writer.interface;
+
+    // try writer_interface.print("pub const table: [_]u21 = .{{\n", .{});
+    try writer_interface.writeAll(
+        \\const std = @import("std");
+        \\
+        \\const DecompositionMap =  std.StaticStringMap(u21);
+        \\
+        \\pub const confusables = DecompositionMap.initComptime(confusables_entries);
+        \\
+        \\pub const confusables_entries = .{
+        \\
+    );
 
     while (try read_file_interface.takeDelimiter('\n')) |line| {
         if (line.len == 0) continue;
@@ -59,24 +73,9 @@ pub fn main() !void {
                 , .{ trimmed, err });
                 return err;
             };
-            table[src_cp] = @intCast(dst_cp);
+            try writer_interface.print(".{{ \"0x{x}\", 0x{x} }},\n", .{ src_cp, dst_cp });
             break; // only first codepoint matters for skeleton
         }
-    }
-
-    var file = try std.fs.cwd().createFile(output_file, .{
-        .truncate = true,
-    });
-    defer file.close();
-
-    var file_write_buf: [4096]u8 = undefined;
-    var writer = file.writerStreaming(&file_write_buf);
-    const writer_interface = &writer.interface;
-
-    try writer_interface.print("pub const table: [0x{x}]u21 = .{{\n", .{MAX});
-
-    for (table) |v| {
-        try writer_interface.print("0x{x},\n", .{v});
     }
 
     try writer_interface.writeAll("};\n");

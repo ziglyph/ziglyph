@@ -1,5 +1,5 @@
 const std = @import("std");
-const lookup = @import("confusables.zig").table;
+const lookup = @import("confusables.zig").confusables;
 
 pub const Skeleton = struct {
     allocator: std.mem.Allocator,
@@ -54,14 +54,8 @@ pub const Skeleton = struct {
         var it = std.unicode.Utf8Iterator{ .bytes = input, .i = 0 };
 
         while (it.nextCodepoint()) |cp| {
-            const mapped_u32 = mapCodepoint(cp);
-
-            // cast safely to u21
-            if (mapped_u32 > 0x10FFFF)
-                continue; // skip invalid codepoints
-            const mapped: u21 = @intCast(mapped_u32);
-
             var buf: [4]u8 = undefined;
+            const mapped = try mapCodepoint(cp);
             const len = try std.unicode.utf8Encode(mapped, &buf);
 
             try out.appendSlice(self.allocator, buf[0..len]);
@@ -71,15 +65,14 @@ pub const Skeleton = struct {
     }
 };
 
-fn mapCodepoint(cp: u32) u32 {
-    return lookup[cp];
+fn mapCodepoint(cp: u21) !u21 {
+    var buff: [16]u8 = undefined;
+    const slice = try std.fmt.bufPrint(&buff, "0x{x}", .{cp});
+    const res = lookup.get(slice) orelse cp;
+    return res;
 }
 
-test "basic skeleton mapping" {
-    try basicSkeletonMapingTest();
-}
-
-pub fn basicSkeletonMapingTest() !void {
+test "basic skeleton mapping paypal" {
     const testing = std.testing;
 
     var sk = Skeleton.init(testing.allocator);
@@ -90,4 +83,17 @@ pub fn basicSkeletonMapingTest() !void {
     defer testing.allocator.free(result);
 
     try testing.expect(std.mem.eql(u8, result, "paypal"));
+}
+
+test "basic skeleton mapping apple" {
+    const testing = std.testing;
+
+    var sk = Skeleton.init(testing.allocator);
+    defer sk.deinit();
+
+    const input = "apple"; // contains Cyrillic letters
+    const result = try sk.compute(input);
+    defer testing.allocator.free(result);
+
+    try testing.expect(std.mem.eql(u8, result, "apple"));
 }
