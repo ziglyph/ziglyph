@@ -19,12 +19,12 @@ pub fn main() !void {
         try run_normalizer(allocator);
     } else if (std.mem.eql(u8, cmd, "detector") or std.mem.eql(u8, cmd, "d")) {
         try run_detector(allocator);
+    } else if (std.mem.eql(u8, cmd, "cleaner") or std.mem.eql(u8, cmd, "c")) {
+        try run_cleaner(allocator);
     } else {
         std.debug.print("Unknown command: {s}\n", .{cmd});
         print_usage();
     }
-
-    std.debug.print("Allocated: {p}\n", .{allocator.ptr});
 }
 
 fn print_usage() void {
@@ -85,4 +85,21 @@ fn run_detector(allocator: std.mem.Allocator) !void {
         , .{"true"});
     }
     std.debug.print("Detector finished.\n", .{});
+}
+
+fn run_cleaner(allocator: std.mem.Allocator) !void {
+    var cl = zgl.cleaner.Cleaner.init(allocator);
+    defer cl.deinit();
+
+    std.debug.print("Running cleaner...\n", .{});
+    // ℓ = script small l
+    const input = "paypaℓ";
+    const result = try cl.clean(input);
+
+    std.debug.print(
+        \\{s}
+        \\{s}
+        \\
+    , .{ result, "paypal" });
+    std.debug.print("Cleaner finished.\n", .{});
 }
