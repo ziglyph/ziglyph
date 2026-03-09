@@ -112,6 +112,11 @@ pub fn main() !void {
     ├── build.zig.zon
     ├── cli
     │   └── main.zig
+    ├── docs
+    │   ├── index.html
+    │   ├── main.js
+    │   ├── main.wasm
+    │   └── sources.tar
     ├── LICENSE
     ├── README.md
     ├── src
@@ -126,7 +131,8 @@ pub fn main() !void {
     │   ├── normalizer_table_generator.zig
     │   └── tools.zig
     └── unicode
-        └── confusables.txt
+        ├── confusables.txt
+        └── UnicodeData.txt
 
 
 ------------------------------------------------------------------------

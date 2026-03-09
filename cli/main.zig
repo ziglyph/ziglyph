@@ -42,7 +42,7 @@ fn run_skeleton(allocator: std.mem.Allocator) !void {
     defer sk.deinit();
 
     std.debug.print("Running skeleton...\n", .{});
-    const input = "раурвl"; // contains Cyrillic letters
+    const input = "раураl"; // contains Cyrillic letters
     const result = try sk.compute(input);
 
     std.debug.print(
