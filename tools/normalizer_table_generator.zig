@@ -29,14 +29,6 @@ pub fn main() !void {
     var read_file_reader = read_file.reader(&read_buff);
     const read_file_interface = &read_file_reader.interface;
 
-    var table = try allocator.alloc([]const u21, MAX);
-    defer allocator.free(table);
-
-    for (table, 0..MAX) |*v, i| {
-        const map = try allocator.dupe(u21, &[_]u21{@intCast(i)});
-        v.* = map;
-    }
-
     var generated_file = try std.fs.cwd().createFile(output_file, .{
         .truncate = true,
     });
@@ -45,6 +37,17 @@ pub fn main() !void {
     var file_write_buf: [4096]u8 = undefined;
     var writer = generated_file.writerStreaming(&file_write_buf);
     const writer_interface = &writer.interface;
+
+    try writer_interface.writeAll(
+        \\const std = @import("std");
+        \\
+        \\const DecompositionMap =  std.StaticStringMap([]const u21);
+        \\
+        \\pub const compat_decomp = DecompositionMap.initComptime(decomp_entries);
+        \\
+        \\pub const decomp_entries = .{
+        \\
+    );
 
     var max_dest_i: usize = 0;
 
@@ -96,18 +99,11 @@ pub fn main() !void {
             );
         }
 
-        const map = try allocator.dupe(u21, dest[0..dest_i]);
-        table[cp] = map;
-    }
-
-    try writer_interface.print("pub const compat_decomp =[_][]const u21{{\n", .{});
-
-    for (table) |v| {
-        try writer_interface.writeAll("&.{");
-        for (v) |vv| {
-            try writer_interface.print("0x{x},", .{vv});
+        try writer_interface.print(".{{ \"0x{x}\", &.{{", .{cp});
+        for (dest[0..dest_i]) |v| {
+            try writer_interface.print("0x{x},", .{v});
         }
-        try writer_interface.writeAll("},\n");
+        try writer_interface.writeAll("} },\n");
     }
 
     try writer_interface.writeAll("};\n");

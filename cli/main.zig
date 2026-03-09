@@ -74,14 +74,15 @@ fn run_detector(allocator: std.mem.Allocator) !void {
     var dt = zgl.detector.Detector.init(allocator);
     defer dt.deinit();
 
-    std.debug.print("Running skeleton...\n", .{});
+    std.debug.print("Running detector...\n", .{});
     const input = "раурвl"; // contains Cyrillic letters
     const result = try dt.detect(input);
 
-    std.debug.print(
-        \\{s}
-        \\{s}
-        \\
-    , .{ result, "paypal" });
-    std.debug.print("Skeleton finished.\n", .{});
+    if (result) {
+        std.debug.print(
+            \\{s}
+            \\
+        , .{"true"});
+    }
+    std.debug.print("Detector finished.\n", .{});
 }
