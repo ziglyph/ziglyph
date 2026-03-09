@@ -13,12 +13,12 @@ pub fn main() !void {
     }
 
     const cmd = args[1];
-    if (std.mem.eql(u8, cmd, "skeleton")) {
+    if (std.mem.eql(u8, cmd, "skeleton") or std.mem.eql(u8, cmd, "s")) {
         try run_skeleton(allocator);
-    } else if (std.mem.eql(u8, cmd, "normalizer")) {
+    } else if (std.mem.eql(u8, cmd, "normalizer") or std.mem.eql(u8, cmd, "n")) {
         try run_normalizer(allocator);
-    } else if (std.mem.eql(u8, cmd, "detector")) {
-        try run_skeleton(allocator);
+    } else if (std.mem.eql(u8, cmd, "detector") or std.mem.eql(u8, cmd, "d")) {
+        try run_detector(allocator);
     } else {
         std.debug.print("Unknown command: {s}\n", .{cmd});
         print_usage();
@@ -57,7 +57,7 @@ fn run_normalizer(allocator: std.mem.Allocator) !void {
     var nm = zgl.normalizer.Normalizer.init(allocator);
     defer nm.deinit();
 
-    std.debug.print("Running normalizer...\n", .{});
+    std.debug.print("Running skeleton...\n", .{});
     // ℓ = script small l
     const input = "paypaℓ";
     const result = try nm.nfkc(input);
@@ -67,5 +67,21 @@ fn run_normalizer(allocator: std.mem.Allocator) !void {
         \\{s}
         \\
     , .{ result, "paypal" });
-    std.debug.print("Normalizer finished.\n", .{});
+    std.debug.print("Skeleton finished.\n", .{});
+}
+
+fn run_detector(allocator: std.mem.Allocator) !void {
+    var dt = zgl.detector.Detector.init(allocator);
+    defer dt.deinit();
+
+    std.debug.print("Running skeleton...\n", .{});
+    const input = "раурвl"; // contains Cyrillic letters
+    const result = try dt.detect(input);
+
+    std.debug.print(
+        \\{s}
+        \\{s}
+        \\
+    , .{ result, "paypal" });
+    std.debug.print("Skeleton finished.\n", .{});
 }
