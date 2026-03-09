@@ -1,13305 +1,3841 @@
 const std = @import("std");
 
-const DecompositionMap = struct {
-    special: std.StaticHashMap(u21, []const u21, 5000),
+const DecompositionMap =  std.StaticStringMap([]const u21);
 
-    fn init(entries: anytype) DecompositionMap {
-        var map = DecompositionMap{
-            .special = std.StaticHashMap(u21, []const u21, 5000).init(),
-        };
+pub const compat_decomp = DecompositionMap.initComptime(decomp_entries);
 
-        inline for (entries) |e| {
-            map.special.put(e.cp, e.decomp) catch unreachable;
-        }
-
-        return map;
-    }
-
-    fn get(self: *const DecompositionMap, cp: u21) []const u21 {
-        return self.special.get(cp) orelse &.{cp};
-    }
-};
-
-pub const compat_decomp = DecompositionMap.init(decomp_entries);
-
-pub const decomp_entries = [_]struct { cp: u21, decomp: []const u21 }{
-    .{ .cp = 0xa0, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0xa8, .decomp = &.{
-        0x20,
-        0x308,
-    } },
-    .{ .cp = 0xaa, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0xaf, .decomp = &.{
-        0x20,
-        0x304,
-    } },
-    .{ .cp = 0xb2, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0xb3, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0xb4, .decomp = &.{
-        0x20,
-        0x301,
-    } },
-    .{ .cp = 0xb5, .decomp = &.{
-        0x3bc,
-    } },
-    .{ .cp = 0xb8, .decomp = &.{
-        0x20,
-        0x327,
-    } },
-    .{ .cp = 0xb9, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0xba, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0xbc, .decomp = &.{
-        0x31,
-        0x2044,
-        0x34,
-    } },
-    .{ .cp = 0xbd, .decomp = &.{
-        0x31,
-        0x2044,
-        0x32,
-    } },
-    .{ .cp = 0xbe, .decomp = &.{
-        0x33,
-        0x2044,
-        0x34,
-    } },
-    .{ .cp = 0x132, .decomp = &.{
-        0x49,
-        0x4a,
-    } },
-    .{ .cp = 0x133, .decomp = &.{
-        0x69,
-        0x6a,
-    } },
-    .{ .cp = 0x13f, .decomp = &.{
-        0x4c,
-        0xb7,
-    } },
-    .{ .cp = 0x140, .decomp = &.{
-        0x6c,
-        0xb7,
-    } },
-    .{ .cp = 0x149, .decomp = &.{
-        0x2bc,
-        0x6e,
-    } },
-    .{ .cp = 0x17f, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1c4, .decomp = &.{
-        0x44,
-        0x17d,
-    } },
-    .{ .cp = 0x1c5, .decomp = &.{
-        0x44,
-        0x17e,
-    } },
-    .{ .cp = 0x1c6, .decomp = &.{
-        0x64,
-        0x17e,
-    } },
-    .{ .cp = 0x1c7, .decomp = &.{
-        0x4c,
-        0x4a,
-    } },
-    .{ .cp = 0x1c8, .decomp = &.{
-        0x4c,
-        0x6a,
-    } },
-    .{ .cp = 0x1c9, .decomp = &.{
-        0x6c,
-        0x6a,
-    } },
-    .{ .cp = 0x1ca, .decomp = &.{
-        0x4e,
-        0x4a,
-    } },
-    .{ .cp = 0x1cb, .decomp = &.{
-        0x4e,
-        0x6a,
-    } },
-    .{ .cp = 0x1cc, .decomp = &.{
-        0x6e,
-        0x6a,
-    } },
-    .{ .cp = 0x1f1, .decomp = &.{
-        0x44,
-        0x5a,
-    } },
-    .{ .cp = 0x1f2, .decomp = &.{
-        0x44,
-        0x7a,
-    } },
-    .{ .cp = 0x1f3, .decomp = &.{
-        0x64,
-        0x7a,
-    } },
-    .{ .cp = 0x2b0, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x2b1, .decomp = &.{
-        0x266,
-    } },
-    .{ .cp = 0x2b2, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x2b3, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x2b4, .decomp = &.{
-        0x279,
-    } },
-    .{ .cp = 0x2b5, .decomp = &.{
-        0x27b,
-    } },
-    .{ .cp = 0x2b6, .decomp = &.{
-        0x281,
-    } },
-    .{ .cp = 0x2b7, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x2b8, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x2d8, .decomp = &.{
-        0x20,
-        0x306,
-    } },
-    .{ .cp = 0x2d9, .decomp = &.{
-        0x20,
-        0x307,
-    } },
-    .{ .cp = 0x2da, .decomp = &.{
-        0x20,
-        0x30a,
-    } },
-    .{ .cp = 0x2db, .decomp = &.{
-        0x20,
-        0x328,
-    } },
-    .{ .cp = 0x2dc, .decomp = &.{
-        0x20,
-        0x303,
-    } },
-    .{ .cp = 0x2dd, .decomp = &.{
-        0x20,
-        0x30b,
-    } },
-    .{ .cp = 0x2e0, .decomp = &.{
-        0x263,
-    } },
-    .{ .cp = 0x2e1, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x2e2, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x2e3, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x2e4, .decomp = &.{
-        0x295,
-    } },
-    .{ .cp = 0x37a, .decomp = &.{
-        0x20,
-        0x345,
-    } },
-    .{ .cp = 0x384, .decomp = &.{
-        0x20,
-        0x301,
-    } },
-    .{ .cp = 0x3d0, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x3d1, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x3d2, .decomp = &.{
-        0x3a5,
-    } },
-    .{ .cp = 0x3d5, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x3d6, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x3f0, .decomp = &.{
-        0x3ba,
-    } },
-    .{ .cp = 0x3f1, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x3f2, .decomp = &.{
-        0x3c2,
-    } },
-    .{ .cp = 0x3f4, .decomp = &.{
-        0x398,
-    } },
-    .{ .cp = 0x3f5, .decomp = &.{
-        0x3b5,
-    } },
-    .{ .cp = 0x3f9, .decomp = &.{
-        0x3a3,
-    } },
-    .{ .cp = 0x587, .decomp = &.{
-        0x565,
-        0x582,
-    } },
-    .{ .cp = 0x675, .decomp = &.{
-        0x627,
-        0x674,
-    } },
-    .{ .cp = 0x676, .decomp = &.{
-        0x648,
-        0x674,
-    } },
-    .{ .cp = 0x677, .decomp = &.{
-        0x6c7,
-        0x674,
-    } },
-    .{ .cp = 0x678, .decomp = &.{
-        0x64a,
-        0x674,
-    } },
-    .{ .cp = 0xe33, .decomp = &.{
-        0xe4d,
-        0xe32,
-    } },
-    .{ .cp = 0xeb3, .decomp = &.{
-        0xecd,
-        0xeb2,
-    } },
-    .{ .cp = 0xedc, .decomp = &.{
-        0xeab,
-        0xe99,
-    } },
-    .{ .cp = 0xedd, .decomp = &.{
-        0xeab,
-        0xea1,
-    } },
-    .{ .cp = 0xf0c, .decomp = &.{
-        0xf0b,
-    } },
-    .{ .cp = 0xf77, .decomp = &.{
-        0xfb2,
-        0xf81,
-    } },
-    .{ .cp = 0xf79, .decomp = &.{
-        0xfb3,
-        0xf81,
-    } },
-    .{ .cp = 0x10fc, .decomp = &.{
-        0x10dc,
-    } },
-    .{ .cp = 0x1d2c, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d2d, .decomp = &.{
-        0xc6,
-    } },
-    .{ .cp = 0x1d2e, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d30, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d31, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d32, .decomp = &.{
-        0x18e,
-    } },
-    .{ .cp = 0x1d33, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d34, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d35, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d36, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d37, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d38, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d39, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d3a, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d3c, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d3d, .decomp = &.{
-        0x222,
-    } },
-    .{ .cp = 0x1d3e, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d3f, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d40, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d41, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d42, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d43, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d44, .decomp = &.{
-        0x250,
-    } },
-    .{ .cp = 0x1d45, .decomp = &.{
-        0x251,
-    } },
-    .{ .cp = 0x1d46, .decomp = &.{
-        0x1d02,
-    } },
-    .{ .cp = 0x1d47, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d48, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d49, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d4a, .decomp = &.{
-        0x259,
-    } },
-    .{ .cp = 0x1d4b, .decomp = &.{
-        0x25b,
-    } },
-    .{ .cp = 0x1d4c, .decomp = &.{
-        0x25c,
-    } },
-    .{ .cp = 0x1d4d, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d4f, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d50, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d51, .decomp = &.{
-        0x14b,
-    } },
-    .{ .cp = 0x1d52, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d53, .decomp = &.{
-        0x254,
-    } },
-    .{ .cp = 0x1d54, .decomp = &.{
-        0x1d16,
-    } },
-    .{ .cp = 0x1d55, .decomp = &.{
-        0x1d17,
-    } },
-    .{ .cp = 0x1d56, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d57, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d58, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d59, .decomp = &.{
-        0x1d1d,
-    } },
-    .{ .cp = 0x1d5a, .decomp = &.{
-        0x26f,
-    } },
-    .{ .cp = 0x1d5b, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d5c, .decomp = &.{
-        0x1d25,
-    } },
-    .{ .cp = 0x1d5d, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d5e, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d5f, .decomp = &.{
-        0x3b4,
-    } },
-    .{ .cp = 0x1d60, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d61, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d62, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d63, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d64, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d65, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d66, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d67, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d68, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x1d69, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d6a, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d78, .decomp = &.{
-        0x43d,
-    } },
-    .{ .cp = 0x1d9b, .decomp = &.{
-        0x252,
-    } },
-    .{ .cp = 0x1d9c, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d9d, .decomp = &.{
-        0x255,
-    } },
-    .{ .cp = 0x1d9e, .decomp = &.{
-        0xf0,
-    } },
-    .{ .cp = 0x1d9f, .decomp = &.{
-        0x25c,
-    } },
-    .{ .cp = 0x1da0, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1da1, .decomp = &.{
-        0x25f,
-    } },
-    .{ .cp = 0x1da2, .decomp = &.{
-        0x261,
-    } },
-    .{ .cp = 0x1da3, .decomp = &.{
-        0x265,
-    } },
-    .{ .cp = 0x1da4, .decomp = &.{
-        0x268,
-    } },
-    .{ .cp = 0x1da5, .decomp = &.{
-        0x269,
-    } },
-    .{ .cp = 0x1da6, .decomp = &.{
-        0x26a,
-    } },
-    .{ .cp = 0x1da7, .decomp = &.{
-        0x1d7b,
-    } },
-    .{ .cp = 0x1da8, .decomp = &.{
-        0x29d,
-    } },
-    .{ .cp = 0x1da9, .decomp = &.{
-        0x26d,
-    } },
-    .{ .cp = 0x1daa, .decomp = &.{
-        0x1d85,
-    } },
-    .{ .cp = 0x1dab, .decomp = &.{
-        0x29f,
-    } },
-    .{ .cp = 0x1dac, .decomp = &.{
-        0x271,
-    } },
-    .{ .cp = 0x1dad, .decomp = &.{
-        0x270,
-    } },
-    .{ .cp = 0x1dae, .decomp = &.{
-        0x272,
-    } },
-    .{ .cp = 0x1daf, .decomp = &.{
-        0x273,
-    } },
-    .{ .cp = 0x1db0, .decomp = &.{
-        0x274,
-    } },
-    .{ .cp = 0x1db1, .decomp = &.{
-        0x275,
-    } },
-    .{ .cp = 0x1db2, .decomp = &.{
-        0x278,
-    } },
-    .{ .cp = 0x1db3, .decomp = &.{
-        0x282,
-    } },
-    .{ .cp = 0x1db4, .decomp = &.{
-        0x283,
-    } },
-    .{ .cp = 0x1db5, .decomp = &.{
-        0x1ab,
-    } },
-    .{ .cp = 0x1db6, .decomp = &.{
-        0x289,
-    } },
-    .{ .cp = 0x1db7, .decomp = &.{
-        0x28a,
-    } },
-    .{ .cp = 0x1db8, .decomp = &.{
-        0x1d1c,
-    } },
-    .{ .cp = 0x1db9, .decomp = &.{
-        0x28b,
-    } },
-    .{ .cp = 0x1dba, .decomp = &.{
-        0x28c,
-    } },
-    .{ .cp = 0x1dbb, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1dbc, .decomp = &.{
-        0x290,
-    } },
-    .{ .cp = 0x1dbd, .decomp = &.{
-        0x291,
-    } },
-    .{ .cp = 0x1dbe, .decomp = &.{
-        0x292,
-    } },
-    .{ .cp = 0x1dbf, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x1e9a, .decomp = &.{
-        0x61,
-        0x2be,
-    } },
-    .{ .cp = 0x1fbd, .decomp = &.{
-        0x20,
-        0x313,
-    } },
-    .{ .cp = 0x1fbf, .decomp = &.{
-        0x20,
-        0x313,
-    } },
-    .{ .cp = 0x1fc0, .decomp = &.{
-        0x20,
-        0x342,
-    } },
-    .{ .cp = 0x1ffe, .decomp = &.{
-        0x20,
-        0x314,
-    } },
-    .{ .cp = 0x2002, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2003, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2004, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2005, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2006, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2007, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2008, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2009, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x200a, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2011, .decomp = &.{
-        0x2010,
-    } },
-    .{ .cp = 0x2017, .decomp = &.{
-        0x20,
-        0x333,
-    } },
-    .{ .cp = 0x2024, .decomp = &.{
-        0x2e,
-    } },
-    .{ .cp = 0x2025, .decomp = &.{
-        0x2e,
-        0x2e,
-    } },
-    .{ .cp = 0x2026, .decomp = &.{
-        0x2e,
-        0x2e,
-        0x2e,
-    } },
-    .{ .cp = 0x202f, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2033, .decomp = &.{
-        0x2032,
-        0x2032,
-    } },
-    .{ .cp = 0x2034, .decomp = &.{
-        0x2032,
-        0x2032,
-        0x2032,
-    } },
-    .{ .cp = 0x2036, .decomp = &.{
-        0x2035,
-        0x2035,
-    } },
-    .{ .cp = 0x2037, .decomp = &.{
-        0x2035,
-        0x2035,
-        0x2035,
-    } },
-    .{ .cp = 0x203c, .decomp = &.{
-        0x21,
-        0x21,
-    } },
-    .{ .cp = 0x203e, .decomp = &.{
-        0x20,
-        0x305,
-    } },
-    .{ .cp = 0x2047, .decomp = &.{
-        0x3f,
-        0x3f,
-    } },
-    .{ .cp = 0x2048, .decomp = &.{
-        0x3f,
-        0x21,
-    } },
-    .{ .cp = 0x2049, .decomp = &.{
-        0x21,
-        0x3f,
-    } },
-    .{ .cp = 0x2057, .decomp = &.{
-        0x2032,
-        0x2032,
-        0x2032,
-        0x2032,
-    } },
-    .{ .cp = 0x205f, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x2070, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x2071, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x2074, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x2075, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x2076, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x2077, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x2078, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x2079, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x207a, .decomp = &.{
-        0x2b,
-    } },
-    .{ .cp = 0x207b, .decomp = &.{
-        0x2212,
-    } },
-    .{ .cp = 0x207c, .decomp = &.{
-        0x3d,
-    } },
-    .{ .cp = 0x207d, .decomp = &.{
-        0x28,
-    } },
-    .{ .cp = 0x207e, .decomp = &.{
-        0x29,
-    } },
-    .{ .cp = 0x207f, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x2080, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x2081, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x2082, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x2083, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x2084, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x2085, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x2086, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x2087, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x2088, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x2089, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x208a, .decomp = &.{
-        0x2b,
-    } },
-    .{ .cp = 0x208b, .decomp = &.{
-        0x2212,
-    } },
-    .{ .cp = 0x208c, .decomp = &.{
-        0x3d,
-    } },
-    .{ .cp = 0x208d, .decomp = &.{
-        0x28,
-    } },
-    .{ .cp = 0x208e, .decomp = &.{
-        0x29,
-    } },
-    .{ .cp = 0x2090, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x2091, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x2092, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x2093, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x2094, .decomp = &.{
-        0x259,
-    } },
-    .{ .cp = 0x2095, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x2096, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x2097, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x2098, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x2099, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x209a, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x209b, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x209c, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x20a8, .decomp = &.{
-        0x52,
-        0x73,
-    } },
-    .{ .cp = 0x2100, .decomp = &.{
-        0x61,
-        0x2f,
-        0x63,
-    } },
-    .{ .cp = 0x2101, .decomp = &.{
-        0x61,
-        0x2f,
-        0x73,
-    } },
-    .{ .cp = 0x2102, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x2103, .decomp = &.{
-        0xb0,
-        0x43,
-    } },
-    .{ .cp = 0x2105, .decomp = &.{
-        0x63,
-        0x2f,
-        0x6f,
-    } },
-    .{ .cp = 0x2106, .decomp = &.{
-        0x63,
-        0x2f,
-        0x75,
-    } },
-    .{ .cp = 0x2107, .decomp = &.{
-        0x190,
-    } },
-    .{ .cp = 0x2109, .decomp = &.{
-        0xb0,
-        0x46,
-    } },
-    .{ .cp = 0x210a, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x210b, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x210c, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x210d, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x210e, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x210f, .decomp = &.{
-        0x127,
-    } },
-    .{ .cp = 0x2110, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x2111, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x2112, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x2113, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x2115, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x2116, .decomp = &.{
-        0x4e,
-        0x6f,
-    } },
-    .{ .cp = 0x2119, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x211a, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x211b, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x211c, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x211d, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x2120, .decomp = &.{
-        0x53,
-        0x4d,
-    } },
-    .{ .cp = 0x2121, .decomp = &.{
-        0x54,
-        0x45,
-        0x4c,
-    } },
-    .{ .cp = 0x2122, .decomp = &.{
-        0x54,
-        0x4d,
-    } },
-    .{ .cp = 0x2124, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x2128, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x212c, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x212d, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x212f, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x2130, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x2131, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x2133, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x2134, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x2135, .decomp = &.{
-        0x5d0,
-    } },
-    .{ .cp = 0x2136, .decomp = &.{
-        0x5d1,
-    } },
-    .{ .cp = 0x2137, .decomp = &.{
-        0x5d2,
-    } },
-    .{ .cp = 0x2138, .decomp = &.{
-        0x5d3,
-    } },
-    .{ .cp = 0x2139, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x213b, .decomp = &.{
-        0x46,
-        0x41,
-        0x58,
-    } },
-    .{ .cp = 0x213c, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x213d, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x213e, .decomp = &.{
-        0x393,
-    } },
-    .{ .cp = 0x213f, .decomp = &.{
-        0x3a0,
-    } },
-    .{ .cp = 0x2140, .decomp = &.{
-        0x2211,
-    } },
-    .{ .cp = 0x2145, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x2146, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x2147, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x2148, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x2149, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x2150, .decomp = &.{
-        0x31,
-        0x2044,
-        0x37,
-    } },
-    .{ .cp = 0x2151, .decomp = &.{
-        0x31,
-        0x2044,
-        0x39,
-    } },
-    .{ .cp = 0x2152, .decomp = &.{
-        0x31,
-        0x2044,
-        0x31,
-        0x30,
-    } },
-    .{ .cp = 0x2153, .decomp = &.{
-        0x31,
-        0x2044,
-        0x33,
-    } },
-    .{ .cp = 0x2154, .decomp = &.{
-        0x32,
-        0x2044,
-        0x33,
-    } },
-    .{ .cp = 0x2155, .decomp = &.{
-        0x31,
-        0x2044,
-        0x35,
-    } },
-    .{ .cp = 0x2156, .decomp = &.{
-        0x32,
-        0x2044,
-        0x35,
-    } },
-    .{ .cp = 0x2157, .decomp = &.{
-        0x33,
-        0x2044,
-        0x35,
-    } },
-    .{ .cp = 0x2158, .decomp = &.{
-        0x34,
-        0x2044,
-        0x35,
-    } },
-    .{ .cp = 0x2159, .decomp = &.{
-        0x31,
-        0x2044,
-        0x36,
-    } },
-    .{ .cp = 0x215a, .decomp = &.{
-        0x35,
-        0x2044,
-        0x36,
-    } },
-    .{ .cp = 0x215b, .decomp = &.{
-        0x31,
-        0x2044,
-        0x38,
-    } },
-    .{ .cp = 0x215c, .decomp = &.{
-        0x33,
-        0x2044,
-        0x38,
-    } },
-    .{ .cp = 0x215d, .decomp = &.{
-        0x35,
-        0x2044,
-        0x38,
-    } },
-    .{ .cp = 0x215e, .decomp = &.{
-        0x37,
-        0x2044,
-        0x38,
-    } },
-    .{ .cp = 0x215f, .decomp = &.{
-        0x31,
-        0x2044,
-    } },
-    .{ .cp = 0x2160, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x2161, .decomp = &.{
-        0x49,
-        0x49,
-    } },
-    .{ .cp = 0x2162, .decomp = &.{
-        0x49,
-        0x49,
-        0x49,
-    } },
-    .{ .cp = 0x2163, .decomp = &.{
-        0x49,
-        0x56,
-    } },
-    .{ .cp = 0x2164, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x2165, .decomp = &.{
-        0x56,
-        0x49,
-    } },
-    .{ .cp = 0x2166, .decomp = &.{
-        0x56,
-        0x49,
-        0x49,
-    } },
-    .{ .cp = 0x2167, .decomp = &.{
-        0x56,
-        0x49,
-        0x49,
-        0x49,
-    } },
-    .{ .cp = 0x2168, .decomp = &.{
-        0x49,
-        0x58,
-    } },
-    .{ .cp = 0x2169, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x216a, .decomp = &.{
-        0x58,
-        0x49,
-    } },
-    .{ .cp = 0x216b, .decomp = &.{
-        0x58,
-        0x49,
-        0x49,
-    } },
-    .{ .cp = 0x216c, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x216d, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x216e, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x216f, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x2170, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x2171, .decomp = &.{
-        0x69,
-        0x69,
-    } },
-    .{ .cp = 0x2172, .decomp = &.{
-        0x69,
-        0x69,
-        0x69,
-    } },
-    .{ .cp = 0x2173, .decomp = &.{
-        0x69,
-        0x76,
-    } },
-    .{ .cp = 0x2174, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x2175, .decomp = &.{
-        0x76,
-        0x69,
-    } },
-    .{ .cp = 0x2176, .decomp = &.{
-        0x76,
-        0x69,
-        0x69,
-    } },
-    .{ .cp = 0x2177, .decomp = &.{
-        0x76,
-        0x69,
-        0x69,
-        0x69,
-    } },
-    .{ .cp = 0x2178, .decomp = &.{
-        0x69,
-        0x78,
-    } },
-    .{ .cp = 0x2179, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x217a, .decomp = &.{
-        0x78,
-        0x69,
-    } },
-    .{ .cp = 0x217b, .decomp = &.{
-        0x78,
-        0x69,
-        0x69,
-    } },
-    .{ .cp = 0x217c, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x217d, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x217e, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x217f, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x2189, .decomp = &.{
-        0x30,
-        0x2044,
-        0x33,
-    } },
-    .{ .cp = 0x222c, .decomp = &.{
-        0x222b,
-        0x222b,
-    } },
-    .{ .cp = 0x222d, .decomp = &.{
-        0x222b,
-        0x222b,
-        0x222b,
-    } },
-    .{ .cp = 0x222f, .decomp = &.{
-        0x222e,
-        0x222e,
-    } },
-    .{ .cp = 0x2230, .decomp = &.{
-        0x222e,
-        0x222e,
-        0x222e,
-    } },
-    .{ .cp = 0x2460, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x2461, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x2462, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x2463, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x2464, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x2465, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x2466, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x2467, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x2468, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x2469, .decomp = &.{
-        0x31,
-        0x30,
-    } },
-    .{ .cp = 0x246a, .decomp = &.{
-        0x31,
-        0x31,
-    } },
-    .{ .cp = 0x246b, .decomp = &.{
-        0x31,
-        0x32,
-    } },
-    .{ .cp = 0x246c, .decomp = &.{
-        0x31,
-        0x33,
-    } },
-    .{ .cp = 0x246d, .decomp = &.{
-        0x31,
-        0x34,
-    } },
-    .{ .cp = 0x246e, .decomp = &.{
-        0x31,
-        0x35,
-    } },
-    .{ .cp = 0x246f, .decomp = &.{
-        0x31,
-        0x36,
-    } },
-    .{ .cp = 0x2470, .decomp = &.{
-        0x31,
-        0x37,
-    } },
-    .{ .cp = 0x2471, .decomp = &.{
-        0x31,
-        0x38,
-    } },
-    .{ .cp = 0x2472, .decomp = &.{
-        0x31,
-        0x39,
-    } },
-    .{ .cp = 0x2473, .decomp = &.{
-        0x32,
-        0x30,
-    } },
-    .{ .cp = 0x2474, .decomp = &.{
-        0x28,
-        0x31,
-        0x29,
-    } },
-    .{ .cp = 0x2475, .decomp = &.{
-        0x28,
-        0x32,
-        0x29,
-    } },
-    .{ .cp = 0x2476, .decomp = &.{
-        0x28,
-        0x33,
-        0x29,
-    } },
-    .{ .cp = 0x2477, .decomp = &.{
-        0x28,
-        0x34,
-        0x29,
-    } },
-    .{ .cp = 0x2478, .decomp = &.{
-        0x28,
-        0x35,
-        0x29,
-    } },
-    .{ .cp = 0x2479, .decomp = &.{
-        0x28,
-        0x36,
-        0x29,
-    } },
-    .{ .cp = 0x247a, .decomp = &.{
-        0x28,
-        0x37,
-        0x29,
-    } },
-    .{ .cp = 0x247b, .decomp = &.{
-        0x28,
-        0x38,
-        0x29,
-    } },
-    .{ .cp = 0x247c, .decomp = &.{
-        0x28,
-        0x39,
-        0x29,
-    } },
-    .{ .cp = 0x247d, .decomp = &.{
-        0x28,
-        0x31,
-        0x30,
-        0x29,
-    } },
-    .{ .cp = 0x247e, .decomp = &.{
-        0x28,
-        0x31,
-        0x31,
-        0x29,
-    } },
-    .{ .cp = 0x247f, .decomp = &.{
-        0x28,
-        0x31,
-        0x32,
-        0x29,
-    } },
-    .{ .cp = 0x2480, .decomp = &.{
-        0x28,
-        0x31,
-        0x33,
-        0x29,
-    } },
-    .{ .cp = 0x2481, .decomp = &.{
-        0x28,
-        0x31,
-        0x34,
-        0x29,
-    } },
-    .{ .cp = 0x2482, .decomp = &.{
-        0x28,
-        0x31,
-        0x35,
-        0x29,
-    } },
-    .{ .cp = 0x2483, .decomp = &.{
-        0x28,
-        0x31,
-        0x36,
-        0x29,
-    } },
-    .{ .cp = 0x2484, .decomp = &.{
-        0x28,
-        0x31,
-        0x37,
-        0x29,
-    } },
-    .{ .cp = 0x2485, .decomp = &.{
-        0x28,
-        0x31,
-        0x38,
-        0x29,
-    } },
-    .{ .cp = 0x2486, .decomp = &.{
-        0x28,
-        0x31,
-        0x39,
-        0x29,
-    } },
-    .{ .cp = 0x2487, .decomp = &.{
-        0x28,
-        0x32,
-        0x30,
-        0x29,
-    } },
-    .{ .cp = 0x2488, .decomp = &.{
-        0x31,
-        0x2e,
-    } },
-    .{ .cp = 0x2489, .decomp = &.{
-        0x32,
-        0x2e,
-    } },
-    .{ .cp = 0x248a, .decomp = &.{
-        0x33,
-        0x2e,
-    } },
-    .{ .cp = 0x248b, .decomp = &.{
-        0x34,
-        0x2e,
-    } },
-    .{ .cp = 0x248c, .decomp = &.{
-        0x35,
-        0x2e,
-    } },
-    .{ .cp = 0x248d, .decomp = &.{
-        0x36,
-        0x2e,
-    } },
-    .{ .cp = 0x248e, .decomp = &.{
-        0x37,
-        0x2e,
-    } },
-    .{ .cp = 0x248f, .decomp = &.{
-        0x38,
-        0x2e,
-    } },
-    .{ .cp = 0x2490, .decomp = &.{
-        0x39,
-        0x2e,
-    } },
-    .{ .cp = 0x2491, .decomp = &.{
-        0x31,
-        0x30,
-        0x2e,
-    } },
-    .{ .cp = 0x2492, .decomp = &.{
-        0x31,
-        0x31,
-        0x2e,
-    } },
-    .{ .cp = 0x2493, .decomp = &.{
-        0x31,
-        0x32,
-        0x2e,
-    } },
-    .{ .cp = 0x2494, .decomp = &.{
-        0x31,
-        0x33,
-        0x2e,
-    } },
-    .{ .cp = 0x2495, .decomp = &.{
-        0x31,
-        0x34,
-        0x2e,
-    } },
-    .{ .cp = 0x2496, .decomp = &.{
-        0x31,
-        0x35,
-        0x2e,
-    } },
-    .{ .cp = 0x2497, .decomp = &.{
-        0x31,
-        0x36,
-        0x2e,
-    } },
-    .{ .cp = 0x2498, .decomp = &.{
-        0x31,
-        0x37,
-        0x2e,
-    } },
-    .{ .cp = 0x2499, .decomp = &.{
-        0x31,
-        0x38,
-        0x2e,
-    } },
-    .{ .cp = 0x249a, .decomp = &.{
-        0x31,
-        0x39,
-        0x2e,
-    } },
-    .{ .cp = 0x249b, .decomp = &.{
-        0x32,
-        0x30,
-        0x2e,
-    } },
-    .{ .cp = 0x249c, .decomp = &.{
-        0x28,
-        0x61,
-        0x29,
-    } },
-    .{ .cp = 0x249d, .decomp = &.{
-        0x28,
-        0x62,
-        0x29,
-    } },
-    .{ .cp = 0x249e, .decomp = &.{
-        0x28,
-        0x63,
-        0x29,
-    } },
-    .{ .cp = 0x249f, .decomp = &.{
-        0x28,
-        0x64,
-        0x29,
-    } },
-    .{ .cp = 0x24a0, .decomp = &.{
-        0x28,
-        0x65,
-        0x29,
-    } },
-    .{ .cp = 0x24a1, .decomp = &.{
-        0x28,
-        0x66,
-        0x29,
-    } },
-    .{ .cp = 0x24a2, .decomp = &.{
-        0x28,
-        0x67,
-        0x29,
-    } },
-    .{ .cp = 0x24a3, .decomp = &.{
-        0x28,
-        0x68,
-        0x29,
-    } },
-    .{ .cp = 0x24a4, .decomp = &.{
-        0x28,
-        0x69,
-        0x29,
-    } },
-    .{ .cp = 0x24a5, .decomp = &.{
-        0x28,
-        0x6a,
-        0x29,
-    } },
-    .{ .cp = 0x24a6, .decomp = &.{
-        0x28,
-        0x6b,
-        0x29,
-    } },
-    .{ .cp = 0x24a7, .decomp = &.{
-        0x28,
-        0x6c,
-        0x29,
-    } },
-    .{ .cp = 0x24a8, .decomp = &.{
-        0x28,
-        0x6d,
-        0x29,
-    } },
-    .{ .cp = 0x24a9, .decomp = &.{
-        0x28,
-        0x6e,
-        0x29,
-    } },
-    .{ .cp = 0x24aa, .decomp = &.{
-        0x28,
-        0x6f,
-        0x29,
-    } },
-    .{ .cp = 0x24ab, .decomp = &.{
-        0x28,
-        0x70,
-        0x29,
-    } },
-    .{ .cp = 0x24ac, .decomp = &.{
-        0x28,
-        0x71,
-        0x29,
-    } },
-    .{ .cp = 0x24ad, .decomp = &.{
-        0x28,
-        0x72,
-        0x29,
-    } },
-    .{ .cp = 0x24ae, .decomp = &.{
-        0x28,
-        0x73,
-        0x29,
-    } },
-    .{ .cp = 0x24af, .decomp = &.{
-        0x28,
-        0x74,
-        0x29,
-    } },
-    .{ .cp = 0x24b0, .decomp = &.{
-        0x28,
-        0x75,
-        0x29,
-    } },
-    .{ .cp = 0x24b1, .decomp = &.{
-        0x28,
-        0x76,
-        0x29,
-    } },
-    .{ .cp = 0x24b2, .decomp = &.{
-        0x28,
-        0x77,
-        0x29,
-    } },
-    .{ .cp = 0x24b3, .decomp = &.{
-        0x28,
-        0x78,
-        0x29,
-    } },
-    .{ .cp = 0x24b4, .decomp = &.{
-        0x28,
-        0x79,
-        0x29,
-    } },
-    .{ .cp = 0x24b5, .decomp = &.{
-        0x28,
-        0x7a,
-        0x29,
-    } },
-    .{ .cp = 0x24b6, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x24b7, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x24b8, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x24b9, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x24ba, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x24bb, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x24bc, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x24bd, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x24be, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x24bf, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x24c0, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x24c1, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x24c2, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x24c3, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x24c4, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x24c5, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x24c6, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x24c7, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x24c8, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x24c9, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x24ca, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x24cb, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x24cc, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x24cd, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x24ce, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x24cf, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x24d0, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x24d1, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x24d2, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x24d3, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x24d4, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x24d5, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x24d6, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x24d7, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x24d8, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x24d9, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x24da, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x24db, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x24dc, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x24dd, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x24de, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x24df, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x24e0, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x24e1, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x24e2, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x24e3, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x24e4, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x24e5, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x24e6, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x24e7, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x24e8, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x24e9, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x24ea, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x2a0c, .decomp = &.{
-        0x222b,
-        0x222b,
-        0x222b,
-        0x222b,
-    } },
-    .{ .cp = 0x2a74, .decomp = &.{
-        0x3a,
-        0x3a,
-        0x3d,
-    } },
-    .{ .cp = 0x2a75, .decomp = &.{
-        0x3d,
-        0x3d,
-    } },
-    .{ .cp = 0x2a76, .decomp = &.{
-        0x3d,
-        0x3d,
-        0x3d,
-    } },
-    .{ .cp = 0x2c7c, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x2c7d, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x2d6f, .decomp = &.{
-        0x2d61,
-    } },
-    .{ .cp = 0x2e9f, .decomp = &.{
-        0x6bcd,
-    } },
-    .{ .cp = 0x2ef3, .decomp = &.{
-        0x9f9f,
-    } },
-    .{ .cp = 0x2f00, .decomp = &.{
-        0x4e00,
-    } },
-    .{ .cp = 0x2f01, .decomp = &.{
-        0x4e28,
-    } },
-    .{ .cp = 0x2f02, .decomp = &.{
-        0x4e36,
-    } },
-    .{ .cp = 0x2f03, .decomp = &.{
-        0x4e3f,
-    } },
-    .{ .cp = 0x2f04, .decomp = &.{
-        0x4e59,
-    } },
-    .{ .cp = 0x2f05, .decomp = &.{
-        0x4e85,
-    } },
-    .{ .cp = 0x2f06, .decomp = &.{
-        0x4e8c,
-    } },
-    .{ .cp = 0x2f07, .decomp = &.{
-        0x4ea0,
-    } },
-    .{ .cp = 0x2f08, .decomp = &.{
-        0x4eba,
-    } },
-    .{ .cp = 0x2f09, .decomp = &.{
-        0x513f,
-    } },
-    .{ .cp = 0x2f0a, .decomp = &.{
-        0x5165,
-    } },
-    .{ .cp = 0x2f0b, .decomp = &.{
-        0x516b,
-    } },
-    .{ .cp = 0x2f0c, .decomp = &.{
-        0x5182,
-    } },
-    .{ .cp = 0x2f0d, .decomp = &.{
-        0x5196,
-    } },
-    .{ .cp = 0x2f0e, .decomp = &.{
-        0x51ab,
-    } },
-    .{ .cp = 0x2f0f, .decomp = &.{
-        0x51e0,
-    } },
-    .{ .cp = 0x2f10, .decomp = &.{
-        0x51f5,
-    } },
-    .{ .cp = 0x2f11, .decomp = &.{
-        0x5200,
-    } },
-    .{ .cp = 0x2f12, .decomp = &.{
-        0x529b,
-    } },
-    .{ .cp = 0x2f13, .decomp = &.{
-        0x52f9,
-    } },
-    .{ .cp = 0x2f14, .decomp = &.{
-        0x5315,
-    } },
-    .{ .cp = 0x2f15, .decomp = &.{
-        0x531a,
-    } },
-    .{ .cp = 0x2f16, .decomp = &.{
-        0x5338,
-    } },
-    .{ .cp = 0x2f17, .decomp = &.{
-        0x5341,
-    } },
-    .{ .cp = 0x2f18, .decomp = &.{
-        0x535c,
-    } },
-    .{ .cp = 0x2f19, .decomp = &.{
-        0x5369,
-    } },
-    .{ .cp = 0x2f1a, .decomp = &.{
-        0x5382,
-    } },
-    .{ .cp = 0x2f1b, .decomp = &.{
-        0x53b6,
-    } },
-    .{ .cp = 0x2f1c, .decomp = &.{
-        0x53c8,
-    } },
-    .{ .cp = 0x2f1d, .decomp = &.{
-        0x53e3,
-    } },
-    .{ .cp = 0x2f1e, .decomp = &.{
-        0x56d7,
-    } },
-    .{ .cp = 0x2f1f, .decomp = &.{
-        0x571f,
-    } },
-    .{ .cp = 0x2f20, .decomp = &.{
-        0x58eb,
-    } },
-    .{ .cp = 0x2f21, .decomp = &.{
-        0x5902,
-    } },
-    .{ .cp = 0x2f22, .decomp = &.{
-        0x590a,
-    } },
-    .{ .cp = 0x2f23, .decomp = &.{
-        0x5915,
-    } },
-    .{ .cp = 0x2f24, .decomp = &.{
-        0x5927,
-    } },
-    .{ .cp = 0x2f25, .decomp = &.{
-        0x5973,
-    } },
-    .{ .cp = 0x2f26, .decomp = &.{
-        0x5b50,
-    } },
-    .{ .cp = 0x2f27, .decomp = &.{
-        0x5b80,
-    } },
-    .{ .cp = 0x2f28, .decomp = &.{
-        0x5bf8,
-    } },
-    .{ .cp = 0x2f29, .decomp = &.{
-        0x5c0f,
-    } },
-    .{ .cp = 0x2f2a, .decomp = &.{
-        0x5c22,
-    } },
-    .{ .cp = 0x2f2b, .decomp = &.{
-        0x5c38,
-    } },
-    .{ .cp = 0x2f2c, .decomp = &.{
-        0x5c6e,
-    } },
-    .{ .cp = 0x2f2d, .decomp = &.{
-        0x5c71,
-    } },
-    .{ .cp = 0x2f2e, .decomp = &.{
-        0x5ddb,
-    } },
-    .{ .cp = 0x2f2f, .decomp = &.{
-        0x5de5,
-    } },
-    .{ .cp = 0x2f30, .decomp = &.{
-        0x5df1,
-    } },
-    .{ .cp = 0x2f31, .decomp = &.{
-        0x5dfe,
-    } },
-    .{ .cp = 0x2f32, .decomp = &.{
-        0x5e72,
-    } },
-    .{ .cp = 0x2f33, .decomp = &.{
-        0x5e7a,
-    } },
-    .{ .cp = 0x2f34, .decomp = &.{
-        0x5e7f,
-    } },
-    .{ .cp = 0x2f35, .decomp = &.{
-        0x5ef4,
-    } },
-    .{ .cp = 0x2f36, .decomp = &.{
-        0x5efe,
-    } },
-    .{ .cp = 0x2f37, .decomp = &.{
-        0x5f0b,
-    } },
-    .{ .cp = 0x2f38, .decomp = &.{
-        0x5f13,
-    } },
-    .{ .cp = 0x2f39, .decomp = &.{
-        0x5f50,
-    } },
-    .{ .cp = 0x2f3a, .decomp = &.{
-        0x5f61,
-    } },
-    .{ .cp = 0x2f3b, .decomp = &.{
-        0x5f73,
-    } },
-    .{ .cp = 0x2f3c, .decomp = &.{
-        0x5fc3,
-    } },
-    .{ .cp = 0x2f3d, .decomp = &.{
-        0x6208,
-    } },
-    .{ .cp = 0x2f3e, .decomp = &.{
-        0x6236,
-    } },
-    .{ .cp = 0x2f3f, .decomp = &.{
-        0x624b,
-    } },
-    .{ .cp = 0x2f40, .decomp = &.{
-        0x652f,
-    } },
-    .{ .cp = 0x2f41, .decomp = &.{
-        0x6534,
-    } },
-    .{ .cp = 0x2f42, .decomp = &.{
-        0x6587,
-    } },
-    .{ .cp = 0x2f43, .decomp = &.{
-        0x6597,
-    } },
-    .{ .cp = 0x2f44, .decomp = &.{
-        0x65a4,
-    } },
-    .{ .cp = 0x2f45, .decomp = &.{
-        0x65b9,
-    } },
-    .{ .cp = 0x2f46, .decomp = &.{
-        0x65e0,
-    } },
-    .{ .cp = 0x2f47, .decomp = &.{
-        0x65e5,
-    } },
-    .{ .cp = 0x2f48, .decomp = &.{
-        0x66f0,
-    } },
-    .{ .cp = 0x2f49, .decomp = &.{
-        0x6708,
-    } },
-    .{ .cp = 0x2f4a, .decomp = &.{
-        0x6728,
-    } },
-    .{ .cp = 0x2f4b, .decomp = &.{
-        0x6b20,
-    } },
-    .{ .cp = 0x2f4c, .decomp = &.{
-        0x6b62,
-    } },
-    .{ .cp = 0x2f4d, .decomp = &.{
-        0x6b79,
-    } },
-    .{ .cp = 0x2f4e, .decomp = &.{
-        0x6bb3,
-    } },
-    .{ .cp = 0x2f4f, .decomp = &.{
-        0x6bcb,
-    } },
-    .{ .cp = 0x2f50, .decomp = &.{
-        0x6bd4,
-    } },
-    .{ .cp = 0x2f51, .decomp = &.{
-        0x6bdb,
-    } },
-    .{ .cp = 0x2f52, .decomp = &.{
-        0x6c0f,
-    } },
-    .{ .cp = 0x2f53, .decomp = &.{
-        0x6c14,
-    } },
-    .{ .cp = 0x2f54, .decomp = &.{
-        0x6c34,
-    } },
-    .{ .cp = 0x2f55, .decomp = &.{
-        0x706b,
-    } },
-    .{ .cp = 0x2f56, .decomp = &.{
-        0x722a,
-    } },
-    .{ .cp = 0x2f57, .decomp = &.{
-        0x7236,
-    } },
-    .{ .cp = 0x2f58, .decomp = &.{
-        0x723b,
-    } },
-    .{ .cp = 0x2f59, .decomp = &.{
-        0x723f,
-    } },
-    .{ .cp = 0x2f5a, .decomp = &.{
-        0x7247,
-    } },
-    .{ .cp = 0x2f5b, .decomp = &.{
-        0x7259,
-    } },
-    .{ .cp = 0x2f5c, .decomp = &.{
-        0x725b,
-    } },
-    .{ .cp = 0x2f5d, .decomp = &.{
-        0x72ac,
-    } },
-    .{ .cp = 0x2f5e, .decomp = &.{
-        0x7384,
-    } },
-    .{ .cp = 0x2f5f, .decomp = &.{
-        0x7389,
-    } },
-    .{ .cp = 0x2f60, .decomp = &.{
-        0x74dc,
-    } },
-    .{ .cp = 0x2f61, .decomp = &.{
-        0x74e6,
-    } },
-    .{ .cp = 0x2f62, .decomp = &.{
-        0x7518,
-    } },
-    .{ .cp = 0x2f63, .decomp = &.{
-        0x751f,
-    } },
-    .{ .cp = 0x2f64, .decomp = &.{
-        0x7528,
-    } },
-    .{ .cp = 0x2f65, .decomp = &.{
-        0x7530,
-    } },
-    .{ .cp = 0x2f66, .decomp = &.{
-        0x758b,
-    } },
-    .{ .cp = 0x2f67, .decomp = &.{
-        0x7592,
-    } },
-    .{ .cp = 0x2f68, .decomp = &.{
-        0x7676,
-    } },
-    .{ .cp = 0x2f69, .decomp = &.{
-        0x767d,
-    } },
-    .{ .cp = 0x2f6a, .decomp = &.{
-        0x76ae,
-    } },
-    .{ .cp = 0x2f6b, .decomp = &.{
-        0x76bf,
-    } },
-    .{ .cp = 0x2f6c, .decomp = &.{
-        0x76ee,
-    } },
-    .{ .cp = 0x2f6d, .decomp = &.{
-        0x77db,
-    } },
-    .{ .cp = 0x2f6e, .decomp = &.{
-        0x77e2,
-    } },
-    .{ .cp = 0x2f6f, .decomp = &.{
-        0x77f3,
-    } },
-    .{ .cp = 0x2f70, .decomp = &.{
-        0x793a,
-    } },
-    .{ .cp = 0x2f71, .decomp = &.{
-        0x79b8,
-    } },
-    .{ .cp = 0x2f72, .decomp = &.{
-        0x79be,
-    } },
-    .{ .cp = 0x2f73, .decomp = &.{
-        0x7a74,
-    } },
-    .{ .cp = 0x2f74, .decomp = &.{
-        0x7acb,
-    } },
-    .{ .cp = 0x2f75, .decomp = &.{
-        0x7af9,
-    } },
-    .{ .cp = 0x2f76, .decomp = &.{
-        0x7c73,
-    } },
-    .{ .cp = 0x2f77, .decomp = &.{
-        0x7cf8,
-    } },
-    .{ .cp = 0x2f78, .decomp = &.{
-        0x7f36,
-    } },
-    .{ .cp = 0x2f79, .decomp = &.{
-        0x7f51,
-    } },
-    .{ .cp = 0x2f7a, .decomp = &.{
-        0x7f8a,
-    } },
-    .{ .cp = 0x2f7b, .decomp = &.{
-        0x7fbd,
-    } },
-    .{ .cp = 0x2f7c, .decomp = &.{
-        0x8001,
-    } },
-    .{ .cp = 0x2f7d, .decomp = &.{
-        0x800c,
-    } },
-    .{ .cp = 0x2f7e, .decomp = &.{
-        0x8012,
-    } },
-    .{ .cp = 0x2f7f, .decomp = &.{
-        0x8033,
-    } },
-    .{ .cp = 0x2f80, .decomp = &.{
-        0x807f,
-    } },
-    .{ .cp = 0x2f81, .decomp = &.{
-        0x8089,
-    } },
-    .{ .cp = 0x2f82, .decomp = &.{
-        0x81e3,
-    } },
-    .{ .cp = 0x2f83, .decomp = &.{
-        0x81ea,
-    } },
-    .{ .cp = 0x2f84, .decomp = &.{
-        0x81f3,
-    } },
-    .{ .cp = 0x2f85, .decomp = &.{
-        0x81fc,
-    } },
-    .{ .cp = 0x2f86, .decomp = &.{
-        0x820c,
-    } },
-    .{ .cp = 0x2f87, .decomp = &.{
-        0x821b,
-    } },
-    .{ .cp = 0x2f88, .decomp = &.{
-        0x821f,
-    } },
-    .{ .cp = 0x2f89, .decomp = &.{
-        0x826e,
-    } },
-    .{ .cp = 0x2f8a, .decomp = &.{
-        0x8272,
-    } },
-    .{ .cp = 0x2f8b, .decomp = &.{
-        0x8278,
-    } },
-    .{ .cp = 0x2f8c, .decomp = &.{
-        0x864d,
-    } },
-    .{ .cp = 0x2f8d, .decomp = &.{
-        0x866b,
-    } },
-    .{ .cp = 0x2f8e, .decomp = &.{
-        0x8840,
-    } },
-    .{ .cp = 0x2f8f, .decomp = &.{
-        0x884c,
-    } },
-    .{ .cp = 0x2f90, .decomp = &.{
-        0x8863,
-    } },
-    .{ .cp = 0x2f91, .decomp = &.{
-        0x897e,
-    } },
-    .{ .cp = 0x2f92, .decomp = &.{
-        0x898b,
-    } },
-    .{ .cp = 0x2f93, .decomp = &.{
-        0x89d2,
-    } },
-    .{ .cp = 0x2f94, .decomp = &.{
-        0x8a00,
-    } },
-    .{ .cp = 0x2f95, .decomp = &.{
-        0x8c37,
-    } },
-    .{ .cp = 0x2f96, .decomp = &.{
-        0x8c46,
-    } },
-    .{ .cp = 0x2f97, .decomp = &.{
-        0x8c55,
-    } },
-    .{ .cp = 0x2f98, .decomp = &.{
-        0x8c78,
-    } },
-    .{ .cp = 0x2f99, .decomp = &.{
-        0x8c9d,
-    } },
-    .{ .cp = 0x2f9a, .decomp = &.{
-        0x8d64,
-    } },
-    .{ .cp = 0x2f9b, .decomp = &.{
-        0x8d70,
-    } },
-    .{ .cp = 0x2f9c, .decomp = &.{
-        0x8db3,
-    } },
-    .{ .cp = 0x2f9d, .decomp = &.{
-        0x8eab,
-    } },
-    .{ .cp = 0x2f9e, .decomp = &.{
-        0x8eca,
-    } },
-    .{ .cp = 0x2f9f, .decomp = &.{
-        0x8f9b,
-    } },
-    .{ .cp = 0x2fa0, .decomp = &.{
-        0x8fb0,
-    } },
-    .{ .cp = 0x2fa1, .decomp = &.{
-        0x8fb5,
-    } },
-    .{ .cp = 0x2fa2, .decomp = &.{
-        0x9091,
-    } },
-    .{ .cp = 0x2fa3, .decomp = &.{
-        0x9149,
-    } },
-    .{ .cp = 0x2fa4, .decomp = &.{
-        0x91c6,
-    } },
-    .{ .cp = 0x2fa5, .decomp = &.{
-        0x91cc,
-    } },
-    .{ .cp = 0x2fa6, .decomp = &.{
-        0x91d1,
-    } },
-    .{ .cp = 0x2fa7, .decomp = &.{
-        0x9577,
-    } },
-    .{ .cp = 0x2fa8, .decomp = &.{
-        0x9580,
-    } },
-    .{ .cp = 0x2fa9, .decomp = &.{
-        0x961c,
-    } },
-    .{ .cp = 0x2faa, .decomp = &.{
-        0x96b6,
-    } },
-    .{ .cp = 0x2fab, .decomp = &.{
-        0x96b9,
-    } },
-    .{ .cp = 0x2fac, .decomp = &.{
-        0x96e8,
-    } },
-    .{ .cp = 0x2fad, .decomp = &.{
-        0x9751,
-    } },
-    .{ .cp = 0x2fae, .decomp = &.{
-        0x975e,
-    } },
-    .{ .cp = 0x2faf, .decomp = &.{
-        0x9762,
-    } },
-    .{ .cp = 0x2fb0, .decomp = &.{
-        0x9769,
-    } },
-    .{ .cp = 0x2fb1, .decomp = &.{
-        0x97cb,
-    } },
-    .{ .cp = 0x2fb2, .decomp = &.{
-        0x97ed,
-    } },
-    .{ .cp = 0x2fb3, .decomp = &.{
-        0x97f3,
-    } },
-    .{ .cp = 0x2fb4, .decomp = &.{
-        0x9801,
-    } },
-    .{ .cp = 0x2fb5, .decomp = &.{
-        0x98a8,
-    } },
-    .{ .cp = 0x2fb6, .decomp = &.{
-        0x98db,
-    } },
-    .{ .cp = 0x2fb7, .decomp = &.{
-        0x98df,
-    } },
-    .{ .cp = 0x2fb8, .decomp = &.{
-        0x9996,
-    } },
-    .{ .cp = 0x2fb9, .decomp = &.{
-        0x9999,
-    } },
-    .{ .cp = 0x2fba, .decomp = &.{
-        0x99ac,
-    } },
-    .{ .cp = 0x2fbb, .decomp = &.{
-        0x9aa8,
-    } },
-    .{ .cp = 0x2fbc, .decomp = &.{
-        0x9ad8,
-    } },
-    .{ .cp = 0x2fbd, .decomp = &.{
-        0x9adf,
-    } },
-    .{ .cp = 0x2fbe, .decomp = &.{
-        0x9b25,
-    } },
-    .{ .cp = 0x2fbf, .decomp = &.{
-        0x9b2f,
-    } },
-    .{ .cp = 0x2fc0, .decomp = &.{
-        0x9b32,
-    } },
-    .{ .cp = 0x2fc1, .decomp = &.{
-        0x9b3c,
-    } },
-    .{ .cp = 0x2fc2, .decomp = &.{
-        0x9b5a,
-    } },
-    .{ .cp = 0x2fc3, .decomp = &.{
-        0x9ce5,
-    } },
-    .{ .cp = 0x2fc4, .decomp = &.{
-        0x9e75,
-    } },
-    .{ .cp = 0x2fc5, .decomp = &.{
-        0x9e7f,
-    } },
-    .{ .cp = 0x2fc6, .decomp = &.{
-        0x9ea5,
-    } },
-    .{ .cp = 0x2fc7, .decomp = &.{
-        0x9ebb,
-    } },
-    .{ .cp = 0x2fc8, .decomp = &.{
-        0x9ec3,
-    } },
-    .{ .cp = 0x2fc9, .decomp = &.{
-        0x9ecd,
-    } },
-    .{ .cp = 0x2fca, .decomp = &.{
-        0x9ed1,
-    } },
-    .{ .cp = 0x2fcb, .decomp = &.{
-        0x9ef9,
-    } },
-    .{ .cp = 0x2fcc, .decomp = &.{
-        0x9efd,
-    } },
-    .{ .cp = 0x2fcd, .decomp = &.{
-        0x9f0e,
-    } },
-    .{ .cp = 0x2fce, .decomp = &.{
-        0x9f13,
-    } },
-    .{ .cp = 0x2fcf, .decomp = &.{
-        0x9f20,
-    } },
-    .{ .cp = 0x2fd0, .decomp = &.{
-        0x9f3b,
-    } },
-    .{ .cp = 0x2fd1, .decomp = &.{
-        0x9f4a,
-    } },
-    .{ .cp = 0x2fd2, .decomp = &.{
-        0x9f52,
-    } },
-    .{ .cp = 0x2fd3, .decomp = &.{
-        0x9f8d,
-    } },
-    .{ .cp = 0x2fd4, .decomp = &.{
-        0x9f9c,
-    } },
-    .{ .cp = 0x2fd5, .decomp = &.{
-        0x9fa0,
-    } },
-    .{ .cp = 0x3000, .decomp = &.{
-        0x20,
-    } },
-    .{ .cp = 0x3036, .decomp = &.{
-        0x3012,
-    } },
-    .{ .cp = 0x3038, .decomp = &.{
-        0x5341,
-    } },
-    .{ .cp = 0x3039, .decomp = &.{
-        0x5344,
-    } },
-    .{ .cp = 0x303a, .decomp = &.{
-        0x5345,
-    } },
-    .{ .cp = 0x309b, .decomp = &.{
-        0x20,
-        0x3099,
-    } },
-    .{ .cp = 0x309c, .decomp = &.{
-        0x20,
-        0x309a,
-    } },
-    .{ .cp = 0x309f, .decomp = &.{
-        0x3088,
-        0x308a,
-    } },
-    .{ .cp = 0x30ff, .decomp = &.{
-        0x30b3,
-        0x30c8,
-    } },
-    .{ .cp = 0x3131, .decomp = &.{
-        0x1100,
-    } },
-    .{ .cp = 0x3132, .decomp = &.{
-        0x1101,
-    } },
-    .{ .cp = 0x3133, .decomp = &.{
-        0x11aa,
-    } },
-    .{ .cp = 0x3134, .decomp = &.{
-        0x1102,
-    } },
-    .{ .cp = 0x3135, .decomp = &.{
-        0x11ac,
-    } },
-    .{ .cp = 0x3136, .decomp = &.{
-        0x11ad,
-    } },
-    .{ .cp = 0x3137, .decomp = &.{
-        0x1103,
-    } },
-    .{ .cp = 0x3138, .decomp = &.{
-        0x1104,
-    } },
-    .{ .cp = 0x3139, .decomp = &.{
-        0x1105,
-    } },
-    .{ .cp = 0x313a, .decomp = &.{
-        0x11b0,
-    } },
-    .{ .cp = 0x313b, .decomp = &.{
-        0x11b1,
-    } },
-    .{ .cp = 0x313c, .decomp = &.{
-        0x11b2,
-    } },
-    .{ .cp = 0x313d, .decomp = &.{
-        0x11b3,
-    } },
-    .{ .cp = 0x313e, .decomp = &.{
-        0x11b4,
-    } },
-    .{ .cp = 0x313f, .decomp = &.{
-        0x11b5,
-    } },
-    .{ .cp = 0x3140, .decomp = &.{
-        0x111a,
-    } },
-    .{ .cp = 0x3141, .decomp = &.{
-        0x1106,
-    } },
-    .{ .cp = 0x3142, .decomp = &.{
-        0x1107,
-    } },
-    .{ .cp = 0x3143, .decomp = &.{
-        0x1108,
-    } },
-    .{ .cp = 0x3144, .decomp = &.{
-        0x1121,
-    } },
-    .{ .cp = 0x3145, .decomp = &.{
-        0x1109,
-    } },
-    .{ .cp = 0x3146, .decomp = &.{
-        0x110a,
-    } },
-    .{ .cp = 0x3147, .decomp = &.{
-        0x110b,
-    } },
-    .{ .cp = 0x3148, .decomp = &.{
-        0x110c,
-    } },
-    .{ .cp = 0x3149, .decomp = &.{
-        0x110d,
-    } },
-    .{ .cp = 0x314a, .decomp = &.{
-        0x110e,
-    } },
-    .{ .cp = 0x314b, .decomp = &.{
-        0x110f,
-    } },
-    .{ .cp = 0x314c, .decomp = &.{
-        0x1110,
-    } },
-    .{ .cp = 0x314d, .decomp = &.{
-        0x1111,
-    } },
-    .{ .cp = 0x314e, .decomp = &.{
-        0x1112,
-    } },
-    .{ .cp = 0x314f, .decomp = &.{
-        0x1161,
-    } },
-    .{ .cp = 0x3150, .decomp = &.{
-        0x1162,
-    } },
-    .{ .cp = 0x3151, .decomp = &.{
-        0x1163,
-    } },
-    .{ .cp = 0x3152, .decomp = &.{
-        0x1164,
-    } },
-    .{ .cp = 0x3153, .decomp = &.{
-        0x1165,
-    } },
-    .{ .cp = 0x3154, .decomp = &.{
-        0x1166,
-    } },
-    .{ .cp = 0x3155, .decomp = &.{
-        0x1167,
-    } },
-    .{ .cp = 0x3156, .decomp = &.{
-        0x1168,
-    } },
-    .{ .cp = 0x3157, .decomp = &.{
-        0x1169,
-    } },
-    .{ .cp = 0x3158, .decomp = &.{
-        0x116a,
-    } },
-    .{ .cp = 0x3159, .decomp = &.{
-        0x116b,
-    } },
-    .{ .cp = 0x315a, .decomp = &.{
-        0x116c,
-    } },
-    .{ .cp = 0x315b, .decomp = &.{
-        0x116d,
-    } },
-    .{ .cp = 0x315c, .decomp = &.{
-        0x116e,
-    } },
-    .{ .cp = 0x315d, .decomp = &.{
-        0x116f,
-    } },
-    .{ .cp = 0x315e, .decomp = &.{
-        0x1170,
-    } },
-    .{ .cp = 0x315f, .decomp = &.{
-        0x1171,
-    } },
-    .{ .cp = 0x3160, .decomp = &.{
-        0x1172,
-    } },
-    .{ .cp = 0x3161, .decomp = &.{
-        0x1173,
-    } },
-    .{ .cp = 0x3162, .decomp = &.{
-        0x1174,
-    } },
-    .{ .cp = 0x3163, .decomp = &.{
-        0x1175,
-    } },
-    .{ .cp = 0x3164, .decomp = &.{
-        0x1160,
-    } },
-    .{ .cp = 0x3165, .decomp = &.{
-        0x1114,
-    } },
-    .{ .cp = 0x3166, .decomp = &.{
-        0x1115,
-    } },
-    .{ .cp = 0x3167, .decomp = &.{
-        0x11c7,
-    } },
-    .{ .cp = 0x3168, .decomp = &.{
-        0x11c8,
-    } },
-    .{ .cp = 0x3169, .decomp = &.{
-        0x11cc,
-    } },
-    .{ .cp = 0x316a, .decomp = &.{
-        0x11ce,
-    } },
-    .{ .cp = 0x316b, .decomp = &.{
-        0x11d3,
-    } },
-    .{ .cp = 0x316c, .decomp = &.{
-        0x11d7,
-    } },
-    .{ .cp = 0x316d, .decomp = &.{
-        0x11d9,
-    } },
-    .{ .cp = 0x316e, .decomp = &.{
-        0x111c,
-    } },
-    .{ .cp = 0x316f, .decomp = &.{
-        0x11dd,
-    } },
-    .{ .cp = 0x3170, .decomp = &.{
-        0x11df,
-    } },
-    .{ .cp = 0x3171, .decomp = &.{
-        0x111d,
-    } },
-    .{ .cp = 0x3172, .decomp = &.{
-        0x111e,
-    } },
-    .{ .cp = 0x3173, .decomp = &.{
-        0x1120,
-    } },
-    .{ .cp = 0x3174, .decomp = &.{
-        0x1122,
-    } },
-    .{ .cp = 0x3175, .decomp = &.{
-        0x1123,
-    } },
-    .{ .cp = 0x3176, .decomp = &.{
-        0x1127,
-    } },
-    .{ .cp = 0x3177, .decomp = &.{
-        0x1129,
-    } },
-    .{ .cp = 0x3178, .decomp = &.{
-        0x112b,
-    } },
-    .{ .cp = 0x3179, .decomp = &.{
-        0x112c,
-    } },
-    .{ .cp = 0x317a, .decomp = &.{
-        0x112d,
-    } },
-    .{ .cp = 0x317b, .decomp = &.{
-        0x112e,
-    } },
-    .{ .cp = 0x317c, .decomp = &.{
-        0x112f,
-    } },
-    .{ .cp = 0x317d, .decomp = &.{
-        0x1132,
-    } },
-    .{ .cp = 0x317e, .decomp = &.{
-        0x1136,
-    } },
-    .{ .cp = 0x317f, .decomp = &.{
-        0x1140,
-    } },
-    .{ .cp = 0x3180, .decomp = &.{
-        0x1147,
-    } },
-    .{ .cp = 0x3181, .decomp = &.{
-        0x114c,
-    } },
-    .{ .cp = 0x3182, .decomp = &.{
-        0x11f1,
-    } },
-    .{ .cp = 0x3183, .decomp = &.{
-        0x11f2,
-    } },
-    .{ .cp = 0x3184, .decomp = &.{
-        0x1157,
-    } },
-    .{ .cp = 0x3185, .decomp = &.{
-        0x1158,
-    } },
-    .{ .cp = 0x3186, .decomp = &.{
-        0x1159,
-    } },
-    .{ .cp = 0x3187, .decomp = &.{
-        0x1184,
-    } },
-    .{ .cp = 0x3188, .decomp = &.{
-        0x1185,
-    } },
-    .{ .cp = 0x3189, .decomp = &.{
-        0x1188,
-    } },
-    .{ .cp = 0x318a, .decomp = &.{
-        0x1191,
-    } },
-    .{ .cp = 0x318b, .decomp = &.{
-        0x1192,
-    } },
-    .{ .cp = 0x318c, .decomp = &.{
-        0x1194,
-    } },
-    .{ .cp = 0x318d, .decomp = &.{
-        0x119e,
-    } },
-    .{ .cp = 0x318e, .decomp = &.{
-        0x11a1,
-    } },
-    .{ .cp = 0x3192, .decomp = &.{
-        0x4e00,
-    } },
-    .{ .cp = 0x3193, .decomp = &.{
-        0x4e8c,
-    } },
-    .{ .cp = 0x3194, .decomp = &.{
-        0x4e09,
-    } },
-    .{ .cp = 0x3195, .decomp = &.{
-        0x56db,
-    } },
-    .{ .cp = 0x3196, .decomp = &.{
-        0x4e0a,
-    } },
-    .{ .cp = 0x3197, .decomp = &.{
-        0x4e2d,
-    } },
-    .{ .cp = 0x3198, .decomp = &.{
-        0x4e0b,
-    } },
-    .{ .cp = 0x3199, .decomp = &.{
-        0x7532,
-    } },
-    .{ .cp = 0x319a, .decomp = &.{
-        0x4e59,
-    } },
-    .{ .cp = 0x319b, .decomp = &.{
-        0x4e19,
-    } },
-    .{ .cp = 0x319c, .decomp = &.{
-        0x4e01,
-    } },
-    .{ .cp = 0x319d, .decomp = &.{
-        0x5929,
-    } },
-    .{ .cp = 0x319e, .decomp = &.{
-        0x5730,
-    } },
-    .{ .cp = 0x319f, .decomp = &.{
-        0x4eba,
-    } },
-    .{ .cp = 0x3200, .decomp = &.{
-        0x28,
-        0x1100,
-        0x29,
-    } },
-    .{ .cp = 0x3201, .decomp = &.{
-        0x28,
-        0x1102,
-        0x29,
-    } },
-    .{ .cp = 0x3202, .decomp = &.{
-        0x28,
-        0x1103,
-        0x29,
-    } },
-    .{ .cp = 0x3203, .decomp = &.{
-        0x28,
-        0x1105,
-        0x29,
-    } },
-    .{ .cp = 0x3204, .decomp = &.{
-        0x28,
-        0x1106,
-        0x29,
-    } },
-    .{ .cp = 0x3205, .decomp = &.{
-        0x28,
-        0x1107,
-        0x29,
-    } },
-    .{ .cp = 0x3206, .decomp = &.{
-        0x28,
-        0x1109,
-        0x29,
-    } },
-    .{ .cp = 0x3207, .decomp = &.{
-        0x28,
-        0x110b,
-        0x29,
-    } },
-    .{ .cp = 0x3208, .decomp = &.{
-        0x28,
-        0x110c,
-        0x29,
-    } },
-    .{ .cp = 0x3209, .decomp = &.{
-        0x28,
-        0x110e,
-        0x29,
-    } },
-    .{ .cp = 0x320a, .decomp = &.{
-        0x28,
-        0x110f,
-        0x29,
-    } },
-    .{ .cp = 0x320b, .decomp = &.{
-        0x28,
-        0x1110,
-        0x29,
-    } },
-    .{ .cp = 0x320c, .decomp = &.{
-        0x28,
-        0x1111,
-        0x29,
-    } },
-    .{ .cp = 0x320d, .decomp = &.{
-        0x28,
-        0x1112,
-        0x29,
-    } },
-    .{ .cp = 0x320e, .decomp = &.{
-        0x28,
-        0x1100,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x320f, .decomp = &.{
-        0x28,
-        0x1102,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3210, .decomp = &.{
-        0x28,
-        0x1103,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3211, .decomp = &.{
-        0x28,
-        0x1105,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3212, .decomp = &.{
-        0x28,
-        0x1106,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3213, .decomp = &.{
-        0x28,
-        0x1107,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3214, .decomp = &.{
-        0x28,
-        0x1109,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3215, .decomp = &.{
-        0x28,
-        0x110b,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3216, .decomp = &.{
-        0x28,
-        0x110c,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3217, .decomp = &.{
-        0x28,
-        0x110e,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3218, .decomp = &.{
-        0x28,
-        0x110f,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x3219, .decomp = &.{
-        0x28,
-        0x1110,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x321a, .decomp = &.{
-        0x28,
-        0x1111,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x321b, .decomp = &.{
-        0x28,
-        0x1112,
-        0x1161,
-        0x29,
-    } },
-    .{ .cp = 0x321c, .decomp = &.{
-        0x28,
-        0x110c,
-        0x116e,
-        0x29,
-    } },
-    .{ .cp = 0x321d, .decomp = &.{
-        0x28,
-        0x110b,
-        0x1169,
-        0x110c,
-        0x1165,
-        0x11ab,
-        0x29,
-    } },
-    .{ .cp = 0x321e, .decomp = &.{
-        0x28,
-        0x110b,
-        0x1169,
-        0x1112,
-        0x116e,
-        0x29,
-    } },
-    .{ .cp = 0x3220, .decomp = &.{
-        0x28,
-        0x4e00,
-        0x29,
-    } },
-    .{ .cp = 0x3221, .decomp = &.{
-        0x28,
-        0x4e8c,
-        0x29,
-    } },
-    .{ .cp = 0x3222, .decomp = &.{
-        0x28,
-        0x4e09,
-        0x29,
-    } },
-    .{ .cp = 0x3223, .decomp = &.{
-        0x28,
-        0x56db,
-        0x29,
-    } },
-    .{ .cp = 0x3224, .decomp = &.{
-        0x28,
-        0x4e94,
-        0x29,
-    } },
-    .{ .cp = 0x3225, .decomp = &.{
-        0x28,
-        0x516d,
-        0x29,
-    } },
-    .{ .cp = 0x3226, .decomp = &.{
-        0x28,
-        0x4e03,
-        0x29,
-    } },
-    .{ .cp = 0x3227, .decomp = &.{
-        0x28,
-        0x516b,
-        0x29,
-    } },
-    .{ .cp = 0x3228, .decomp = &.{
-        0x28,
-        0x4e5d,
-        0x29,
-    } },
-    .{ .cp = 0x3229, .decomp = &.{
-        0x28,
-        0x5341,
-        0x29,
-    } },
-    .{ .cp = 0x322a, .decomp = &.{
-        0x28,
-        0x6708,
-        0x29,
-    } },
-    .{ .cp = 0x322b, .decomp = &.{
-        0x28,
-        0x706b,
-        0x29,
-    } },
-    .{ .cp = 0x322c, .decomp = &.{
-        0x28,
-        0x6c34,
-        0x29,
-    } },
-    .{ .cp = 0x322d, .decomp = &.{
-        0x28,
-        0x6728,
-        0x29,
-    } },
-    .{ .cp = 0x322e, .decomp = &.{
-        0x28,
-        0x91d1,
-        0x29,
-    } },
-    .{ .cp = 0x322f, .decomp = &.{
-        0x28,
-        0x571f,
-        0x29,
-    } },
-    .{ .cp = 0x3230, .decomp = &.{
-        0x28,
-        0x65e5,
-        0x29,
-    } },
-    .{ .cp = 0x3231, .decomp = &.{
-        0x28,
-        0x682a,
-        0x29,
-    } },
-    .{ .cp = 0x3232, .decomp = &.{
-        0x28,
-        0x6709,
-        0x29,
-    } },
-    .{ .cp = 0x3233, .decomp = &.{
-        0x28,
-        0x793e,
-        0x29,
-    } },
-    .{ .cp = 0x3234, .decomp = &.{
-        0x28,
-        0x540d,
-        0x29,
-    } },
-    .{ .cp = 0x3235, .decomp = &.{
-        0x28,
-        0x7279,
-        0x29,
-    } },
-    .{ .cp = 0x3236, .decomp = &.{
-        0x28,
-        0x8ca1,
-        0x29,
-    } },
-    .{ .cp = 0x3237, .decomp = &.{
-        0x28,
-        0x795d,
-        0x29,
-    } },
-    .{ .cp = 0x3238, .decomp = &.{
-        0x28,
-        0x52b4,
-        0x29,
-    } },
-    .{ .cp = 0x3239, .decomp = &.{
-        0x28,
-        0x4ee3,
-        0x29,
-    } },
-    .{ .cp = 0x323a, .decomp = &.{
-        0x28,
-        0x547c,
-        0x29,
-    } },
-    .{ .cp = 0x323b, .decomp = &.{
-        0x28,
-        0x5b66,
-        0x29,
-    } },
-    .{ .cp = 0x323c, .decomp = &.{
-        0x28,
-        0x76e3,
-        0x29,
-    } },
-    .{ .cp = 0x323d, .decomp = &.{
-        0x28,
-        0x4f01,
-        0x29,
-    } },
-    .{ .cp = 0x323e, .decomp = &.{
-        0x28,
-        0x8cc7,
-        0x29,
-    } },
-    .{ .cp = 0x323f, .decomp = &.{
-        0x28,
-        0x5354,
-        0x29,
-    } },
-    .{ .cp = 0x3240, .decomp = &.{
-        0x28,
-        0x796d,
-        0x29,
-    } },
-    .{ .cp = 0x3241, .decomp = &.{
-        0x28,
-        0x4f11,
-        0x29,
-    } },
-    .{ .cp = 0x3242, .decomp = &.{
-        0x28,
-        0x81ea,
-        0x29,
-    } },
-    .{ .cp = 0x3243, .decomp = &.{
-        0x28,
-        0x81f3,
-        0x29,
-    } },
-    .{ .cp = 0x3244, .decomp = &.{
-        0x554f,
-    } },
-    .{ .cp = 0x3245, .decomp = &.{
-        0x5e7c,
-    } },
-    .{ .cp = 0x3246, .decomp = &.{
-        0x6587,
-    } },
-    .{ .cp = 0x3247, .decomp = &.{
-        0x7b8f,
-    } },
-    .{ .cp = 0x3250, .decomp = &.{
-        0x50,
-        0x54,
-        0x45,
-    } },
-    .{ .cp = 0x3251, .decomp = &.{
-        0x32,
-        0x31,
-    } },
-    .{ .cp = 0x3252, .decomp = &.{
-        0x32,
-        0x32,
-    } },
-    .{ .cp = 0x3253, .decomp = &.{
-        0x32,
-        0x33,
-    } },
-    .{ .cp = 0x3254, .decomp = &.{
-        0x32,
-        0x34,
-    } },
-    .{ .cp = 0x3255, .decomp = &.{
-        0x32,
-        0x35,
-    } },
-    .{ .cp = 0x3256, .decomp = &.{
-        0x32,
-        0x36,
-    } },
-    .{ .cp = 0x3257, .decomp = &.{
-        0x32,
-        0x37,
-    } },
-    .{ .cp = 0x3258, .decomp = &.{
-        0x32,
-        0x38,
-    } },
-    .{ .cp = 0x3259, .decomp = &.{
-        0x32,
-        0x39,
-    } },
-    .{ .cp = 0x325a, .decomp = &.{
-        0x33,
-        0x30,
-    } },
-    .{ .cp = 0x325b, .decomp = &.{
-        0x33,
-        0x31,
-    } },
-    .{ .cp = 0x325c, .decomp = &.{
-        0x33,
-        0x32,
-    } },
-    .{ .cp = 0x325d, .decomp = &.{
-        0x33,
-        0x33,
-    } },
-    .{ .cp = 0x325e, .decomp = &.{
-        0x33,
-        0x34,
-    } },
-    .{ .cp = 0x325f, .decomp = &.{
-        0x33,
-        0x35,
-    } },
-    .{ .cp = 0x3260, .decomp = &.{
-        0x1100,
-    } },
-    .{ .cp = 0x3261, .decomp = &.{
-        0x1102,
-    } },
-    .{ .cp = 0x3262, .decomp = &.{
-        0x1103,
-    } },
-    .{ .cp = 0x3263, .decomp = &.{
-        0x1105,
-    } },
-    .{ .cp = 0x3264, .decomp = &.{
-        0x1106,
-    } },
-    .{ .cp = 0x3265, .decomp = &.{
-        0x1107,
-    } },
-    .{ .cp = 0x3266, .decomp = &.{
-        0x1109,
-    } },
-    .{ .cp = 0x3267, .decomp = &.{
-        0x110b,
-    } },
-    .{ .cp = 0x3268, .decomp = &.{
-        0x110c,
-    } },
-    .{ .cp = 0x3269, .decomp = &.{
-        0x110e,
-    } },
-    .{ .cp = 0x326a, .decomp = &.{
-        0x110f,
-    } },
-    .{ .cp = 0x326b, .decomp = &.{
-        0x1110,
-    } },
-    .{ .cp = 0x326c, .decomp = &.{
-        0x1111,
-    } },
-    .{ .cp = 0x326d, .decomp = &.{
-        0x1112,
-    } },
-    .{ .cp = 0x326e, .decomp = &.{
-        0x1100,
-        0x1161,
-    } },
-    .{ .cp = 0x326f, .decomp = &.{
-        0x1102,
-        0x1161,
-    } },
-    .{ .cp = 0x3270, .decomp = &.{
-        0x1103,
-        0x1161,
-    } },
-    .{ .cp = 0x3271, .decomp = &.{
-        0x1105,
-        0x1161,
-    } },
-    .{ .cp = 0x3272, .decomp = &.{
-        0x1106,
-        0x1161,
-    } },
-    .{ .cp = 0x3273, .decomp = &.{
-        0x1107,
-        0x1161,
-    } },
-    .{ .cp = 0x3274, .decomp = &.{
-        0x1109,
-        0x1161,
-    } },
-    .{ .cp = 0x3275, .decomp = &.{
-        0x110b,
-        0x1161,
-    } },
-    .{ .cp = 0x3276, .decomp = &.{
-        0x110c,
-        0x1161,
-    } },
-    .{ .cp = 0x3277, .decomp = &.{
-        0x110e,
-        0x1161,
-    } },
-    .{ .cp = 0x3278, .decomp = &.{
-        0x110f,
-        0x1161,
-    } },
-    .{ .cp = 0x3279, .decomp = &.{
-        0x1110,
-        0x1161,
-    } },
-    .{ .cp = 0x327a, .decomp = &.{
-        0x1111,
-        0x1161,
-    } },
-    .{ .cp = 0x327b, .decomp = &.{
-        0x1112,
-        0x1161,
-    } },
-    .{ .cp = 0x327c, .decomp = &.{
-        0x110e,
-        0x1161,
-        0x11b7,
-        0x1100,
-        0x1169,
-    } },
-    .{ .cp = 0x327d, .decomp = &.{
-        0x110c,
-        0x116e,
-        0x110b,
-        0x1174,
-    } },
-    .{ .cp = 0x327e, .decomp = &.{
-        0x110b,
-        0x116e,
-    } },
-    .{ .cp = 0x3280, .decomp = &.{
-        0x4e00,
-    } },
-    .{ .cp = 0x3281, .decomp = &.{
-        0x4e8c,
-    } },
-    .{ .cp = 0x3282, .decomp = &.{
-        0x4e09,
-    } },
-    .{ .cp = 0x3283, .decomp = &.{
-        0x56db,
-    } },
-    .{ .cp = 0x3284, .decomp = &.{
-        0x4e94,
-    } },
-    .{ .cp = 0x3285, .decomp = &.{
-        0x516d,
-    } },
-    .{ .cp = 0x3286, .decomp = &.{
-        0x4e03,
-    } },
-    .{ .cp = 0x3287, .decomp = &.{
-        0x516b,
-    } },
-    .{ .cp = 0x3288, .decomp = &.{
-        0x4e5d,
-    } },
-    .{ .cp = 0x3289, .decomp = &.{
-        0x5341,
-    } },
-    .{ .cp = 0x328a, .decomp = &.{
-        0x6708,
-    } },
-    .{ .cp = 0x328b, .decomp = &.{
-        0x706b,
-    } },
-    .{ .cp = 0x328c, .decomp = &.{
-        0x6c34,
-    } },
-    .{ .cp = 0x328d, .decomp = &.{
-        0x6728,
-    } },
-    .{ .cp = 0x328e, .decomp = &.{
-        0x91d1,
-    } },
-    .{ .cp = 0x328f, .decomp = &.{
-        0x571f,
-    } },
-    .{ .cp = 0x3290, .decomp = &.{
-        0x65e5,
-    } },
-    .{ .cp = 0x3291, .decomp = &.{
-        0x682a,
-    } },
-    .{ .cp = 0x3292, .decomp = &.{
-        0x6709,
-    } },
-    .{ .cp = 0x3293, .decomp = &.{
-        0x793e,
-    } },
-    .{ .cp = 0x3294, .decomp = &.{
-        0x540d,
-    } },
-    .{ .cp = 0x3295, .decomp = &.{
-        0x7279,
-    } },
-    .{ .cp = 0x3296, .decomp = &.{
-        0x8ca1,
-    } },
-    .{ .cp = 0x3297, .decomp = &.{
-        0x795d,
-    } },
-    .{ .cp = 0x3298, .decomp = &.{
-        0x52b4,
-    } },
-    .{ .cp = 0x3299, .decomp = &.{
-        0x79d8,
-    } },
-    .{ .cp = 0x329a, .decomp = &.{
-        0x7537,
-    } },
-    .{ .cp = 0x329b, .decomp = &.{
-        0x5973,
-    } },
-    .{ .cp = 0x329c, .decomp = &.{
-        0x9069,
-    } },
-    .{ .cp = 0x329d, .decomp = &.{
-        0x512a,
-    } },
-    .{ .cp = 0x329e, .decomp = &.{
-        0x5370,
-    } },
-    .{ .cp = 0x329f, .decomp = &.{
-        0x6ce8,
-    } },
-    .{ .cp = 0x32a0, .decomp = &.{
-        0x9805,
-    } },
-    .{ .cp = 0x32a1, .decomp = &.{
-        0x4f11,
-    } },
-    .{ .cp = 0x32a2, .decomp = &.{
-        0x5199,
-    } },
-    .{ .cp = 0x32a3, .decomp = &.{
-        0x6b63,
-    } },
-    .{ .cp = 0x32a4, .decomp = &.{
-        0x4e0a,
-    } },
-    .{ .cp = 0x32a5, .decomp = &.{
-        0x4e2d,
-    } },
-    .{ .cp = 0x32a6, .decomp = &.{
-        0x4e0b,
-    } },
-    .{ .cp = 0x32a7, .decomp = &.{
-        0x5de6,
-    } },
-    .{ .cp = 0x32a8, .decomp = &.{
-        0x53f3,
-    } },
-    .{ .cp = 0x32a9, .decomp = &.{
-        0x533b,
-    } },
-    .{ .cp = 0x32aa, .decomp = &.{
-        0x5b97,
-    } },
-    .{ .cp = 0x32ab, .decomp = &.{
-        0x5b66,
-    } },
-    .{ .cp = 0x32ac, .decomp = &.{
-        0x76e3,
-    } },
-    .{ .cp = 0x32ad, .decomp = &.{
-        0x4f01,
-    } },
-    .{ .cp = 0x32ae, .decomp = &.{
-        0x8cc7,
-    } },
-    .{ .cp = 0x32af, .decomp = &.{
-        0x5354,
-    } },
-    .{ .cp = 0x32b0, .decomp = &.{
-        0x591c,
-    } },
-    .{ .cp = 0x32b1, .decomp = &.{
-        0x33,
-        0x36,
-    } },
-    .{ .cp = 0x32b2, .decomp = &.{
-        0x33,
-        0x37,
-    } },
-    .{ .cp = 0x32b3, .decomp = &.{
-        0x33,
-        0x38,
-    } },
-    .{ .cp = 0x32b4, .decomp = &.{
-        0x33,
-        0x39,
-    } },
-    .{ .cp = 0x32b5, .decomp = &.{
-        0x34,
-        0x30,
-    } },
-    .{ .cp = 0x32b6, .decomp = &.{
-        0x34,
-        0x31,
-    } },
-    .{ .cp = 0x32b7, .decomp = &.{
-        0x34,
-        0x32,
-    } },
-    .{ .cp = 0x32b8, .decomp = &.{
-        0x34,
-        0x33,
-    } },
-    .{ .cp = 0x32b9, .decomp = &.{
-        0x34,
-        0x34,
-    } },
-    .{ .cp = 0x32ba, .decomp = &.{
-        0x34,
-        0x35,
-    } },
-    .{ .cp = 0x32bb, .decomp = &.{
-        0x34,
-        0x36,
-    } },
-    .{ .cp = 0x32bc, .decomp = &.{
-        0x34,
-        0x37,
-    } },
-    .{ .cp = 0x32bd, .decomp = &.{
-        0x34,
-        0x38,
-    } },
-    .{ .cp = 0x32be, .decomp = &.{
-        0x34,
-        0x39,
-    } },
-    .{ .cp = 0x32bf, .decomp = &.{
-        0x35,
-        0x30,
-    } },
-    .{ .cp = 0x32c0, .decomp = &.{
-        0x31,
-        0x6708,
-    } },
-    .{ .cp = 0x32c1, .decomp = &.{
-        0x32,
-        0x6708,
-    } },
-    .{ .cp = 0x32c2, .decomp = &.{
-        0x33,
-        0x6708,
-    } },
-    .{ .cp = 0x32c3, .decomp = &.{
-        0x34,
-        0x6708,
-    } },
-    .{ .cp = 0x32c4, .decomp = &.{
-        0x35,
-        0x6708,
-    } },
-    .{ .cp = 0x32c5, .decomp = &.{
-        0x36,
-        0x6708,
-    } },
-    .{ .cp = 0x32c6, .decomp = &.{
-        0x37,
-        0x6708,
-    } },
-    .{ .cp = 0x32c7, .decomp = &.{
-        0x38,
-        0x6708,
-    } },
-    .{ .cp = 0x32c8, .decomp = &.{
-        0x39,
-        0x6708,
-    } },
-    .{ .cp = 0x32c9, .decomp = &.{
-        0x31,
-        0x30,
-        0x6708,
-    } },
-    .{ .cp = 0x32ca, .decomp = &.{
-        0x31,
-        0x31,
-        0x6708,
-    } },
-    .{ .cp = 0x32cb, .decomp = &.{
-        0x31,
-        0x32,
-        0x6708,
-    } },
-    .{ .cp = 0x32cc, .decomp = &.{
-        0x48,
-        0x67,
-    } },
-    .{ .cp = 0x32cd, .decomp = &.{
-        0x65,
-        0x72,
-        0x67,
-    } },
-    .{ .cp = 0x32ce, .decomp = &.{
-        0x65,
-        0x56,
-    } },
-    .{ .cp = 0x32cf, .decomp = &.{
-        0x4c,
-        0x54,
-        0x44,
-    } },
-    .{ .cp = 0x32d0, .decomp = &.{
-        0x30a2,
-    } },
-    .{ .cp = 0x32d1, .decomp = &.{
-        0x30a4,
-    } },
-    .{ .cp = 0x32d2, .decomp = &.{
-        0x30a6,
-    } },
-    .{ .cp = 0x32d3, .decomp = &.{
-        0x30a8,
-    } },
-    .{ .cp = 0x32d4, .decomp = &.{
-        0x30aa,
-    } },
-    .{ .cp = 0x32d5, .decomp = &.{
-        0x30ab,
-    } },
-    .{ .cp = 0x32d6, .decomp = &.{
-        0x30ad,
-    } },
-    .{ .cp = 0x32d7, .decomp = &.{
-        0x30af,
-    } },
-    .{ .cp = 0x32d8, .decomp = &.{
-        0x30b1,
-    } },
-    .{ .cp = 0x32d9, .decomp = &.{
-        0x30b3,
-    } },
-    .{ .cp = 0x32da, .decomp = &.{
-        0x30b5,
-    } },
-    .{ .cp = 0x32db, .decomp = &.{
-        0x30b7,
-    } },
-    .{ .cp = 0x32dc, .decomp = &.{
-        0x30b9,
-    } },
-    .{ .cp = 0x32dd, .decomp = &.{
-        0x30bb,
-    } },
-    .{ .cp = 0x32de, .decomp = &.{
-        0x30bd,
-    } },
-    .{ .cp = 0x32df, .decomp = &.{
-        0x30bf,
-    } },
-    .{ .cp = 0x32e0, .decomp = &.{
-        0x30c1,
-    } },
-    .{ .cp = 0x32e1, .decomp = &.{
-        0x30c4,
-    } },
-    .{ .cp = 0x32e2, .decomp = &.{
-        0x30c6,
-    } },
-    .{ .cp = 0x32e3, .decomp = &.{
-        0x30c8,
-    } },
-    .{ .cp = 0x32e4, .decomp = &.{
-        0x30ca,
-    } },
-    .{ .cp = 0x32e5, .decomp = &.{
-        0x30cb,
-    } },
-    .{ .cp = 0x32e6, .decomp = &.{
-        0x30cc,
-    } },
-    .{ .cp = 0x32e7, .decomp = &.{
-        0x30cd,
-    } },
-    .{ .cp = 0x32e8, .decomp = &.{
-        0x30ce,
-    } },
-    .{ .cp = 0x32e9, .decomp = &.{
-        0x30cf,
-    } },
-    .{ .cp = 0x32ea, .decomp = &.{
-        0x30d2,
-    } },
-    .{ .cp = 0x32eb, .decomp = &.{
-        0x30d5,
-    } },
-    .{ .cp = 0x32ec, .decomp = &.{
-        0x30d8,
-    } },
-    .{ .cp = 0x32ed, .decomp = &.{
-        0x30db,
-    } },
-    .{ .cp = 0x32ee, .decomp = &.{
-        0x30de,
-    } },
-    .{ .cp = 0x32ef, .decomp = &.{
-        0x30df,
-    } },
-    .{ .cp = 0x32f0, .decomp = &.{
-        0x30e0,
-    } },
-    .{ .cp = 0x32f1, .decomp = &.{
-        0x30e1,
-    } },
-    .{ .cp = 0x32f2, .decomp = &.{
-        0x30e2,
-    } },
-    .{ .cp = 0x32f3, .decomp = &.{
-        0x30e4,
-    } },
-    .{ .cp = 0x32f4, .decomp = &.{
-        0x30e6,
-    } },
-    .{ .cp = 0x32f5, .decomp = &.{
-        0x30e8,
-    } },
-    .{ .cp = 0x32f6, .decomp = &.{
-        0x30e9,
-    } },
-    .{ .cp = 0x32f7, .decomp = &.{
-        0x30ea,
-    } },
-    .{ .cp = 0x32f8, .decomp = &.{
-        0x30eb,
-    } },
-    .{ .cp = 0x32f9, .decomp = &.{
-        0x30ec,
-    } },
-    .{ .cp = 0x32fa, .decomp = &.{
-        0x30ed,
-    } },
-    .{ .cp = 0x32fb, .decomp = &.{
-        0x30ef,
-    } },
-    .{ .cp = 0x32fc, .decomp = &.{
-        0x30f0,
-    } },
-    .{ .cp = 0x32fd, .decomp = &.{
-        0x30f1,
-    } },
-    .{ .cp = 0x32fe, .decomp = &.{
-        0x30f2,
-    } },
-    .{ .cp = 0x32ff, .decomp = &.{
-        0x4ee4,
-        0x548c,
-    } },
-    .{ .cp = 0x3300, .decomp = &.{
-        0x30a2,
-        0x30d1,
-        0x30fc,
-        0x30c8,
-    } },
-    .{ .cp = 0x3301, .decomp = &.{
-        0x30a2,
-        0x30eb,
-        0x30d5,
-        0x30a1,
-    } },
-    .{ .cp = 0x3302, .decomp = &.{
-        0x30a2,
-        0x30f3,
-        0x30da,
-        0x30a2,
-    } },
-    .{ .cp = 0x3303, .decomp = &.{
-        0x30a2,
-        0x30fc,
-        0x30eb,
-    } },
-    .{ .cp = 0x3304, .decomp = &.{
-        0x30a4,
-        0x30cb,
-        0x30f3,
-        0x30b0,
-    } },
-    .{ .cp = 0x3305, .decomp = &.{
-        0x30a4,
-        0x30f3,
-        0x30c1,
-    } },
-    .{ .cp = 0x3306, .decomp = &.{
-        0x30a6,
-        0x30a9,
-        0x30f3,
-    } },
-    .{ .cp = 0x3307, .decomp = &.{
-        0x30a8,
-        0x30b9,
-        0x30af,
-        0x30fc,
-        0x30c9,
-    } },
-    .{ .cp = 0x3308, .decomp = &.{
-        0x30a8,
-        0x30fc,
-        0x30ab,
-        0x30fc,
-    } },
-    .{ .cp = 0x3309, .decomp = &.{
-        0x30aa,
-        0x30f3,
-        0x30b9,
-    } },
-    .{ .cp = 0x330a, .decomp = &.{
-        0x30aa,
-        0x30fc,
-        0x30e0,
-    } },
-    .{ .cp = 0x330b, .decomp = &.{
-        0x30ab,
-        0x30a4,
-        0x30ea,
-    } },
-    .{ .cp = 0x330c, .decomp = &.{
-        0x30ab,
-        0x30e9,
-        0x30c3,
-        0x30c8,
-    } },
-    .{ .cp = 0x330d, .decomp = &.{
-        0x30ab,
-        0x30ed,
-        0x30ea,
-        0x30fc,
-    } },
-    .{ .cp = 0x330e, .decomp = &.{
-        0x30ac,
-        0x30ed,
-        0x30f3,
-    } },
-    .{ .cp = 0x330f, .decomp = &.{
-        0x30ac,
-        0x30f3,
-        0x30de,
-    } },
-    .{ .cp = 0x3310, .decomp = &.{
-        0x30ae,
-        0x30ac,
-    } },
-    .{ .cp = 0x3311, .decomp = &.{
-        0x30ae,
-        0x30cb,
-        0x30fc,
-    } },
-    .{ .cp = 0x3312, .decomp = &.{
-        0x30ad,
-        0x30e5,
-        0x30ea,
-        0x30fc,
-    } },
-    .{ .cp = 0x3313, .decomp = &.{
-        0x30ae,
-        0x30eb,
-        0x30c0,
-        0x30fc,
-    } },
-    .{ .cp = 0x3314, .decomp = &.{
-        0x30ad,
-        0x30ed,
-    } },
-    .{ .cp = 0x3315, .decomp = &.{
-        0x30ad,
-        0x30ed,
-        0x30b0,
-        0x30e9,
-        0x30e0,
-    } },
-    .{ .cp = 0x3316, .decomp = &.{
-        0x30ad,
-        0x30ed,
-        0x30e1,
-        0x30fc,
-        0x30c8,
-        0x30eb,
-    } },
-    .{ .cp = 0x3317, .decomp = &.{
-        0x30ad,
-        0x30ed,
-        0x30ef,
-        0x30c3,
-        0x30c8,
-    } },
-    .{ .cp = 0x3318, .decomp = &.{
-        0x30b0,
-        0x30e9,
-        0x30e0,
-    } },
-    .{ .cp = 0x3319, .decomp = &.{
-        0x30b0,
-        0x30e9,
-        0x30e0,
-        0x30c8,
-        0x30f3,
-    } },
-    .{ .cp = 0x331a, .decomp = &.{
-        0x30af,
-        0x30eb,
-        0x30bc,
-        0x30a4,
-        0x30ed,
-    } },
-    .{ .cp = 0x331b, .decomp = &.{
-        0x30af,
-        0x30ed,
-        0x30fc,
-        0x30cd,
-    } },
-    .{ .cp = 0x331c, .decomp = &.{
-        0x30b1,
-        0x30fc,
-        0x30b9,
-    } },
-    .{ .cp = 0x331d, .decomp = &.{
-        0x30b3,
-        0x30eb,
-        0x30ca,
-    } },
-    .{ .cp = 0x331e, .decomp = &.{
-        0x30b3,
-        0x30fc,
-        0x30dd,
-    } },
-    .{ .cp = 0x331f, .decomp = &.{
-        0x30b5,
-        0x30a4,
-        0x30af,
-        0x30eb,
-    } },
-    .{ .cp = 0x3320, .decomp = &.{
-        0x30b5,
-        0x30f3,
-        0x30c1,
-        0x30fc,
-        0x30e0,
-    } },
-    .{ .cp = 0x3321, .decomp = &.{
-        0x30b7,
-        0x30ea,
-        0x30f3,
-        0x30b0,
-    } },
-    .{ .cp = 0x3322, .decomp = &.{
-        0x30bb,
-        0x30f3,
-        0x30c1,
-    } },
-    .{ .cp = 0x3323, .decomp = &.{
-        0x30bb,
-        0x30f3,
-        0x30c8,
-    } },
-    .{ .cp = 0x3324, .decomp = &.{
-        0x30c0,
-        0x30fc,
-        0x30b9,
-    } },
-    .{ .cp = 0x3325, .decomp = &.{
-        0x30c7,
-        0x30b7,
-    } },
-    .{ .cp = 0x3326, .decomp = &.{
-        0x30c9,
-        0x30eb,
-    } },
-    .{ .cp = 0x3327, .decomp = &.{
-        0x30c8,
-        0x30f3,
-    } },
-    .{ .cp = 0x3328, .decomp = &.{
-        0x30ca,
-        0x30ce,
-    } },
-    .{ .cp = 0x3329, .decomp = &.{
-        0x30ce,
-        0x30c3,
-        0x30c8,
-    } },
-    .{ .cp = 0x332a, .decomp = &.{
-        0x30cf,
-        0x30a4,
-        0x30c4,
-    } },
-    .{ .cp = 0x332b, .decomp = &.{
-        0x30d1,
-        0x30fc,
-        0x30bb,
-        0x30f3,
-        0x30c8,
-    } },
-    .{ .cp = 0x332c, .decomp = &.{
-        0x30d1,
-        0x30fc,
-        0x30c4,
-    } },
-    .{ .cp = 0x332d, .decomp = &.{
-        0x30d0,
-        0x30fc,
-        0x30ec,
-        0x30eb,
-    } },
-    .{ .cp = 0x332e, .decomp = &.{
-        0x30d4,
-        0x30a2,
-        0x30b9,
-        0x30c8,
-        0x30eb,
-    } },
-    .{ .cp = 0x332f, .decomp = &.{
-        0x30d4,
-        0x30af,
-        0x30eb,
-    } },
-    .{ .cp = 0x3330, .decomp = &.{
-        0x30d4,
-        0x30b3,
-    } },
-    .{ .cp = 0x3331, .decomp = &.{
-        0x30d3,
-        0x30eb,
-    } },
-    .{ .cp = 0x3332, .decomp = &.{
-        0x30d5,
-        0x30a1,
-        0x30e9,
-        0x30c3,
-        0x30c9,
-    } },
-    .{ .cp = 0x3333, .decomp = &.{
-        0x30d5,
-        0x30a3,
-        0x30fc,
-        0x30c8,
-    } },
-    .{ .cp = 0x3334, .decomp = &.{
-        0x30d6,
-        0x30c3,
-        0x30b7,
-        0x30a7,
-        0x30eb,
-    } },
-    .{ .cp = 0x3335, .decomp = &.{
-        0x30d5,
-        0x30e9,
-        0x30f3,
-    } },
-    .{ .cp = 0x3336, .decomp = &.{
-        0x30d8,
-        0x30af,
-        0x30bf,
-        0x30fc,
-        0x30eb,
-    } },
-    .{ .cp = 0x3337, .decomp = &.{
-        0x30da,
-        0x30bd,
-    } },
-    .{ .cp = 0x3338, .decomp = &.{
-        0x30da,
-        0x30cb,
-        0x30d2,
-    } },
-    .{ .cp = 0x3339, .decomp = &.{
-        0x30d8,
-        0x30eb,
-        0x30c4,
-    } },
-    .{ .cp = 0x333a, .decomp = &.{
-        0x30da,
-        0x30f3,
-        0x30b9,
-    } },
-    .{ .cp = 0x333b, .decomp = &.{
-        0x30da,
-        0x30fc,
-        0x30b8,
-    } },
-    .{ .cp = 0x333c, .decomp = &.{
-        0x30d9,
-        0x30fc,
-        0x30bf,
-    } },
-    .{ .cp = 0x333d, .decomp = &.{
-        0x30dd,
-        0x30a4,
-        0x30f3,
-        0x30c8,
-    } },
-    .{ .cp = 0x333e, .decomp = &.{
-        0x30dc,
-        0x30eb,
-        0x30c8,
-    } },
-    .{ .cp = 0x333f, .decomp = &.{
-        0x30db,
-        0x30f3,
-    } },
-    .{ .cp = 0x3340, .decomp = &.{
-        0x30dd,
-        0x30f3,
-        0x30c9,
-    } },
-    .{ .cp = 0x3341, .decomp = &.{
-        0x30db,
-        0x30fc,
-        0x30eb,
-    } },
-    .{ .cp = 0x3342, .decomp = &.{
-        0x30db,
-        0x30fc,
-        0x30f3,
-    } },
-    .{ .cp = 0x3343, .decomp = &.{
-        0x30de,
-        0x30a4,
-        0x30af,
-        0x30ed,
-    } },
-    .{ .cp = 0x3344, .decomp = &.{
-        0x30de,
-        0x30a4,
-        0x30eb,
-    } },
-    .{ .cp = 0x3345, .decomp = &.{
-        0x30de,
-        0x30c3,
-        0x30cf,
-    } },
-    .{ .cp = 0x3346, .decomp = &.{
-        0x30de,
-        0x30eb,
-        0x30af,
-    } },
-    .{ .cp = 0x3347, .decomp = &.{
-        0x30de,
-        0x30f3,
-        0x30b7,
-        0x30e7,
-        0x30f3,
-    } },
-    .{ .cp = 0x3348, .decomp = &.{
-        0x30df,
-        0x30af,
-        0x30ed,
-        0x30f3,
-    } },
-    .{ .cp = 0x3349, .decomp = &.{
-        0x30df,
-        0x30ea,
-    } },
-    .{ .cp = 0x334a, .decomp = &.{
-        0x30df,
-        0x30ea,
-        0x30d0,
-        0x30fc,
-        0x30eb,
-    } },
-    .{ .cp = 0x334b, .decomp = &.{
-        0x30e1,
-        0x30ac,
-    } },
-    .{ .cp = 0x334c, .decomp = &.{
-        0x30e1,
-        0x30ac,
-        0x30c8,
-        0x30f3,
-    } },
-    .{ .cp = 0x334d, .decomp = &.{
-        0x30e1,
-        0x30fc,
-        0x30c8,
-        0x30eb,
-    } },
-    .{ .cp = 0x334e, .decomp = &.{
-        0x30e4,
-        0x30fc,
-        0x30c9,
-    } },
-    .{ .cp = 0x334f, .decomp = &.{
-        0x30e4,
-        0x30fc,
-        0x30eb,
-    } },
-    .{ .cp = 0x3350, .decomp = &.{
-        0x30e6,
-        0x30a2,
-        0x30f3,
-    } },
-    .{ .cp = 0x3351, .decomp = &.{
-        0x30ea,
-        0x30c3,
-        0x30c8,
-        0x30eb,
-    } },
-    .{ .cp = 0x3352, .decomp = &.{
-        0x30ea,
-        0x30e9,
-    } },
-    .{ .cp = 0x3353, .decomp = &.{
-        0x30eb,
-        0x30d4,
-        0x30fc,
-    } },
-    .{ .cp = 0x3354, .decomp = &.{
-        0x30eb,
-        0x30fc,
-        0x30d6,
-        0x30eb,
-    } },
-    .{ .cp = 0x3355, .decomp = &.{
-        0x30ec,
-        0x30e0,
-    } },
-    .{ .cp = 0x3356, .decomp = &.{
-        0x30ec,
-        0x30f3,
-        0x30c8,
-        0x30b2,
-        0x30f3,
-    } },
-    .{ .cp = 0x3357, .decomp = &.{
-        0x30ef,
-        0x30c3,
-        0x30c8,
-    } },
-    .{ .cp = 0x3358, .decomp = &.{
-        0x30,
-        0x70b9,
-    } },
-    .{ .cp = 0x3359, .decomp = &.{
-        0x31,
-        0x70b9,
-    } },
-    .{ .cp = 0x335a, .decomp = &.{
-        0x32,
-        0x70b9,
-    } },
-    .{ .cp = 0x335b, .decomp = &.{
-        0x33,
-        0x70b9,
-    } },
-    .{ .cp = 0x335c, .decomp = &.{
-        0x34,
-        0x70b9,
-    } },
-    .{ .cp = 0x335d, .decomp = &.{
-        0x35,
-        0x70b9,
-    } },
-    .{ .cp = 0x335e, .decomp = &.{
-        0x36,
-        0x70b9,
-    } },
-    .{ .cp = 0x335f, .decomp = &.{
-        0x37,
-        0x70b9,
-    } },
-    .{ .cp = 0x3360, .decomp = &.{
-        0x38,
-        0x70b9,
-    } },
-    .{ .cp = 0x3361, .decomp = &.{
-        0x39,
-        0x70b9,
-    } },
-    .{ .cp = 0x3362, .decomp = &.{
-        0x31,
-        0x30,
-        0x70b9,
-    } },
-    .{ .cp = 0x3363, .decomp = &.{
-        0x31,
-        0x31,
-        0x70b9,
-    } },
-    .{ .cp = 0x3364, .decomp = &.{
-        0x31,
-        0x32,
-        0x70b9,
-    } },
-    .{ .cp = 0x3365, .decomp = &.{
-        0x31,
-        0x33,
-        0x70b9,
-    } },
-    .{ .cp = 0x3366, .decomp = &.{
-        0x31,
-        0x34,
-        0x70b9,
-    } },
-    .{ .cp = 0x3367, .decomp = &.{
-        0x31,
-        0x35,
-        0x70b9,
-    } },
-    .{ .cp = 0x3368, .decomp = &.{
-        0x31,
-        0x36,
-        0x70b9,
-    } },
-    .{ .cp = 0x3369, .decomp = &.{
-        0x31,
-        0x37,
-        0x70b9,
-    } },
-    .{ .cp = 0x336a, .decomp = &.{
-        0x31,
-        0x38,
-        0x70b9,
-    } },
-    .{ .cp = 0x336b, .decomp = &.{
-        0x31,
-        0x39,
-        0x70b9,
-    } },
-    .{ .cp = 0x336c, .decomp = &.{
-        0x32,
-        0x30,
-        0x70b9,
-    } },
-    .{ .cp = 0x336d, .decomp = &.{
-        0x32,
-        0x31,
-        0x70b9,
-    } },
-    .{ .cp = 0x336e, .decomp = &.{
-        0x32,
-        0x32,
-        0x70b9,
-    } },
-    .{ .cp = 0x336f, .decomp = &.{
-        0x32,
-        0x33,
-        0x70b9,
-    } },
-    .{ .cp = 0x3370, .decomp = &.{
-        0x32,
-        0x34,
-        0x70b9,
-    } },
-    .{ .cp = 0x3371, .decomp = &.{
-        0x68,
-        0x50,
-        0x61,
-    } },
-    .{ .cp = 0x3372, .decomp = &.{
-        0x64,
-        0x61,
-    } },
-    .{ .cp = 0x3373, .decomp = &.{
-        0x41,
-        0x55,
-    } },
-    .{ .cp = 0x3374, .decomp = &.{
-        0x62,
-        0x61,
-        0x72,
-    } },
-    .{ .cp = 0x3375, .decomp = &.{
-        0x6f,
-        0x56,
-    } },
-    .{ .cp = 0x3376, .decomp = &.{
-        0x70,
-        0x63,
-    } },
-    .{ .cp = 0x3377, .decomp = &.{
-        0x64,
-        0x6d,
-    } },
-    .{ .cp = 0x3378, .decomp = &.{
-        0x64,
-        0x6d,
-        0xb2,
-    } },
-    .{ .cp = 0x3379, .decomp = &.{
-        0x64,
-        0x6d,
-        0xb3,
-    } },
-    .{ .cp = 0x337a, .decomp = &.{
-        0x49,
-        0x55,
-    } },
-    .{ .cp = 0x337b, .decomp = &.{
-        0x5e73,
-        0x6210,
-    } },
-    .{ .cp = 0x337c, .decomp = &.{
-        0x662d,
-        0x548c,
-    } },
-    .{ .cp = 0x337d, .decomp = &.{
-        0x5927,
-        0x6b63,
-    } },
-    .{ .cp = 0x337e, .decomp = &.{
-        0x660e,
-        0x6cbb,
-    } },
-    .{ .cp = 0x337f, .decomp = &.{
-        0x682a,
-        0x5f0f,
-        0x4f1a,
-        0x793e,
-    } },
-    .{ .cp = 0x3380, .decomp = &.{
-        0x70,
-        0x41,
-    } },
-    .{ .cp = 0x3381, .decomp = &.{
-        0x6e,
-        0x41,
-    } },
-    .{ .cp = 0x3382, .decomp = &.{
-        0x3bc,
-        0x41,
-    } },
-    .{ .cp = 0x3383, .decomp = &.{
-        0x6d,
-        0x41,
-    } },
-    .{ .cp = 0x3384, .decomp = &.{
-        0x6b,
-        0x41,
-    } },
-    .{ .cp = 0x3385, .decomp = &.{
-        0x4b,
-        0x42,
-    } },
-    .{ .cp = 0x3386, .decomp = &.{
-        0x4d,
-        0x42,
-    } },
-    .{ .cp = 0x3387, .decomp = &.{
-        0x47,
-        0x42,
-    } },
-    .{ .cp = 0x3388, .decomp = &.{
-        0x63,
-        0x61,
-        0x6c,
-    } },
-    .{ .cp = 0x3389, .decomp = &.{
-        0x6b,
-        0x63,
-        0x61,
-        0x6c,
-    } },
-    .{ .cp = 0x338a, .decomp = &.{
-        0x70,
-        0x46,
-    } },
-    .{ .cp = 0x338b, .decomp = &.{
-        0x6e,
-        0x46,
-    } },
-    .{ .cp = 0x338c, .decomp = &.{
-        0x3bc,
-        0x46,
-    } },
-    .{ .cp = 0x338d, .decomp = &.{
-        0x3bc,
-        0x67,
-    } },
-    .{ .cp = 0x338e, .decomp = &.{
-        0x6d,
-        0x67,
-    } },
-    .{ .cp = 0x338f, .decomp = &.{
-        0x6b,
-        0x67,
-    } },
-    .{ .cp = 0x3390, .decomp = &.{
-        0x48,
-        0x7a,
-    } },
-    .{ .cp = 0x3391, .decomp = &.{
-        0x6b,
-        0x48,
-        0x7a,
-    } },
-    .{ .cp = 0x3392, .decomp = &.{
-        0x4d,
-        0x48,
-        0x7a,
-    } },
-    .{ .cp = 0x3393, .decomp = &.{
-        0x47,
-        0x48,
-        0x7a,
-    } },
-    .{ .cp = 0x3394, .decomp = &.{
-        0x54,
-        0x48,
-        0x7a,
-    } },
-    .{ .cp = 0x3395, .decomp = &.{
-        0x3bc,
-        0x2113,
-    } },
-    .{ .cp = 0x3396, .decomp = &.{
-        0x6d,
-        0x2113,
-    } },
-    .{ .cp = 0x3397, .decomp = &.{
-        0x64,
-        0x2113,
-    } },
-    .{ .cp = 0x3398, .decomp = &.{
-        0x6b,
-        0x2113,
-    } },
-    .{ .cp = 0x3399, .decomp = &.{
-        0x66,
-        0x6d,
-    } },
-    .{ .cp = 0x339a, .decomp = &.{
-        0x6e,
-        0x6d,
-    } },
-    .{ .cp = 0x339b, .decomp = &.{
-        0x3bc,
-        0x6d,
-    } },
-    .{ .cp = 0x339c, .decomp = &.{
-        0x6d,
-        0x6d,
-    } },
-    .{ .cp = 0x339d, .decomp = &.{
-        0x63,
-        0x6d,
-    } },
-    .{ .cp = 0x339e, .decomp = &.{
-        0x6b,
-        0x6d,
-    } },
-    .{ .cp = 0x339f, .decomp = &.{
-        0x6d,
-        0x6d,
-        0xb2,
-    } },
-    .{ .cp = 0x33a0, .decomp = &.{
-        0x63,
-        0x6d,
-        0xb2,
-    } },
-    .{ .cp = 0x33a1, .decomp = &.{
-        0x6d,
-        0xb2,
-    } },
-    .{ .cp = 0x33a2, .decomp = &.{
-        0x6b,
-        0x6d,
-        0xb2,
-    } },
-    .{ .cp = 0x33a3, .decomp = &.{
-        0x6d,
-        0x6d,
-        0xb3,
-    } },
-    .{ .cp = 0x33a4, .decomp = &.{
-        0x63,
-        0x6d,
-        0xb3,
-    } },
-    .{ .cp = 0x33a5, .decomp = &.{
-        0x6d,
-        0xb3,
-    } },
-    .{ .cp = 0x33a6, .decomp = &.{
-        0x6b,
-        0x6d,
-        0xb3,
-    } },
-    .{ .cp = 0x33a7, .decomp = &.{
-        0x6d,
-        0x2215,
-        0x73,
-    } },
-    .{ .cp = 0x33a8, .decomp = &.{
-        0x6d,
-        0x2215,
-        0x73,
-        0xb2,
-    } },
-    .{ .cp = 0x33a9, .decomp = &.{
-        0x50,
-        0x61,
-    } },
-    .{ .cp = 0x33aa, .decomp = &.{
-        0x6b,
-        0x50,
-        0x61,
-    } },
-    .{ .cp = 0x33ab, .decomp = &.{
-        0x4d,
-        0x50,
-        0x61,
-    } },
-    .{ .cp = 0x33ac, .decomp = &.{
-        0x47,
-        0x50,
-        0x61,
-    } },
-    .{ .cp = 0x33ad, .decomp = &.{
-        0x72,
-        0x61,
-        0x64,
-    } },
-    .{ .cp = 0x33ae, .decomp = &.{
-        0x72,
-        0x61,
-        0x64,
-        0x2215,
-        0x73,
-    } },
-    .{ .cp = 0x33af, .decomp = &.{
-        0x72,
-        0x61,
-        0x64,
-        0x2215,
-        0x73,
-        0xb2,
-    } },
-    .{ .cp = 0x33b0, .decomp = &.{
-        0x70,
-        0x73,
-    } },
-    .{ .cp = 0x33b1, .decomp = &.{
-        0x6e,
-        0x73,
-    } },
-    .{ .cp = 0x33b2, .decomp = &.{
-        0x3bc,
-        0x73,
-    } },
-    .{ .cp = 0x33b3, .decomp = &.{
-        0x6d,
-        0x73,
-    } },
-    .{ .cp = 0x33b4, .decomp = &.{
-        0x70,
-        0x56,
-    } },
-    .{ .cp = 0x33b5, .decomp = &.{
-        0x6e,
-        0x56,
-    } },
-    .{ .cp = 0x33b6, .decomp = &.{
-        0x3bc,
-        0x56,
-    } },
-    .{ .cp = 0x33b7, .decomp = &.{
-        0x6d,
-        0x56,
-    } },
-    .{ .cp = 0x33b8, .decomp = &.{
-        0x6b,
-        0x56,
-    } },
-    .{ .cp = 0x33b9, .decomp = &.{
-        0x4d,
-        0x56,
-    } },
-    .{ .cp = 0x33ba, .decomp = &.{
-        0x70,
-        0x57,
-    } },
-    .{ .cp = 0x33bb, .decomp = &.{
-        0x6e,
-        0x57,
-    } },
-    .{ .cp = 0x33bc, .decomp = &.{
-        0x3bc,
-        0x57,
-    } },
-    .{ .cp = 0x33bd, .decomp = &.{
-        0x6d,
-        0x57,
-    } },
-    .{ .cp = 0x33be, .decomp = &.{
-        0x6b,
-        0x57,
-    } },
-    .{ .cp = 0x33bf, .decomp = &.{
-        0x4d,
-        0x57,
-    } },
-    .{ .cp = 0x33c0, .decomp = &.{
-        0x6b,
-        0x3a9,
-    } },
-    .{ .cp = 0x33c1, .decomp = &.{
-        0x4d,
-        0x3a9,
-    } },
-    .{ .cp = 0x33c2, .decomp = &.{
-        0x61,
-        0x2e,
-        0x6d,
-        0x2e,
-    } },
-    .{ .cp = 0x33c3, .decomp = &.{
-        0x42,
-        0x71,
-    } },
-    .{ .cp = 0x33c4, .decomp = &.{
-        0x63,
-        0x63,
-    } },
-    .{ .cp = 0x33c5, .decomp = &.{
-        0x63,
-        0x64,
-    } },
-    .{ .cp = 0x33c6, .decomp = &.{
-        0x43,
-        0x2215,
-        0x6b,
-        0x67,
-    } },
-    .{ .cp = 0x33c7, .decomp = &.{
-        0x43,
-        0x6f,
-        0x2e,
-    } },
-    .{ .cp = 0x33c8, .decomp = &.{
-        0x64,
-        0x42,
-    } },
-    .{ .cp = 0x33c9, .decomp = &.{
-        0x47,
-        0x79,
-    } },
-    .{ .cp = 0x33ca, .decomp = &.{
-        0x68,
-        0x61,
-    } },
-    .{ .cp = 0x33cb, .decomp = &.{
-        0x48,
-        0x50,
-    } },
-    .{ .cp = 0x33cc, .decomp = &.{
-        0x69,
-        0x6e,
-    } },
-    .{ .cp = 0x33cd, .decomp = &.{
-        0x4b,
-        0x4b,
-    } },
-    .{ .cp = 0x33ce, .decomp = &.{
-        0x4b,
-        0x4d,
-    } },
-    .{ .cp = 0x33cf, .decomp = &.{
-        0x6b,
-        0x74,
-    } },
-    .{ .cp = 0x33d0, .decomp = &.{
-        0x6c,
-        0x6d,
-    } },
-    .{ .cp = 0x33d1, .decomp = &.{
-        0x6c,
-        0x6e,
-    } },
-    .{ .cp = 0x33d2, .decomp = &.{
-        0x6c,
-        0x6f,
-        0x67,
-    } },
-    .{ .cp = 0x33d3, .decomp = &.{
-        0x6c,
-        0x78,
-    } },
-    .{ .cp = 0x33d4, .decomp = &.{
-        0x6d,
-        0x62,
-    } },
-    .{ .cp = 0x33d5, .decomp = &.{
-        0x6d,
-        0x69,
-        0x6c,
-    } },
-    .{ .cp = 0x33d6, .decomp = &.{
-        0x6d,
-        0x6f,
-        0x6c,
-    } },
-    .{ .cp = 0x33d7, .decomp = &.{
-        0x50,
-        0x48,
-    } },
-    .{ .cp = 0x33d8, .decomp = &.{
-        0x70,
-        0x2e,
-        0x6d,
-        0x2e,
-    } },
-    .{ .cp = 0x33d9, .decomp = &.{
-        0x50,
-        0x50,
-        0x4d,
-    } },
-    .{ .cp = 0x33da, .decomp = &.{
-        0x50,
-        0x52,
-    } },
-    .{ .cp = 0x33db, .decomp = &.{
-        0x73,
-        0x72,
-    } },
-    .{ .cp = 0x33dc, .decomp = &.{
-        0x53,
-        0x76,
-    } },
-    .{ .cp = 0x33dd, .decomp = &.{
-        0x57,
-        0x62,
-    } },
-    .{ .cp = 0x33de, .decomp = &.{
-        0x56,
-        0x2215,
-        0x6d,
-    } },
-    .{ .cp = 0x33df, .decomp = &.{
-        0x41,
-        0x2215,
-        0x6d,
-    } },
-    .{ .cp = 0x33e0, .decomp = &.{
-        0x31,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e1, .decomp = &.{
-        0x32,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e2, .decomp = &.{
-        0x33,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e3, .decomp = &.{
-        0x34,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e4, .decomp = &.{
-        0x35,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e5, .decomp = &.{
-        0x36,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e6, .decomp = &.{
-        0x37,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e7, .decomp = &.{
-        0x38,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e8, .decomp = &.{
-        0x39,
-        0x65e5,
-    } },
-    .{ .cp = 0x33e9, .decomp = &.{
-        0x31,
-        0x30,
-        0x65e5,
-    } },
-    .{ .cp = 0x33ea, .decomp = &.{
-        0x31,
-        0x31,
-        0x65e5,
-    } },
-    .{ .cp = 0x33eb, .decomp = &.{
-        0x31,
-        0x32,
-        0x65e5,
-    } },
-    .{ .cp = 0x33ec, .decomp = &.{
-        0x31,
-        0x33,
-        0x65e5,
-    } },
-    .{ .cp = 0x33ed, .decomp = &.{
-        0x31,
-        0x34,
-        0x65e5,
-    } },
-    .{ .cp = 0x33ee, .decomp = &.{
-        0x31,
-        0x35,
-        0x65e5,
-    } },
-    .{ .cp = 0x33ef, .decomp = &.{
-        0x31,
-        0x36,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f0, .decomp = &.{
-        0x31,
-        0x37,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f1, .decomp = &.{
-        0x31,
-        0x38,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f2, .decomp = &.{
-        0x31,
-        0x39,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f3, .decomp = &.{
-        0x32,
-        0x30,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f4, .decomp = &.{
-        0x32,
-        0x31,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f5, .decomp = &.{
-        0x32,
-        0x32,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f6, .decomp = &.{
-        0x32,
-        0x33,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f7, .decomp = &.{
-        0x32,
-        0x34,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f8, .decomp = &.{
-        0x32,
-        0x35,
-        0x65e5,
-    } },
-    .{ .cp = 0x33f9, .decomp = &.{
-        0x32,
-        0x36,
-        0x65e5,
-    } },
-    .{ .cp = 0x33fa, .decomp = &.{
-        0x32,
-        0x37,
-        0x65e5,
-    } },
-    .{ .cp = 0x33fb, .decomp = &.{
-        0x32,
-        0x38,
-        0x65e5,
-    } },
-    .{ .cp = 0x33fc, .decomp = &.{
-        0x32,
-        0x39,
-        0x65e5,
-    } },
-    .{ .cp = 0x33fd, .decomp = &.{
-        0x33,
-        0x30,
-        0x65e5,
-    } },
-    .{ .cp = 0x33fe, .decomp = &.{
-        0x33,
-        0x31,
-        0x65e5,
-    } },
-    .{ .cp = 0x33ff, .decomp = &.{
-        0x67,
-        0x61,
-        0x6c,
-    } },
-    .{ .cp = 0xa69c, .decomp = &.{
-        0x44a,
-    } },
-    .{ .cp = 0xa69d, .decomp = &.{
-        0x44c,
-    } },
-    .{ .cp = 0xa770, .decomp = &.{
-        0xa76f,
-    } },
-    .{ .cp = 0xa7f1, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0xa7f2, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0xa7f3, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0xa7f4, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0xa7f8, .decomp = &.{
-        0x126,
-    } },
-    .{ .cp = 0xa7f9, .decomp = &.{
-        0x153,
-    } },
-    .{ .cp = 0xab5c, .decomp = &.{
-        0xa727,
-    } },
-    .{ .cp = 0xab5d, .decomp = &.{
-        0xab37,
-    } },
-    .{ .cp = 0xab5e, .decomp = &.{
-        0x26b,
-    } },
-    .{ .cp = 0xab5f, .decomp = &.{
-        0xab52,
-    } },
-    .{ .cp = 0xab69, .decomp = &.{
-        0x28d,
-    } },
-    .{ .cp = 0xfb00, .decomp = &.{
-        0x66,
-        0x66,
-    } },
-    .{ .cp = 0xfb01, .decomp = &.{
-        0x66,
-        0x69,
-    } },
-    .{ .cp = 0xfb02, .decomp = &.{
-        0x66,
-        0x6c,
-    } },
-    .{ .cp = 0xfb03, .decomp = &.{
-        0x66,
-        0x66,
-        0x69,
-    } },
-    .{ .cp = 0xfb04, .decomp = &.{
-        0x66,
-        0x66,
-        0x6c,
-    } },
-    .{ .cp = 0xfb05, .decomp = &.{
-        0x17f,
-        0x74,
-    } },
-    .{ .cp = 0xfb06, .decomp = &.{
-        0x73,
-        0x74,
-    } },
-    .{ .cp = 0xfb13, .decomp = &.{
-        0x574,
-        0x576,
-    } },
-    .{ .cp = 0xfb14, .decomp = &.{
-        0x574,
-        0x565,
-    } },
-    .{ .cp = 0xfb15, .decomp = &.{
-        0x574,
-        0x56b,
-    } },
-    .{ .cp = 0xfb16, .decomp = &.{
-        0x57e,
-        0x576,
-    } },
-    .{ .cp = 0xfb17, .decomp = &.{
-        0x574,
-        0x56d,
-    } },
-    .{ .cp = 0xfb20, .decomp = &.{
-        0x5e2,
-    } },
-    .{ .cp = 0xfb21, .decomp = &.{
-        0x5d0,
-    } },
-    .{ .cp = 0xfb22, .decomp = &.{
-        0x5d3,
-    } },
-    .{ .cp = 0xfb23, .decomp = &.{
-        0x5d4,
-    } },
-    .{ .cp = 0xfb24, .decomp = &.{
-        0x5db,
-    } },
-    .{ .cp = 0xfb25, .decomp = &.{
-        0x5dc,
-    } },
-    .{ .cp = 0xfb26, .decomp = &.{
-        0x5dd,
-    } },
-    .{ .cp = 0xfb27, .decomp = &.{
-        0x5e8,
-    } },
-    .{ .cp = 0xfb28, .decomp = &.{
-        0x5ea,
-    } },
-    .{ .cp = 0xfb29, .decomp = &.{
-        0x2b,
-    } },
-    .{ .cp = 0xfb4f, .decomp = &.{
-        0x5d0,
-        0x5dc,
-    } },
-    .{ .cp = 0xfb50, .decomp = &.{
-        0x671,
-    } },
-    .{ .cp = 0xfb51, .decomp = &.{
-        0x671,
-    } },
-    .{ .cp = 0xfb52, .decomp = &.{
-        0x67b,
-    } },
-    .{ .cp = 0xfb53, .decomp = &.{
-        0x67b,
-    } },
-    .{ .cp = 0xfb54, .decomp = &.{
-        0x67b,
-    } },
-    .{ .cp = 0xfb55, .decomp = &.{
-        0x67b,
-    } },
-    .{ .cp = 0xfb56, .decomp = &.{
-        0x67e,
-    } },
-    .{ .cp = 0xfb57, .decomp = &.{
-        0x67e,
-    } },
-    .{ .cp = 0xfb58, .decomp = &.{
-        0x67e,
-    } },
-    .{ .cp = 0xfb59, .decomp = &.{
-        0x67e,
-    } },
-    .{ .cp = 0xfb5a, .decomp = &.{
-        0x680,
-    } },
-    .{ .cp = 0xfb5b, .decomp = &.{
-        0x680,
-    } },
-    .{ .cp = 0xfb5c, .decomp = &.{
-        0x680,
-    } },
-    .{ .cp = 0xfb5d, .decomp = &.{
-        0x680,
-    } },
-    .{ .cp = 0xfb5e, .decomp = &.{
-        0x67a,
-    } },
-    .{ .cp = 0xfb5f, .decomp = &.{
-        0x67a,
-    } },
-    .{ .cp = 0xfb60, .decomp = &.{
-        0x67a,
-    } },
-    .{ .cp = 0xfb61, .decomp = &.{
-        0x67a,
-    } },
-    .{ .cp = 0xfb62, .decomp = &.{
-        0x67f,
-    } },
-    .{ .cp = 0xfb63, .decomp = &.{
-        0x67f,
-    } },
-    .{ .cp = 0xfb64, .decomp = &.{
-        0x67f,
-    } },
-    .{ .cp = 0xfb65, .decomp = &.{
-        0x67f,
-    } },
-    .{ .cp = 0xfb66, .decomp = &.{
-        0x679,
-    } },
-    .{ .cp = 0xfb67, .decomp = &.{
-        0x679,
-    } },
-    .{ .cp = 0xfb68, .decomp = &.{
-        0x679,
-    } },
-    .{ .cp = 0xfb69, .decomp = &.{
-        0x679,
-    } },
-    .{ .cp = 0xfb6a, .decomp = &.{
-        0x6a4,
-    } },
-    .{ .cp = 0xfb6b, .decomp = &.{
-        0x6a4,
-    } },
-    .{ .cp = 0xfb6c, .decomp = &.{
-        0x6a4,
-    } },
-    .{ .cp = 0xfb6d, .decomp = &.{
-        0x6a4,
-    } },
-    .{ .cp = 0xfb6e, .decomp = &.{
-        0x6a6,
-    } },
-    .{ .cp = 0xfb6f, .decomp = &.{
-        0x6a6,
-    } },
-    .{ .cp = 0xfb70, .decomp = &.{
-        0x6a6,
-    } },
-    .{ .cp = 0xfb71, .decomp = &.{
-        0x6a6,
-    } },
-    .{ .cp = 0xfb72, .decomp = &.{
-        0x684,
-    } },
-    .{ .cp = 0xfb73, .decomp = &.{
-        0x684,
-    } },
-    .{ .cp = 0xfb74, .decomp = &.{
-        0x684,
-    } },
-    .{ .cp = 0xfb75, .decomp = &.{
-        0x684,
-    } },
-    .{ .cp = 0xfb76, .decomp = &.{
-        0x683,
-    } },
-    .{ .cp = 0xfb77, .decomp = &.{
-        0x683,
-    } },
-    .{ .cp = 0xfb78, .decomp = &.{
-        0x683,
-    } },
-    .{ .cp = 0xfb79, .decomp = &.{
-        0x683,
-    } },
-    .{ .cp = 0xfb7a, .decomp = &.{
-        0x686,
-    } },
-    .{ .cp = 0xfb7b, .decomp = &.{
-        0x686,
-    } },
-    .{ .cp = 0xfb7c, .decomp = &.{
-        0x686,
-    } },
-    .{ .cp = 0xfb7d, .decomp = &.{
-        0x686,
-    } },
-    .{ .cp = 0xfb7e, .decomp = &.{
-        0x687,
-    } },
-    .{ .cp = 0xfb7f, .decomp = &.{
-        0x687,
-    } },
-    .{ .cp = 0xfb80, .decomp = &.{
-        0x687,
-    } },
-    .{ .cp = 0xfb81, .decomp = &.{
-        0x687,
-    } },
-    .{ .cp = 0xfb82, .decomp = &.{
-        0x68d,
-    } },
-    .{ .cp = 0xfb83, .decomp = &.{
-        0x68d,
-    } },
-    .{ .cp = 0xfb84, .decomp = &.{
-        0x68c,
-    } },
-    .{ .cp = 0xfb85, .decomp = &.{
-        0x68c,
-    } },
-    .{ .cp = 0xfb86, .decomp = &.{
-        0x68e,
-    } },
-    .{ .cp = 0xfb87, .decomp = &.{
-        0x68e,
-    } },
-    .{ .cp = 0xfb88, .decomp = &.{
-        0x688,
-    } },
-    .{ .cp = 0xfb89, .decomp = &.{
-        0x688,
-    } },
-    .{ .cp = 0xfb8a, .decomp = &.{
-        0x698,
-    } },
-    .{ .cp = 0xfb8b, .decomp = &.{
-        0x698,
-    } },
-    .{ .cp = 0xfb8c, .decomp = &.{
-        0x691,
-    } },
-    .{ .cp = 0xfb8d, .decomp = &.{
-        0x691,
-    } },
-    .{ .cp = 0xfb8e, .decomp = &.{
-        0x6a9,
-    } },
-    .{ .cp = 0xfb8f, .decomp = &.{
-        0x6a9,
-    } },
-    .{ .cp = 0xfb90, .decomp = &.{
-        0x6a9,
-    } },
-    .{ .cp = 0xfb91, .decomp = &.{
-        0x6a9,
-    } },
-    .{ .cp = 0xfb92, .decomp = &.{
-        0x6af,
-    } },
-    .{ .cp = 0xfb93, .decomp = &.{
-        0x6af,
-    } },
-    .{ .cp = 0xfb94, .decomp = &.{
-        0x6af,
-    } },
-    .{ .cp = 0xfb95, .decomp = &.{
-        0x6af,
-    } },
-    .{ .cp = 0xfb96, .decomp = &.{
-        0x6b3,
-    } },
-    .{ .cp = 0xfb97, .decomp = &.{
-        0x6b3,
-    } },
-    .{ .cp = 0xfb98, .decomp = &.{
-        0x6b3,
-    } },
-    .{ .cp = 0xfb99, .decomp = &.{
-        0x6b3,
-    } },
-    .{ .cp = 0xfb9a, .decomp = &.{
-        0x6b1,
-    } },
-    .{ .cp = 0xfb9b, .decomp = &.{
-        0x6b1,
-    } },
-    .{ .cp = 0xfb9c, .decomp = &.{
-        0x6b1,
-    } },
-    .{ .cp = 0xfb9d, .decomp = &.{
-        0x6b1,
-    } },
-    .{ .cp = 0xfb9e, .decomp = &.{
-        0x6ba,
-    } },
-    .{ .cp = 0xfb9f, .decomp = &.{
-        0x6ba,
-    } },
-    .{ .cp = 0xfba0, .decomp = &.{
-        0x6bb,
-    } },
-    .{ .cp = 0xfba1, .decomp = &.{
-        0x6bb,
-    } },
-    .{ .cp = 0xfba2, .decomp = &.{
-        0x6bb,
-    } },
-    .{ .cp = 0xfba3, .decomp = &.{
-        0x6bb,
-    } },
-    .{ .cp = 0xfba4, .decomp = &.{
-        0x6c0,
-    } },
-    .{ .cp = 0xfba5, .decomp = &.{
-        0x6c0,
-    } },
-    .{ .cp = 0xfba6, .decomp = &.{
-        0x6c1,
-    } },
-    .{ .cp = 0xfba7, .decomp = &.{
-        0x6c1,
-    } },
-    .{ .cp = 0xfba8, .decomp = &.{
-        0x6c1,
-    } },
-    .{ .cp = 0xfba9, .decomp = &.{
-        0x6c1,
-    } },
-    .{ .cp = 0xfbaa, .decomp = &.{
-        0x6be,
-    } },
-    .{ .cp = 0xfbab, .decomp = &.{
-        0x6be,
-    } },
-    .{ .cp = 0xfbac, .decomp = &.{
-        0x6be,
-    } },
-    .{ .cp = 0xfbad, .decomp = &.{
-        0x6be,
-    } },
-    .{ .cp = 0xfbae, .decomp = &.{
-        0x6d2,
-    } },
-    .{ .cp = 0xfbaf, .decomp = &.{
-        0x6d2,
-    } },
-    .{ .cp = 0xfbb0, .decomp = &.{
-        0x6d3,
-    } },
-    .{ .cp = 0xfbb1, .decomp = &.{
-        0x6d3,
-    } },
-    .{ .cp = 0xfbd3, .decomp = &.{
-        0x6ad,
-    } },
-    .{ .cp = 0xfbd4, .decomp = &.{
-        0x6ad,
-    } },
-    .{ .cp = 0xfbd5, .decomp = &.{
-        0x6ad,
-    } },
-    .{ .cp = 0xfbd6, .decomp = &.{
-        0x6ad,
-    } },
-    .{ .cp = 0xfbd7, .decomp = &.{
-        0x6c7,
-    } },
-    .{ .cp = 0xfbd8, .decomp = &.{
-        0x6c7,
-    } },
-    .{ .cp = 0xfbd9, .decomp = &.{
-        0x6c6,
-    } },
-    .{ .cp = 0xfbda, .decomp = &.{
-        0x6c6,
-    } },
-    .{ .cp = 0xfbdb, .decomp = &.{
-        0x6c8,
-    } },
-    .{ .cp = 0xfbdc, .decomp = &.{
-        0x6c8,
-    } },
-    .{ .cp = 0xfbdd, .decomp = &.{
-        0x677,
-    } },
-    .{ .cp = 0xfbde, .decomp = &.{
-        0x6cb,
-    } },
-    .{ .cp = 0xfbdf, .decomp = &.{
-        0x6cb,
-    } },
-    .{ .cp = 0xfbe0, .decomp = &.{
-        0x6c5,
-    } },
-    .{ .cp = 0xfbe1, .decomp = &.{
-        0x6c5,
-    } },
-    .{ .cp = 0xfbe2, .decomp = &.{
-        0x6c9,
-    } },
-    .{ .cp = 0xfbe3, .decomp = &.{
-        0x6c9,
-    } },
-    .{ .cp = 0xfbe4, .decomp = &.{
-        0x6d0,
-    } },
-    .{ .cp = 0xfbe5, .decomp = &.{
-        0x6d0,
-    } },
-    .{ .cp = 0xfbe6, .decomp = &.{
-        0x6d0,
-    } },
-    .{ .cp = 0xfbe7, .decomp = &.{
-        0x6d0,
-    } },
-    .{ .cp = 0xfbe8, .decomp = &.{
-        0x649,
-    } },
-    .{ .cp = 0xfbe9, .decomp = &.{
-        0x649,
-    } },
-    .{ .cp = 0xfbea, .decomp = &.{
-        0x626,
-        0x627,
-    } },
-    .{ .cp = 0xfbeb, .decomp = &.{
-        0x626,
-        0x627,
-    } },
-    .{ .cp = 0xfbec, .decomp = &.{
-        0x626,
-        0x6d5,
-    } },
-    .{ .cp = 0xfbed, .decomp = &.{
-        0x626,
-        0x6d5,
-    } },
-    .{ .cp = 0xfbee, .decomp = &.{
-        0x626,
-        0x648,
-    } },
-    .{ .cp = 0xfbef, .decomp = &.{
-        0x626,
-        0x648,
-    } },
-    .{ .cp = 0xfbf0, .decomp = &.{
-        0x626,
-        0x6c7,
-    } },
-    .{ .cp = 0xfbf1, .decomp = &.{
-        0x626,
-        0x6c7,
-    } },
-    .{ .cp = 0xfbf2, .decomp = &.{
-        0x626,
-        0x6c6,
-    } },
-    .{ .cp = 0xfbf3, .decomp = &.{
-        0x626,
-        0x6c6,
-    } },
-    .{ .cp = 0xfbf4, .decomp = &.{
-        0x626,
-        0x6c8,
-    } },
-    .{ .cp = 0xfbf5, .decomp = &.{
-        0x626,
-        0x6c8,
-    } },
-    .{ .cp = 0xfbf6, .decomp = &.{
-        0x626,
-        0x6d0,
-    } },
-    .{ .cp = 0xfbf7, .decomp = &.{
-        0x626,
-        0x6d0,
-    } },
-    .{ .cp = 0xfbf8, .decomp = &.{
-        0x626,
-        0x6d0,
-    } },
-    .{ .cp = 0xfbf9, .decomp = &.{
-        0x626,
-        0x649,
-    } },
-    .{ .cp = 0xfbfa, .decomp = &.{
-        0x626,
-        0x649,
-    } },
-    .{ .cp = 0xfbfb, .decomp = &.{
-        0x626,
-        0x649,
-    } },
-    .{ .cp = 0xfbfc, .decomp = &.{
-        0x6cc,
-    } },
-    .{ .cp = 0xfbfd, .decomp = &.{
-        0x6cc,
-    } },
-    .{ .cp = 0xfbfe, .decomp = &.{
-        0x6cc,
-    } },
-    .{ .cp = 0xfbff, .decomp = &.{
-        0x6cc,
-    } },
-    .{ .cp = 0xfc00, .decomp = &.{
-        0x626,
-        0x62c,
-    } },
-    .{ .cp = 0xfc01, .decomp = &.{
-        0x626,
-        0x62d,
-    } },
-    .{ .cp = 0xfc02, .decomp = &.{
-        0x626,
-        0x645,
-    } },
-    .{ .cp = 0xfc03, .decomp = &.{
-        0x626,
-        0x649,
-    } },
-    .{ .cp = 0xfc04, .decomp = &.{
-        0x626,
-        0x64a,
-    } },
-    .{ .cp = 0xfc05, .decomp = &.{
-        0x628,
-        0x62c,
-    } },
-    .{ .cp = 0xfc06, .decomp = &.{
-        0x628,
-        0x62d,
-    } },
-    .{ .cp = 0xfc07, .decomp = &.{
-        0x628,
-        0x62e,
-    } },
-    .{ .cp = 0xfc08, .decomp = &.{
-        0x628,
-        0x645,
-    } },
-    .{ .cp = 0xfc09, .decomp = &.{
-        0x628,
-        0x649,
-    } },
-    .{ .cp = 0xfc0a, .decomp = &.{
-        0x628,
-        0x64a,
-    } },
-    .{ .cp = 0xfc0b, .decomp = &.{
-        0x62a,
-        0x62c,
-    } },
-    .{ .cp = 0xfc0c, .decomp = &.{
-        0x62a,
-        0x62d,
-    } },
-    .{ .cp = 0xfc0d, .decomp = &.{
-        0x62a,
-        0x62e,
-    } },
-    .{ .cp = 0xfc0e, .decomp = &.{
-        0x62a,
-        0x645,
-    } },
-    .{ .cp = 0xfc0f, .decomp = &.{
-        0x62a,
-        0x649,
-    } },
-    .{ .cp = 0xfc10, .decomp = &.{
-        0x62a,
-        0x64a,
-    } },
-    .{ .cp = 0xfc11, .decomp = &.{
-        0x62b,
-        0x62c,
-    } },
-    .{ .cp = 0xfc12, .decomp = &.{
-        0x62b,
-        0x645,
-    } },
-    .{ .cp = 0xfc13, .decomp = &.{
-        0x62b,
-        0x649,
-    } },
-    .{ .cp = 0xfc14, .decomp = &.{
-        0x62b,
-        0x64a,
-    } },
-    .{ .cp = 0xfc15, .decomp = &.{
-        0x62c,
-        0x62d,
-    } },
-    .{ .cp = 0xfc16, .decomp = &.{
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfc17, .decomp = &.{
-        0x62d,
-        0x62c,
-    } },
-    .{ .cp = 0xfc18, .decomp = &.{
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfc19, .decomp = &.{
-        0x62e,
-        0x62c,
-    } },
-    .{ .cp = 0xfc1a, .decomp = &.{
-        0x62e,
-        0x62d,
-    } },
-    .{ .cp = 0xfc1b, .decomp = &.{
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfc1c, .decomp = &.{
-        0x633,
-        0x62c,
-    } },
-    .{ .cp = 0xfc1d, .decomp = &.{
-        0x633,
-        0x62d,
-    } },
-    .{ .cp = 0xfc1e, .decomp = &.{
-        0x633,
-        0x62e,
-    } },
-    .{ .cp = 0xfc1f, .decomp = &.{
-        0x633,
-        0x645,
-    } },
-    .{ .cp = 0xfc20, .decomp = &.{
-        0x635,
-        0x62d,
-    } },
-    .{ .cp = 0xfc21, .decomp = &.{
-        0x635,
-        0x645,
-    } },
-    .{ .cp = 0xfc22, .decomp = &.{
-        0x636,
-        0x62c,
-    } },
-    .{ .cp = 0xfc23, .decomp = &.{
-        0x636,
-        0x62d,
-    } },
-    .{ .cp = 0xfc24, .decomp = &.{
-        0x636,
-        0x62e,
-    } },
-    .{ .cp = 0xfc25, .decomp = &.{
-        0x636,
-        0x645,
-    } },
-    .{ .cp = 0xfc26, .decomp = &.{
-        0x637,
-        0x62d,
-    } },
-    .{ .cp = 0xfc27, .decomp = &.{
-        0x637,
-        0x645,
-    } },
-    .{ .cp = 0xfc28, .decomp = &.{
-        0x638,
-        0x645,
-    } },
-    .{ .cp = 0xfc29, .decomp = &.{
-        0x639,
-        0x62c,
-    } },
-    .{ .cp = 0xfc2a, .decomp = &.{
-        0x639,
-        0x645,
-    } },
-    .{ .cp = 0xfc2b, .decomp = &.{
-        0x63a,
-        0x62c,
-    } },
-    .{ .cp = 0xfc2c, .decomp = &.{
-        0x63a,
-        0x645,
-    } },
-    .{ .cp = 0xfc2d, .decomp = &.{
-        0x641,
-        0x62c,
-    } },
-    .{ .cp = 0xfc2e, .decomp = &.{
-        0x641,
-        0x62d,
-    } },
-    .{ .cp = 0xfc2f, .decomp = &.{
-        0x641,
-        0x62e,
-    } },
-    .{ .cp = 0xfc30, .decomp = &.{
-        0x641,
-        0x645,
-    } },
-    .{ .cp = 0xfc31, .decomp = &.{
-        0x641,
-        0x649,
-    } },
-    .{ .cp = 0xfc32, .decomp = &.{
-        0x641,
-        0x64a,
-    } },
-    .{ .cp = 0xfc33, .decomp = &.{
-        0x642,
-        0x62d,
-    } },
-    .{ .cp = 0xfc34, .decomp = &.{
-        0x642,
-        0x645,
-    } },
-    .{ .cp = 0xfc35, .decomp = &.{
-        0x642,
-        0x649,
-    } },
-    .{ .cp = 0xfc36, .decomp = &.{
-        0x642,
-        0x64a,
-    } },
-    .{ .cp = 0xfc37, .decomp = &.{
-        0x643,
-        0x627,
-    } },
-    .{ .cp = 0xfc38, .decomp = &.{
-        0x643,
-        0x62c,
-    } },
-    .{ .cp = 0xfc39, .decomp = &.{
-        0x643,
-        0x62d,
-    } },
-    .{ .cp = 0xfc3a, .decomp = &.{
-        0x643,
-        0x62e,
-    } },
-    .{ .cp = 0xfc3b, .decomp = &.{
-        0x643,
-        0x644,
-    } },
-    .{ .cp = 0xfc3c, .decomp = &.{
-        0x643,
-        0x645,
-    } },
-    .{ .cp = 0xfc3d, .decomp = &.{
-        0x643,
-        0x649,
-    } },
-    .{ .cp = 0xfc3e, .decomp = &.{
-        0x643,
-        0x64a,
-    } },
-    .{ .cp = 0xfc3f, .decomp = &.{
-        0x644,
-        0x62c,
-    } },
-    .{ .cp = 0xfc40, .decomp = &.{
-        0x644,
-        0x62d,
-    } },
-    .{ .cp = 0xfc41, .decomp = &.{
-        0x644,
-        0x62e,
-    } },
-    .{ .cp = 0xfc42, .decomp = &.{
-        0x644,
-        0x645,
-    } },
-    .{ .cp = 0xfc43, .decomp = &.{
-        0x644,
-        0x649,
-    } },
-    .{ .cp = 0xfc44, .decomp = &.{
-        0x644,
-        0x64a,
-    } },
-    .{ .cp = 0xfc45, .decomp = &.{
-        0x645,
-        0x62c,
-    } },
-    .{ .cp = 0xfc46, .decomp = &.{
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfc47, .decomp = &.{
-        0x645,
-        0x62e,
-    } },
-    .{ .cp = 0xfc48, .decomp = &.{
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfc49, .decomp = &.{
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfc4a, .decomp = &.{
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfc4b, .decomp = &.{
-        0x646,
-        0x62c,
-    } },
-    .{ .cp = 0xfc4c, .decomp = &.{
-        0x646,
-        0x62d,
-    } },
-    .{ .cp = 0xfc4d, .decomp = &.{
-        0x646,
-        0x62e,
-    } },
-    .{ .cp = 0xfc4e, .decomp = &.{
-        0x646,
-        0x645,
-    } },
-    .{ .cp = 0xfc4f, .decomp = &.{
-        0x646,
-        0x649,
-    } },
-    .{ .cp = 0xfc50, .decomp = &.{
-        0x646,
-        0x64a,
-    } },
-    .{ .cp = 0xfc51, .decomp = &.{
-        0x647,
-        0x62c,
-    } },
-    .{ .cp = 0xfc52, .decomp = &.{
-        0x647,
-        0x645,
-    } },
-    .{ .cp = 0xfc53, .decomp = &.{
-        0x647,
-        0x649,
-    } },
-    .{ .cp = 0xfc54, .decomp = &.{
-        0x647,
-        0x64a,
-    } },
-    .{ .cp = 0xfc55, .decomp = &.{
-        0x64a,
-        0x62c,
-    } },
-    .{ .cp = 0xfc56, .decomp = &.{
-        0x64a,
-        0x62d,
-    } },
-    .{ .cp = 0xfc57, .decomp = &.{
-        0x64a,
-        0x62e,
-    } },
-    .{ .cp = 0xfc58, .decomp = &.{
-        0x64a,
-        0x645,
-    } },
-    .{ .cp = 0xfc59, .decomp = &.{
-        0x64a,
-        0x649,
-    } },
-    .{ .cp = 0xfc5a, .decomp = &.{
-        0x64a,
-        0x64a,
-    } },
-    .{ .cp = 0xfc5b, .decomp = &.{
-        0x630,
-        0x670,
-    } },
-    .{ .cp = 0xfc5c, .decomp = &.{
-        0x631,
-        0x670,
-    } },
-    .{ .cp = 0xfc5d, .decomp = &.{
-        0x649,
-        0x670,
-    } },
-    .{ .cp = 0xfc5e, .decomp = &.{
-        0x20,
-        0x64c,
-        0x651,
-    } },
-    .{ .cp = 0xfc5f, .decomp = &.{
-        0x20,
-        0x64d,
-        0x651,
-    } },
-    .{ .cp = 0xfc60, .decomp = &.{
-        0x20,
-        0x64e,
-        0x651,
-    } },
-    .{ .cp = 0xfc61, .decomp = &.{
-        0x20,
-        0x64f,
-        0x651,
-    } },
-    .{ .cp = 0xfc62, .decomp = &.{
-        0x20,
-        0x650,
-        0x651,
-    } },
-    .{ .cp = 0xfc63, .decomp = &.{
-        0x20,
-        0x651,
-        0x670,
-    } },
-    .{ .cp = 0xfc64, .decomp = &.{
-        0x626,
-        0x631,
-    } },
-    .{ .cp = 0xfc65, .decomp = &.{
-        0x626,
-        0x632,
-    } },
-    .{ .cp = 0xfc66, .decomp = &.{
-        0x626,
-        0x645,
-    } },
-    .{ .cp = 0xfc67, .decomp = &.{
-        0x626,
-        0x646,
-    } },
-    .{ .cp = 0xfc68, .decomp = &.{
-        0x626,
-        0x649,
-    } },
-    .{ .cp = 0xfc69, .decomp = &.{
-        0x626,
-        0x64a,
-    } },
-    .{ .cp = 0xfc6a, .decomp = &.{
-        0x628,
-        0x631,
-    } },
-    .{ .cp = 0xfc6b, .decomp = &.{
-        0x628,
-        0x632,
-    } },
-    .{ .cp = 0xfc6c, .decomp = &.{
-        0x628,
-        0x645,
-    } },
-    .{ .cp = 0xfc6d, .decomp = &.{
-        0x628,
-        0x646,
-    } },
-    .{ .cp = 0xfc6e, .decomp = &.{
-        0x628,
-        0x649,
-    } },
-    .{ .cp = 0xfc6f, .decomp = &.{
-        0x628,
-        0x64a,
-    } },
-    .{ .cp = 0xfc70, .decomp = &.{
-        0x62a,
-        0x631,
-    } },
-    .{ .cp = 0xfc71, .decomp = &.{
-        0x62a,
-        0x632,
-    } },
-    .{ .cp = 0xfc72, .decomp = &.{
-        0x62a,
-        0x645,
-    } },
-    .{ .cp = 0xfc73, .decomp = &.{
-        0x62a,
-        0x646,
-    } },
-    .{ .cp = 0xfc74, .decomp = &.{
-        0x62a,
-        0x649,
-    } },
-    .{ .cp = 0xfc75, .decomp = &.{
-        0x62a,
-        0x64a,
-    } },
-    .{ .cp = 0xfc76, .decomp = &.{
-        0x62b,
-        0x631,
-    } },
-    .{ .cp = 0xfc77, .decomp = &.{
-        0x62b,
-        0x632,
-    } },
-    .{ .cp = 0xfc78, .decomp = &.{
-        0x62b,
-        0x645,
-    } },
-    .{ .cp = 0xfc79, .decomp = &.{
-        0x62b,
-        0x646,
-    } },
-    .{ .cp = 0xfc7a, .decomp = &.{
-        0x62b,
-        0x649,
-    } },
-    .{ .cp = 0xfc7b, .decomp = &.{
-        0x62b,
-        0x64a,
-    } },
-    .{ .cp = 0xfc7c, .decomp = &.{
-        0x641,
-        0x649,
-    } },
-    .{ .cp = 0xfc7d, .decomp = &.{
-        0x641,
-        0x64a,
-    } },
-    .{ .cp = 0xfc7e, .decomp = &.{
-        0x642,
-        0x649,
-    } },
-    .{ .cp = 0xfc7f, .decomp = &.{
-        0x642,
-        0x64a,
-    } },
-    .{ .cp = 0xfc80, .decomp = &.{
-        0x643,
-        0x627,
-    } },
-    .{ .cp = 0xfc81, .decomp = &.{
-        0x643,
-        0x644,
-    } },
-    .{ .cp = 0xfc82, .decomp = &.{
-        0x643,
-        0x645,
-    } },
-    .{ .cp = 0xfc83, .decomp = &.{
-        0x643,
-        0x649,
-    } },
-    .{ .cp = 0xfc84, .decomp = &.{
-        0x643,
-        0x64a,
-    } },
-    .{ .cp = 0xfc85, .decomp = &.{
-        0x644,
-        0x645,
-    } },
-    .{ .cp = 0xfc86, .decomp = &.{
-        0x644,
-        0x649,
-    } },
-    .{ .cp = 0xfc87, .decomp = &.{
-        0x644,
-        0x64a,
-    } },
-    .{ .cp = 0xfc88, .decomp = &.{
-        0x645,
-        0x627,
-    } },
-    .{ .cp = 0xfc89, .decomp = &.{
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfc8a, .decomp = &.{
-        0x646,
-        0x631,
-    } },
-    .{ .cp = 0xfc8b, .decomp = &.{
-        0x646,
-        0x632,
-    } },
-    .{ .cp = 0xfc8c, .decomp = &.{
-        0x646,
-        0x645,
-    } },
-    .{ .cp = 0xfc8d, .decomp = &.{
-        0x646,
-        0x646,
-    } },
-    .{ .cp = 0xfc8e, .decomp = &.{
-        0x646,
-        0x649,
-    } },
-    .{ .cp = 0xfc8f, .decomp = &.{
-        0x646,
-        0x64a,
-    } },
-    .{ .cp = 0xfc90, .decomp = &.{
-        0x649,
-        0x670,
-    } },
-    .{ .cp = 0xfc91, .decomp = &.{
-        0x64a,
-        0x631,
-    } },
-    .{ .cp = 0xfc92, .decomp = &.{
-        0x64a,
-        0x632,
-    } },
-    .{ .cp = 0xfc93, .decomp = &.{
-        0x64a,
-        0x645,
-    } },
-    .{ .cp = 0xfc94, .decomp = &.{
-        0x64a,
-        0x646,
-    } },
-    .{ .cp = 0xfc95, .decomp = &.{
-        0x64a,
-        0x649,
-    } },
-    .{ .cp = 0xfc96, .decomp = &.{
-        0x64a,
-        0x64a,
-    } },
-    .{ .cp = 0xfc97, .decomp = &.{
-        0x626,
-        0x62c,
-    } },
-    .{ .cp = 0xfc98, .decomp = &.{
-        0x626,
-        0x62d,
-    } },
-    .{ .cp = 0xfc99, .decomp = &.{
-        0x626,
-        0x62e,
-    } },
-    .{ .cp = 0xfc9a, .decomp = &.{
-        0x626,
-        0x645,
-    } },
-    .{ .cp = 0xfc9b, .decomp = &.{
-        0x626,
-        0x647,
-    } },
-    .{ .cp = 0xfc9c, .decomp = &.{
-        0x628,
-        0x62c,
-    } },
-    .{ .cp = 0xfc9d, .decomp = &.{
-        0x628,
-        0x62d,
-    } },
-    .{ .cp = 0xfc9e, .decomp = &.{
-        0x628,
-        0x62e,
-    } },
-    .{ .cp = 0xfc9f, .decomp = &.{
-        0x628,
-        0x645,
-    } },
-    .{ .cp = 0xfca0, .decomp = &.{
-        0x628,
-        0x647,
-    } },
-    .{ .cp = 0xfca1, .decomp = &.{
-        0x62a,
-        0x62c,
-    } },
-    .{ .cp = 0xfca2, .decomp = &.{
-        0x62a,
-        0x62d,
-    } },
-    .{ .cp = 0xfca3, .decomp = &.{
-        0x62a,
-        0x62e,
-    } },
-    .{ .cp = 0xfca4, .decomp = &.{
-        0x62a,
-        0x645,
-    } },
-    .{ .cp = 0xfca5, .decomp = &.{
-        0x62a,
-        0x647,
-    } },
-    .{ .cp = 0xfca6, .decomp = &.{
-        0x62b,
-        0x645,
-    } },
-    .{ .cp = 0xfca7, .decomp = &.{
-        0x62c,
-        0x62d,
-    } },
-    .{ .cp = 0xfca8, .decomp = &.{
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfca9, .decomp = &.{
-        0x62d,
-        0x62c,
-    } },
-    .{ .cp = 0xfcaa, .decomp = &.{
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfcab, .decomp = &.{
-        0x62e,
-        0x62c,
-    } },
-    .{ .cp = 0xfcac, .decomp = &.{
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfcad, .decomp = &.{
-        0x633,
-        0x62c,
-    } },
-    .{ .cp = 0xfcae, .decomp = &.{
-        0x633,
-        0x62d,
-    } },
-    .{ .cp = 0xfcaf, .decomp = &.{
-        0x633,
-        0x62e,
-    } },
-    .{ .cp = 0xfcb0, .decomp = &.{
-        0x633,
-        0x645,
-    } },
-    .{ .cp = 0xfcb1, .decomp = &.{
-        0x635,
-        0x62d,
-    } },
-    .{ .cp = 0xfcb2, .decomp = &.{
-        0x635,
-        0x62e,
-    } },
-    .{ .cp = 0xfcb3, .decomp = &.{
-        0x635,
-        0x645,
-    } },
-    .{ .cp = 0xfcb4, .decomp = &.{
-        0x636,
-        0x62c,
-    } },
-    .{ .cp = 0xfcb5, .decomp = &.{
-        0x636,
-        0x62d,
-    } },
-    .{ .cp = 0xfcb6, .decomp = &.{
-        0x636,
-        0x62e,
-    } },
-    .{ .cp = 0xfcb7, .decomp = &.{
-        0x636,
-        0x645,
-    } },
-    .{ .cp = 0xfcb8, .decomp = &.{
-        0x637,
-        0x62d,
-    } },
-    .{ .cp = 0xfcb9, .decomp = &.{
-        0x638,
-        0x645,
-    } },
-    .{ .cp = 0xfcba, .decomp = &.{
-        0x639,
-        0x62c,
-    } },
-    .{ .cp = 0xfcbb, .decomp = &.{
-        0x639,
-        0x645,
-    } },
-    .{ .cp = 0xfcbc, .decomp = &.{
-        0x63a,
-        0x62c,
-    } },
-    .{ .cp = 0xfcbd, .decomp = &.{
-        0x63a,
-        0x645,
-    } },
-    .{ .cp = 0xfcbe, .decomp = &.{
-        0x641,
-        0x62c,
-    } },
-    .{ .cp = 0xfcbf, .decomp = &.{
-        0x641,
-        0x62d,
-    } },
-    .{ .cp = 0xfcc0, .decomp = &.{
-        0x641,
-        0x62e,
-    } },
-    .{ .cp = 0xfcc1, .decomp = &.{
-        0x641,
-        0x645,
-    } },
-    .{ .cp = 0xfcc2, .decomp = &.{
-        0x642,
-        0x62d,
-    } },
-    .{ .cp = 0xfcc3, .decomp = &.{
-        0x642,
-        0x645,
-    } },
-    .{ .cp = 0xfcc4, .decomp = &.{
-        0x643,
-        0x62c,
-    } },
-    .{ .cp = 0xfcc5, .decomp = &.{
-        0x643,
-        0x62d,
-    } },
-    .{ .cp = 0xfcc6, .decomp = &.{
-        0x643,
-        0x62e,
-    } },
-    .{ .cp = 0xfcc7, .decomp = &.{
-        0x643,
-        0x644,
-    } },
-    .{ .cp = 0xfcc8, .decomp = &.{
-        0x643,
-        0x645,
-    } },
-    .{ .cp = 0xfcc9, .decomp = &.{
-        0x644,
-        0x62c,
-    } },
-    .{ .cp = 0xfcca, .decomp = &.{
-        0x644,
-        0x62d,
-    } },
-    .{ .cp = 0xfccb, .decomp = &.{
-        0x644,
-        0x62e,
-    } },
-    .{ .cp = 0xfccc, .decomp = &.{
-        0x644,
-        0x645,
-    } },
-    .{ .cp = 0xfccd, .decomp = &.{
-        0x644,
-        0x647,
-    } },
-    .{ .cp = 0xfcce, .decomp = &.{
-        0x645,
-        0x62c,
-    } },
-    .{ .cp = 0xfccf, .decomp = &.{
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfcd0, .decomp = &.{
-        0x645,
-        0x62e,
-    } },
-    .{ .cp = 0xfcd1, .decomp = &.{
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfcd2, .decomp = &.{
-        0x646,
-        0x62c,
-    } },
-    .{ .cp = 0xfcd3, .decomp = &.{
-        0x646,
-        0x62d,
-    } },
-    .{ .cp = 0xfcd4, .decomp = &.{
-        0x646,
-        0x62e,
-    } },
-    .{ .cp = 0xfcd5, .decomp = &.{
-        0x646,
-        0x645,
-    } },
-    .{ .cp = 0xfcd6, .decomp = &.{
-        0x646,
-        0x647,
-    } },
-    .{ .cp = 0xfcd7, .decomp = &.{
-        0x647,
-        0x62c,
-    } },
-    .{ .cp = 0xfcd8, .decomp = &.{
-        0x647,
-        0x645,
-    } },
-    .{ .cp = 0xfcd9, .decomp = &.{
-        0x647,
-        0x670,
-    } },
-    .{ .cp = 0xfcda, .decomp = &.{
-        0x64a,
-        0x62c,
-    } },
-    .{ .cp = 0xfcdb, .decomp = &.{
-        0x64a,
-        0x62d,
-    } },
-    .{ .cp = 0xfcdc, .decomp = &.{
-        0x64a,
-        0x62e,
-    } },
-    .{ .cp = 0xfcdd, .decomp = &.{
-        0x64a,
-        0x645,
-    } },
-    .{ .cp = 0xfcde, .decomp = &.{
-        0x64a,
-        0x647,
-    } },
-    .{ .cp = 0xfcdf, .decomp = &.{
-        0x626,
-        0x645,
-    } },
-    .{ .cp = 0xfce0, .decomp = &.{
-        0x626,
-        0x647,
-    } },
-    .{ .cp = 0xfce1, .decomp = &.{
-        0x628,
-        0x645,
-    } },
-    .{ .cp = 0xfce2, .decomp = &.{
-        0x628,
-        0x647,
-    } },
-    .{ .cp = 0xfce3, .decomp = &.{
-        0x62a,
-        0x645,
-    } },
-    .{ .cp = 0xfce4, .decomp = &.{
-        0x62a,
-        0x647,
-    } },
-    .{ .cp = 0xfce5, .decomp = &.{
-        0x62b,
-        0x645,
-    } },
-    .{ .cp = 0xfce6, .decomp = &.{
-        0x62b,
-        0x647,
-    } },
-    .{ .cp = 0xfce7, .decomp = &.{
-        0x633,
-        0x645,
-    } },
-    .{ .cp = 0xfce8, .decomp = &.{
-        0x633,
-        0x647,
-    } },
-    .{ .cp = 0xfce9, .decomp = &.{
-        0x634,
-        0x645,
-    } },
-    .{ .cp = 0xfcea, .decomp = &.{
-        0x634,
-        0x647,
-    } },
-    .{ .cp = 0xfceb, .decomp = &.{
-        0x643,
-        0x644,
-    } },
-    .{ .cp = 0xfcec, .decomp = &.{
-        0x643,
-        0x645,
-    } },
-    .{ .cp = 0xfced, .decomp = &.{
-        0x644,
-        0x645,
-    } },
-    .{ .cp = 0xfcee, .decomp = &.{
-        0x646,
-        0x645,
-    } },
-    .{ .cp = 0xfcef, .decomp = &.{
-        0x646,
-        0x647,
-    } },
-    .{ .cp = 0xfcf0, .decomp = &.{
-        0x64a,
-        0x645,
-    } },
-    .{ .cp = 0xfcf1, .decomp = &.{
-        0x64a,
-        0x647,
-    } },
-    .{ .cp = 0xfcf2, .decomp = &.{
-        0x640,
-        0x64e,
-        0x651,
-    } },
-    .{ .cp = 0xfcf3, .decomp = &.{
-        0x640,
-        0x64f,
-        0x651,
-    } },
-    .{ .cp = 0xfcf4, .decomp = &.{
-        0x640,
-        0x650,
-        0x651,
-    } },
-    .{ .cp = 0xfcf5, .decomp = &.{
-        0x637,
-        0x649,
-    } },
-    .{ .cp = 0xfcf6, .decomp = &.{
-        0x637,
-        0x64a,
-    } },
-    .{ .cp = 0xfcf7, .decomp = &.{
-        0x639,
-        0x649,
-    } },
-    .{ .cp = 0xfcf8, .decomp = &.{
-        0x639,
-        0x64a,
-    } },
-    .{ .cp = 0xfcf9, .decomp = &.{
-        0x63a,
-        0x649,
-    } },
-    .{ .cp = 0xfcfa, .decomp = &.{
-        0x63a,
-        0x64a,
-    } },
-    .{ .cp = 0xfcfb, .decomp = &.{
-        0x633,
-        0x649,
-    } },
-    .{ .cp = 0xfcfc, .decomp = &.{
-        0x633,
-        0x64a,
-    } },
-    .{ .cp = 0xfcfd, .decomp = &.{
-        0x634,
-        0x649,
-    } },
-    .{ .cp = 0xfcfe, .decomp = &.{
-        0x634,
-        0x64a,
-    } },
-    .{ .cp = 0xfcff, .decomp = &.{
-        0x62d,
-        0x649,
-    } },
-    .{ .cp = 0xfd00, .decomp = &.{
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfd01, .decomp = &.{
-        0x62c,
-        0x649,
-    } },
-    .{ .cp = 0xfd02, .decomp = &.{
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfd03, .decomp = &.{
-        0x62e,
-        0x649,
-    } },
-    .{ .cp = 0xfd04, .decomp = &.{
-        0x62e,
-        0x64a,
-    } },
-    .{ .cp = 0xfd05, .decomp = &.{
-        0x635,
-        0x649,
-    } },
-    .{ .cp = 0xfd06, .decomp = &.{
-        0x635,
-        0x64a,
-    } },
-    .{ .cp = 0xfd07, .decomp = &.{
-        0x636,
-        0x649,
-    } },
-    .{ .cp = 0xfd08, .decomp = &.{
-        0x636,
-        0x64a,
-    } },
-    .{ .cp = 0xfd09, .decomp = &.{
-        0x634,
-        0x62c,
-    } },
-    .{ .cp = 0xfd0a, .decomp = &.{
-        0x634,
-        0x62d,
-    } },
-    .{ .cp = 0xfd0b, .decomp = &.{
-        0x634,
-        0x62e,
-    } },
-    .{ .cp = 0xfd0c, .decomp = &.{
-        0x634,
-        0x645,
-    } },
-    .{ .cp = 0xfd0d, .decomp = &.{
-        0x634,
-        0x631,
-    } },
-    .{ .cp = 0xfd0e, .decomp = &.{
-        0x633,
-        0x631,
-    } },
-    .{ .cp = 0xfd0f, .decomp = &.{
-        0x635,
-        0x631,
-    } },
-    .{ .cp = 0xfd10, .decomp = &.{
-        0x636,
-        0x631,
-    } },
-    .{ .cp = 0xfd11, .decomp = &.{
-        0x637,
-        0x649,
-    } },
-    .{ .cp = 0xfd12, .decomp = &.{
-        0x637,
-        0x64a,
-    } },
-    .{ .cp = 0xfd13, .decomp = &.{
-        0x639,
-        0x649,
-    } },
-    .{ .cp = 0xfd14, .decomp = &.{
-        0x639,
-        0x64a,
-    } },
-    .{ .cp = 0xfd15, .decomp = &.{
-        0x63a,
-        0x649,
-    } },
-    .{ .cp = 0xfd16, .decomp = &.{
-        0x63a,
-        0x64a,
-    } },
-    .{ .cp = 0xfd17, .decomp = &.{
-        0x633,
-        0x649,
-    } },
-    .{ .cp = 0xfd18, .decomp = &.{
-        0x633,
-        0x64a,
-    } },
-    .{ .cp = 0xfd19, .decomp = &.{
-        0x634,
-        0x649,
-    } },
-    .{ .cp = 0xfd1a, .decomp = &.{
-        0x634,
-        0x64a,
-    } },
-    .{ .cp = 0xfd1b, .decomp = &.{
-        0x62d,
-        0x649,
-    } },
-    .{ .cp = 0xfd1c, .decomp = &.{
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfd1d, .decomp = &.{
-        0x62c,
-        0x649,
-    } },
-    .{ .cp = 0xfd1e, .decomp = &.{
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfd1f, .decomp = &.{
-        0x62e,
-        0x649,
-    } },
-    .{ .cp = 0xfd20, .decomp = &.{
-        0x62e,
-        0x64a,
-    } },
-    .{ .cp = 0xfd21, .decomp = &.{
-        0x635,
-        0x649,
-    } },
-    .{ .cp = 0xfd22, .decomp = &.{
-        0x635,
-        0x64a,
-    } },
-    .{ .cp = 0xfd23, .decomp = &.{
-        0x636,
-        0x649,
-    } },
-    .{ .cp = 0xfd24, .decomp = &.{
-        0x636,
-        0x64a,
-    } },
-    .{ .cp = 0xfd25, .decomp = &.{
-        0x634,
-        0x62c,
-    } },
-    .{ .cp = 0xfd26, .decomp = &.{
-        0x634,
-        0x62d,
-    } },
-    .{ .cp = 0xfd27, .decomp = &.{
-        0x634,
-        0x62e,
-    } },
-    .{ .cp = 0xfd28, .decomp = &.{
-        0x634,
-        0x645,
-    } },
-    .{ .cp = 0xfd29, .decomp = &.{
-        0x634,
-        0x631,
-    } },
-    .{ .cp = 0xfd2a, .decomp = &.{
-        0x633,
-        0x631,
-    } },
-    .{ .cp = 0xfd2b, .decomp = &.{
-        0x635,
-        0x631,
-    } },
-    .{ .cp = 0xfd2c, .decomp = &.{
-        0x636,
-        0x631,
-    } },
-    .{ .cp = 0xfd2d, .decomp = &.{
-        0x634,
-        0x62c,
-    } },
-    .{ .cp = 0xfd2e, .decomp = &.{
-        0x634,
-        0x62d,
-    } },
-    .{ .cp = 0xfd2f, .decomp = &.{
-        0x634,
-        0x62e,
-    } },
-    .{ .cp = 0xfd30, .decomp = &.{
-        0x634,
-        0x645,
-    } },
-    .{ .cp = 0xfd31, .decomp = &.{
-        0x633,
-        0x647,
-    } },
-    .{ .cp = 0xfd32, .decomp = &.{
-        0x634,
-        0x647,
-    } },
-    .{ .cp = 0xfd33, .decomp = &.{
-        0x637,
-        0x645,
-    } },
-    .{ .cp = 0xfd34, .decomp = &.{
-        0x633,
-        0x62c,
-    } },
-    .{ .cp = 0xfd35, .decomp = &.{
-        0x633,
-        0x62d,
-    } },
-    .{ .cp = 0xfd36, .decomp = &.{
-        0x633,
-        0x62e,
-    } },
-    .{ .cp = 0xfd37, .decomp = &.{
-        0x634,
-        0x62c,
-    } },
-    .{ .cp = 0xfd38, .decomp = &.{
-        0x634,
-        0x62d,
-    } },
-    .{ .cp = 0xfd39, .decomp = &.{
-        0x634,
-        0x62e,
-    } },
-    .{ .cp = 0xfd3a, .decomp = &.{
-        0x637,
-        0x645,
-    } },
-    .{ .cp = 0xfd3b, .decomp = &.{
-        0x638,
-        0x645,
-    } },
-    .{ .cp = 0xfd3c, .decomp = &.{
-        0x627,
-        0x64b,
-    } },
-    .{ .cp = 0xfd3d, .decomp = &.{
-        0x627,
-        0x64b,
-    } },
-    .{ .cp = 0xfd50, .decomp = &.{
-        0x62a,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfd51, .decomp = &.{
-        0x62a,
-        0x62d,
-        0x62c,
-    } },
-    .{ .cp = 0xfd52, .decomp = &.{
-        0x62a,
-        0x62d,
-        0x62c,
-    } },
-    .{ .cp = 0xfd53, .decomp = &.{
-        0x62a,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfd54, .decomp = &.{
-        0x62a,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd55, .decomp = &.{
-        0x62a,
-        0x645,
-        0x62c,
-    } },
-    .{ .cp = 0xfd56, .decomp = &.{
-        0x62a,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd57, .decomp = &.{
-        0x62a,
-        0x645,
-        0x62e,
-    } },
-    .{ .cp = 0xfd58, .decomp = &.{
-        0x62c,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd59, .decomp = &.{
-        0x62c,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd5a, .decomp = &.{
-        0x62d,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfd5b, .decomp = &.{
-        0x62d,
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfd5c, .decomp = &.{
-        0x633,
-        0x62d,
-        0x62c,
-    } },
-    .{ .cp = 0xfd5d, .decomp = &.{
-        0x633,
-        0x62c,
-        0x62d,
-    } },
-    .{ .cp = 0xfd5e, .decomp = &.{
-        0x633,
-        0x62c,
-        0x649,
-    } },
-    .{ .cp = 0xfd5f, .decomp = &.{
-        0x633,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd60, .decomp = &.{
-        0x633,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd61, .decomp = &.{
-        0x633,
-        0x645,
-        0x62c,
-    } },
-    .{ .cp = 0xfd62, .decomp = &.{
-        0x633,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd63, .decomp = &.{
-        0x633,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd64, .decomp = &.{
-        0x635,
-        0x62d,
-        0x62d,
-    } },
-    .{ .cp = 0xfd65, .decomp = &.{
-        0x635,
-        0x62d,
-        0x62d,
-    } },
-    .{ .cp = 0xfd66, .decomp = &.{
-        0x635,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd67, .decomp = &.{
-        0x634,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfd68, .decomp = &.{
-        0x634,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfd69, .decomp = &.{
-        0x634,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfd6a, .decomp = &.{
-        0x634,
-        0x645,
-        0x62e,
-    } },
-    .{ .cp = 0xfd6b, .decomp = &.{
-        0x634,
-        0x645,
-        0x62e,
-    } },
-    .{ .cp = 0xfd6c, .decomp = &.{
-        0x634,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd6d, .decomp = &.{
-        0x634,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd6e, .decomp = &.{
-        0x636,
-        0x62d,
-        0x649,
-    } },
-    .{ .cp = 0xfd6f, .decomp = &.{
-        0x636,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd70, .decomp = &.{
-        0x636,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd71, .decomp = &.{
-        0x637,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd72, .decomp = &.{
-        0x637,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd73, .decomp = &.{
-        0x637,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd74, .decomp = &.{
-        0x637,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfd75, .decomp = &.{
-        0x639,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfd76, .decomp = &.{
-        0x639,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd77, .decomp = &.{
-        0x639,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd78, .decomp = &.{
-        0x639,
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfd79, .decomp = &.{
-        0x63a,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd7a, .decomp = &.{
-        0x63a,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfd7b, .decomp = &.{
-        0x63a,
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfd7c, .decomp = &.{
-        0x641,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd7d, .decomp = &.{
-        0x641,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd7e, .decomp = &.{
-        0x642,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd7f, .decomp = &.{
-        0x642,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd80, .decomp = &.{
-        0x644,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfd81, .decomp = &.{
-        0x644,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfd82, .decomp = &.{
-        0x644,
-        0x62d,
-        0x649,
-    } },
-    .{ .cp = 0xfd83, .decomp = &.{
-        0x644,
-        0x62c,
-        0x62c,
-    } },
-    .{ .cp = 0xfd84, .decomp = &.{
-        0x644,
-        0x62c,
-        0x62c,
-    } },
-    .{ .cp = 0xfd85, .decomp = &.{
-        0x644,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd86, .decomp = &.{
-        0x644,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd87, .decomp = &.{
-        0x644,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd88, .decomp = &.{
-        0x644,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfd89, .decomp = &.{
-        0x645,
-        0x62d,
-        0x62c,
-    } },
-    .{ .cp = 0xfd8a, .decomp = &.{
-        0x645,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfd8b, .decomp = &.{
-        0x645,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfd8c, .decomp = &.{
-        0x645,
-        0x62c,
-        0x62d,
-    } },
-    .{ .cp = 0xfd8d, .decomp = &.{
-        0x645,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfd8e, .decomp = &.{
-        0x645,
-        0x62e,
-        0x62c,
-    } },
-    .{ .cp = 0xfd8f, .decomp = &.{
-        0x645,
-        0x62e,
-        0x645,
-    } },
-    .{ .cp = 0xfd92, .decomp = &.{
-        0x645,
-        0x62c,
-        0x62e,
-    } },
-    .{ .cp = 0xfd93, .decomp = &.{
-        0x647,
-        0x645,
-        0x62c,
-    } },
-    .{ .cp = 0xfd94, .decomp = &.{
-        0x647,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd95, .decomp = &.{
-        0x646,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfd96, .decomp = &.{
-        0x646,
-        0x62d,
-        0x649,
-    } },
-    .{ .cp = 0xfd97, .decomp = &.{
-        0x646,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfd98, .decomp = &.{
-        0x646,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfd99, .decomp = &.{
-        0x646,
-        0x62c,
-        0x649,
-    } },
-    .{ .cp = 0xfd9a, .decomp = &.{
-        0x646,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfd9b, .decomp = &.{
-        0x646,
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfd9c, .decomp = &.{
-        0x64a,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd9d, .decomp = &.{
-        0x64a,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfd9e, .decomp = &.{
-        0x628,
-        0x62e,
-        0x64a,
-    } },
-    .{ .cp = 0xfd9f, .decomp = &.{
-        0x62a,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfda0, .decomp = &.{
-        0x62a,
-        0x62c,
-        0x649,
-    } },
-    .{ .cp = 0xfda1, .decomp = &.{
-        0x62a,
-        0x62e,
-        0x64a,
-    } },
-    .{ .cp = 0xfda2, .decomp = &.{
-        0x62a,
-        0x62e,
-        0x649,
-    } },
-    .{ .cp = 0xfda3, .decomp = &.{
-        0x62a,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfda4, .decomp = &.{
-        0x62a,
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfda5, .decomp = &.{
-        0x62c,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfda6, .decomp = &.{
-        0x62c,
-        0x62d,
-        0x649,
-    } },
-    .{ .cp = 0xfda7, .decomp = &.{
-        0x62c,
-        0x645,
-        0x649,
-    } },
-    .{ .cp = 0xfda8, .decomp = &.{
-        0x633,
-        0x62e,
-        0x649,
-    } },
-    .{ .cp = 0xfda9, .decomp = &.{
-        0x635,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdaa, .decomp = &.{
-        0x634,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdab, .decomp = &.{
-        0x636,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdac, .decomp = &.{
-        0x644,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfdad, .decomp = &.{
-        0x644,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdae, .decomp = &.{
-        0x64a,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdaf, .decomp = &.{
-        0x64a,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb0, .decomp = &.{
-        0x64a,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb1, .decomp = &.{
-        0x645,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb2, .decomp = &.{
-        0x642,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb3, .decomp = &.{
-        0x646,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb4, .decomp = &.{
-        0x642,
-        0x645,
-        0x62d,
-    } },
-    .{ .cp = 0xfdb5, .decomp = &.{
-        0x644,
-        0x62d,
-        0x645,
-    } },
-    .{ .cp = 0xfdb6, .decomp = &.{
-        0x639,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb7, .decomp = &.{
-        0x643,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdb8, .decomp = &.{
-        0x646,
-        0x62c,
-        0x62d,
-    } },
-    .{ .cp = 0xfdb9, .decomp = &.{
-        0x645,
-        0x62e,
-        0x64a,
-    } },
-    .{ .cp = 0xfdba, .decomp = &.{
-        0x644,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfdbb, .decomp = &.{
-        0x643,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfdbc, .decomp = &.{
-        0x644,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfdbd, .decomp = &.{
-        0x646,
-        0x62c,
-        0x62d,
-    } },
-    .{ .cp = 0xfdbe, .decomp = &.{
-        0x62c,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdbf, .decomp = &.{
-        0x62d,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfdc0, .decomp = &.{
-        0x645,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfdc1, .decomp = &.{
-        0x641,
-        0x645,
-        0x64a,
-    } },
-    .{ .cp = 0xfdc2, .decomp = &.{
-        0x628,
-        0x62d,
-        0x64a,
-    } },
-    .{ .cp = 0xfdc3, .decomp = &.{
-        0x643,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfdc4, .decomp = &.{
-        0x639,
-        0x62c,
-        0x645,
-    } },
-    .{ .cp = 0xfdc5, .decomp = &.{
-        0x635,
-        0x645,
-        0x645,
-    } },
-    .{ .cp = 0xfdc6, .decomp = &.{
-        0x633,
-        0x62e,
-        0x64a,
-    } },
-    .{ .cp = 0xfdc7, .decomp = &.{
-        0x646,
-        0x62c,
-        0x64a,
-    } },
-    .{ .cp = 0xfdf0, .decomp = &.{
-        0x635,
-        0x644,
-        0x6d2,
-    } },
-    .{ .cp = 0xfdf1, .decomp = &.{
-        0x642,
-        0x644,
-        0x6d2,
-    } },
-    .{ .cp = 0xfdf2, .decomp = &.{
-        0x627,
-        0x644,
-        0x644,
-        0x647,
-    } },
-    .{ .cp = 0xfdf3, .decomp = &.{
-        0x627,
-        0x643,
-        0x628,
-        0x631,
-    } },
-    .{ .cp = 0xfdf4, .decomp = &.{
-        0x645,
-        0x62d,
-        0x645,
-        0x62f,
-    } },
-    .{ .cp = 0xfdf5, .decomp = &.{
-        0x635,
-        0x644,
-        0x639,
-        0x645,
-    } },
-    .{ .cp = 0xfdf6, .decomp = &.{
-        0x631,
-        0x633,
-        0x648,
-        0x644,
-    } },
-    .{ .cp = 0xfdf7, .decomp = &.{
-        0x639,
-        0x644,
-        0x64a,
-        0x647,
-    } },
-    .{ .cp = 0xfdf8, .decomp = &.{
-        0x648,
-        0x633,
-        0x644,
-        0x645,
-    } },
-    .{ .cp = 0xfdf9, .decomp = &.{
-        0x635,
-        0x644,
-        0x649,
-    } },
-    .{ .cp = 0xfdfa, .decomp = &.{
-        0x635,
-        0x644,
-        0x649,
-        0x20,
-        0x627,
-        0x644,
-        0x644,
-        0x647,
-        0x20,
-        0x639,
-        0x644,
-        0x64a,
-        0x647,
-        0x20,
-        0x648,
-        0x633,
-        0x644,
-        0x645,
-    } },
-    .{ .cp = 0xfdfb, .decomp = &.{
-        0x62c,
-        0x644,
-        0x20,
-        0x62c,
-        0x644,
-        0x627,
-        0x644,
-        0x647,
-    } },
-    .{ .cp = 0xfdfc, .decomp = &.{
-        0x631,
-        0x6cc,
-        0x627,
-        0x644,
-    } },
-    .{ .cp = 0xfe10, .decomp = &.{
-        0x2c,
-    } },
-    .{ .cp = 0xfe11, .decomp = &.{
-        0x3001,
-    } },
-    .{ .cp = 0xfe12, .decomp = &.{
-        0x3002,
-    } },
-    .{ .cp = 0xfe13, .decomp = &.{
-        0x3a,
-    } },
-    .{ .cp = 0xfe14, .decomp = &.{
-        0x3b,
-    } },
-    .{ .cp = 0xfe15, .decomp = &.{
-        0x21,
-    } },
-    .{ .cp = 0xfe16, .decomp = &.{
-        0x3f,
-    } },
-    .{ .cp = 0xfe17, .decomp = &.{
-        0x3016,
-    } },
-    .{ .cp = 0xfe18, .decomp = &.{
-        0x3017,
-    } },
-    .{ .cp = 0xfe19, .decomp = &.{
-        0x2026,
-    } },
-    .{ .cp = 0xfe30, .decomp = &.{
-        0x2025,
-    } },
-    .{ .cp = 0xfe31, .decomp = &.{
-        0x2014,
-    } },
-    .{ .cp = 0xfe32, .decomp = &.{
-        0x2013,
-    } },
-    .{ .cp = 0xfe33, .decomp = &.{
-        0x5f,
-    } },
-    .{ .cp = 0xfe34, .decomp = &.{
-        0x5f,
-    } },
-    .{ .cp = 0xfe35, .decomp = &.{
-        0x28,
-    } },
-    .{ .cp = 0xfe36, .decomp = &.{
-        0x29,
-    } },
-    .{ .cp = 0xfe37, .decomp = &.{
-        0x7b,
-    } },
-    .{ .cp = 0xfe38, .decomp = &.{
-        0x7d,
-    } },
-    .{ .cp = 0xfe39, .decomp = &.{
-        0x3014,
-    } },
-    .{ .cp = 0xfe3a, .decomp = &.{
-        0x3015,
-    } },
-    .{ .cp = 0xfe3b, .decomp = &.{
-        0x3010,
-    } },
-    .{ .cp = 0xfe3c, .decomp = &.{
-        0x3011,
-    } },
-    .{ .cp = 0xfe3d, .decomp = &.{
-        0x300a,
-    } },
-    .{ .cp = 0xfe3e, .decomp = &.{
-        0x300b,
-    } },
-    .{ .cp = 0xfe3f, .decomp = &.{
-        0x3008,
-    } },
-    .{ .cp = 0xfe40, .decomp = &.{
-        0x3009,
-    } },
-    .{ .cp = 0xfe41, .decomp = &.{
-        0x300c,
-    } },
-    .{ .cp = 0xfe42, .decomp = &.{
-        0x300d,
-    } },
-    .{ .cp = 0xfe43, .decomp = &.{
-        0x300e,
-    } },
-    .{ .cp = 0xfe44, .decomp = &.{
-        0x300f,
-    } },
-    .{ .cp = 0xfe47, .decomp = &.{
-        0x5b,
-    } },
-    .{ .cp = 0xfe48, .decomp = &.{
-        0x5d,
-    } },
-    .{ .cp = 0xfe49, .decomp = &.{
-        0x203e,
-    } },
-    .{ .cp = 0xfe4a, .decomp = &.{
-        0x203e,
-    } },
-    .{ .cp = 0xfe4b, .decomp = &.{
-        0x203e,
-    } },
-    .{ .cp = 0xfe4c, .decomp = &.{
-        0x203e,
-    } },
-    .{ .cp = 0xfe4d, .decomp = &.{
-        0x5f,
-    } },
-    .{ .cp = 0xfe4e, .decomp = &.{
-        0x5f,
-    } },
-    .{ .cp = 0xfe4f, .decomp = &.{
-        0x5f,
-    } },
-    .{ .cp = 0xfe50, .decomp = &.{
-        0x2c,
-    } },
-    .{ .cp = 0xfe51, .decomp = &.{
-        0x3001,
-    } },
-    .{ .cp = 0xfe52, .decomp = &.{
-        0x2e,
-    } },
-    .{ .cp = 0xfe54, .decomp = &.{
-        0x3b,
-    } },
-    .{ .cp = 0xfe55, .decomp = &.{
-        0x3a,
-    } },
-    .{ .cp = 0xfe56, .decomp = &.{
-        0x3f,
-    } },
-    .{ .cp = 0xfe57, .decomp = &.{
-        0x21,
-    } },
-    .{ .cp = 0xfe58, .decomp = &.{
-        0x2014,
-    } },
-    .{ .cp = 0xfe59, .decomp = &.{
-        0x28,
-    } },
-    .{ .cp = 0xfe5a, .decomp = &.{
-        0x29,
-    } },
-    .{ .cp = 0xfe5b, .decomp = &.{
-        0x7b,
-    } },
-    .{ .cp = 0xfe5c, .decomp = &.{
-        0x7d,
-    } },
-    .{ .cp = 0xfe5d, .decomp = &.{
-        0x3014,
-    } },
-    .{ .cp = 0xfe5e, .decomp = &.{
-        0x3015,
-    } },
-    .{ .cp = 0xfe5f, .decomp = &.{
-        0x23,
-    } },
-    .{ .cp = 0xfe60, .decomp = &.{
-        0x26,
-    } },
-    .{ .cp = 0xfe61, .decomp = &.{
-        0x2a,
-    } },
-    .{ .cp = 0xfe62, .decomp = &.{
-        0x2b,
-    } },
-    .{ .cp = 0xfe63, .decomp = &.{
-        0x2d,
-    } },
-    .{ .cp = 0xfe64, .decomp = &.{
-        0x3c,
-    } },
-    .{ .cp = 0xfe65, .decomp = &.{
-        0x3e,
-    } },
-    .{ .cp = 0xfe66, .decomp = &.{
-        0x3d,
-    } },
-    .{ .cp = 0xfe68, .decomp = &.{
-        0x5c,
-    } },
-    .{ .cp = 0xfe69, .decomp = &.{
-        0x24,
-    } },
-    .{ .cp = 0xfe6a, .decomp = &.{
-        0x25,
-    } },
-    .{ .cp = 0xfe6b, .decomp = &.{
-        0x40,
-    } },
-    .{ .cp = 0xfe70, .decomp = &.{
-        0x20,
-        0x64b,
-    } },
-    .{ .cp = 0xfe71, .decomp = &.{
-        0x640,
-        0x64b,
-    } },
-    .{ .cp = 0xfe72, .decomp = &.{
-        0x20,
-        0x64c,
-    } },
-    .{ .cp = 0xfe74, .decomp = &.{
-        0x20,
-        0x64d,
-    } },
-    .{ .cp = 0xfe76, .decomp = &.{
-        0x20,
-        0x64e,
-    } },
-    .{ .cp = 0xfe77, .decomp = &.{
-        0x640,
-        0x64e,
-    } },
-    .{ .cp = 0xfe78, .decomp = &.{
-        0x20,
-        0x64f,
-    } },
-    .{ .cp = 0xfe79, .decomp = &.{
-        0x640,
-        0x64f,
-    } },
-    .{ .cp = 0xfe7a, .decomp = &.{
-        0x20,
-        0x650,
-    } },
-    .{ .cp = 0xfe7b, .decomp = &.{
-        0x640,
-        0x650,
-    } },
-    .{ .cp = 0xfe7c, .decomp = &.{
-        0x20,
-        0x651,
-    } },
-    .{ .cp = 0xfe7d, .decomp = &.{
-        0x640,
-        0x651,
-    } },
-    .{ .cp = 0xfe7e, .decomp = &.{
-        0x20,
-        0x652,
-    } },
-    .{ .cp = 0xfe7f, .decomp = &.{
-        0x640,
-        0x652,
-    } },
-    .{ .cp = 0xfe80, .decomp = &.{
-        0x621,
-    } },
-    .{ .cp = 0xfe81, .decomp = &.{
-        0x622,
-    } },
-    .{ .cp = 0xfe82, .decomp = &.{
-        0x622,
-    } },
-    .{ .cp = 0xfe83, .decomp = &.{
-        0x623,
-    } },
-    .{ .cp = 0xfe84, .decomp = &.{
-        0x623,
-    } },
-    .{ .cp = 0xfe85, .decomp = &.{
-        0x624,
-    } },
-    .{ .cp = 0xfe86, .decomp = &.{
-        0x624,
-    } },
-    .{ .cp = 0xfe87, .decomp = &.{
-        0x625,
-    } },
-    .{ .cp = 0xfe88, .decomp = &.{
-        0x625,
-    } },
-    .{ .cp = 0xfe89, .decomp = &.{
-        0x626,
-    } },
-    .{ .cp = 0xfe8a, .decomp = &.{
-        0x626,
-    } },
-    .{ .cp = 0xfe8b, .decomp = &.{
-        0x626,
-    } },
-    .{ .cp = 0xfe8c, .decomp = &.{
-        0x626,
-    } },
-    .{ .cp = 0xfe8d, .decomp = &.{
-        0x627,
-    } },
-    .{ .cp = 0xfe8e, .decomp = &.{
-        0x627,
-    } },
-    .{ .cp = 0xfe8f, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0xfe90, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0xfe91, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0xfe92, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0xfe93, .decomp = &.{
-        0x629,
-    } },
-    .{ .cp = 0xfe94, .decomp = &.{
-        0x629,
-    } },
-    .{ .cp = 0xfe95, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0xfe96, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0xfe97, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0xfe98, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0xfe99, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0xfe9a, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0xfe9b, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0xfe9c, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0xfe9d, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0xfe9e, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0xfe9f, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0xfea0, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0xfea1, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0xfea2, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0xfea3, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0xfea4, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0xfea5, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0xfea6, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0xfea7, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0xfea8, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0xfea9, .decomp = &.{
-        0x62f,
-    } },
-    .{ .cp = 0xfeaa, .decomp = &.{
-        0x62f,
-    } },
-    .{ .cp = 0xfeab, .decomp = &.{
-        0x630,
-    } },
-    .{ .cp = 0xfeac, .decomp = &.{
-        0x630,
-    } },
-    .{ .cp = 0xfead, .decomp = &.{
-        0x631,
-    } },
-    .{ .cp = 0xfeae, .decomp = &.{
-        0x631,
-    } },
-    .{ .cp = 0xfeaf, .decomp = &.{
-        0x632,
-    } },
-    .{ .cp = 0xfeb0, .decomp = &.{
-        0x632,
-    } },
-    .{ .cp = 0xfeb1, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0xfeb2, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0xfeb3, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0xfeb4, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0xfeb5, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0xfeb6, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0xfeb7, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0xfeb8, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0xfeb9, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0xfeba, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0xfebb, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0xfebc, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0xfebd, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0xfebe, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0xfebf, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0xfec0, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0xfec1, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0xfec2, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0xfec3, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0xfec4, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0xfec5, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0xfec6, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0xfec7, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0xfec8, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0xfec9, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0xfeca, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0xfecb, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0xfecc, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0xfecd, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0xfece, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0xfecf, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0xfed0, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0xfed1, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0xfed2, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0xfed3, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0xfed4, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0xfed5, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0xfed6, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0xfed7, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0xfed8, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0xfed9, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0xfeda, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0xfedb, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0xfedc, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0xfedd, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0xfede, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0xfedf, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0xfee0, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0xfee1, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0xfee2, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0xfee3, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0xfee4, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0xfee5, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0xfee6, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0xfee7, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0xfee8, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0xfee9, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0xfeea, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0xfeeb, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0xfeec, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0xfeed, .decomp = &.{
-        0x648,
-    } },
-    .{ .cp = 0xfeee, .decomp = &.{
-        0x648,
-    } },
-    .{ .cp = 0xfeef, .decomp = &.{
-        0x649,
-    } },
-    .{ .cp = 0xfef0, .decomp = &.{
-        0x649,
-    } },
-    .{ .cp = 0xfef1, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0xfef2, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0xfef3, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0xfef4, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0xfef5, .decomp = &.{
-        0x644,
-        0x622,
-    } },
-    .{ .cp = 0xfef6, .decomp = &.{
-        0x644,
-        0x622,
-    } },
-    .{ .cp = 0xfef7, .decomp = &.{
-        0x644,
-        0x623,
-    } },
-    .{ .cp = 0xfef8, .decomp = &.{
-        0x644,
-        0x623,
-    } },
-    .{ .cp = 0xfef9, .decomp = &.{
-        0x644,
-        0x625,
-    } },
-    .{ .cp = 0xfefa, .decomp = &.{
-        0x644,
-        0x625,
-    } },
-    .{ .cp = 0xfefb, .decomp = &.{
-        0x644,
-        0x627,
-    } },
-    .{ .cp = 0xfefc, .decomp = &.{
-        0x644,
-        0x627,
-    } },
-    .{ .cp = 0xff01, .decomp = &.{
-        0x21,
-    } },
-    .{ .cp = 0xff02, .decomp = &.{
-        0x22,
-    } },
-    .{ .cp = 0xff03, .decomp = &.{
-        0x23,
-    } },
-    .{ .cp = 0xff04, .decomp = &.{
-        0x24,
-    } },
-    .{ .cp = 0xff05, .decomp = &.{
-        0x25,
-    } },
-    .{ .cp = 0xff06, .decomp = &.{
-        0x26,
-    } },
-    .{ .cp = 0xff07, .decomp = &.{
-        0x27,
-    } },
-    .{ .cp = 0xff08, .decomp = &.{
-        0x28,
-    } },
-    .{ .cp = 0xff09, .decomp = &.{
-        0x29,
-    } },
-    .{ .cp = 0xff0a, .decomp = &.{
-        0x2a,
-    } },
-    .{ .cp = 0xff0b, .decomp = &.{
-        0x2b,
-    } },
-    .{ .cp = 0xff0c, .decomp = &.{
-        0x2c,
-    } },
-    .{ .cp = 0xff0d, .decomp = &.{
-        0x2d,
-    } },
-    .{ .cp = 0xff0e, .decomp = &.{
-        0x2e,
-    } },
-    .{ .cp = 0xff0f, .decomp = &.{
-        0x2f,
-    } },
-    .{ .cp = 0xff10, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0xff11, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0xff12, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0xff13, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0xff14, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0xff15, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0xff16, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0xff17, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0xff18, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0xff19, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0xff1a, .decomp = &.{
-        0x3a,
-    } },
-    .{ .cp = 0xff1b, .decomp = &.{
-        0x3b,
-    } },
-    .{ .cp = 0xff1c, .decomp = &.{
-        0x3c,
-    } },
-    .{ .cp = 0xff1d, .decomp = &.{
-        0x3d,
-    } },
-    .{ .cp = 0xff1e, .decomp = &.{
-        0x3e,
-    } },
-    .{ .cp = 0xff1f, .decomp = &.{
-        0x3f,
-    } },
-    .{ .cp = 0xff20, .decomp = &.{
-        0x40,
-    } },
-    .{ .cp = 0xff21, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0xff22, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0xff23, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0xff24, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0xff25, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0xff26, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0xff27, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0xff28, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0xff29, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0xff2a, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0xff2b, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0xff2c, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0xff2d, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0xff2e, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0xff2f, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0xff30, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0xff31, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0xff32, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0xff33, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0xff34, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0xff35, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0xff36, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0xff37, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0xff38, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0xff39, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0xff3a, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0xff3b, .decomp = &.{
-        0x5b,
-    } },
-    .{ .cp = 0xff3c, .decomp = &.{
-        0x5c,
-    } },
-    .{ .cp = 0xff3d, .decomp = &.{
-        0x5d,
-    } },
-    .{ .cp = 0xff3e, .decomp = &.{
-        0x5e,
-    } },
-    .{ .cp = 0xff3f, .decomp = &.{
-        0x5f,
-    } },
-    .{ .cp = 0xff40, .decomp = &.{
-        0x60,
-    } },
-    .{ .cp = 0xff41, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0xff42, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0xff43, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0xff44, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0xff45, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0xff46, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0xff47, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0xff48, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0xff49, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0xff4a, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0xff4b, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0xff4c, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0xff4d, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0xff4e, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0xff4f, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0xff50, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0xff51, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0xff52, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0xff53, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0xff54, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0xff55, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0xff56, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0xff57, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0xff58, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0xff59, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0xff5a, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0xff5b, .decomp = &.{
-        0x7b,
-    } },
-    .{ .cp = 0xff5c, .decomp = &.{
-        0x7c,
-    } },
-    .{ .cp = 0xff5d, .decomp = &.{
-        0x7d,
-    } },
-    .{ .cp = 0xff5e, .decomp = &.{
-        0x7e,
-    } },
-    .{ .cp = 0xff5f, .decomp = &.{
-        0x2985,
-    } },
-    .{ .cp = 0xff60, .decomp = &.{
-        0x2986,
-    } },
-    .{ .cp = 0xff61, .decomp = &.{
-        0x3002,
-    } },
-    .{ .cp = 0xff62, .decomp = &.{
-        0x300c,
-    } },
-    .{ .cp = 0xff63, .decomp = &.{
-        0x300d,
-    } },
-    .{ .cp = 0xff64, .decomp = &.{
-        0x3001,
-    } },
-    .{ .cp = 0xff65, .decomp = &.{
-        0x30fb,
-    } },
-    .{ .cp = 0xff66, .decomp = &.{
-        0x30f2,
-    } },
-    .{ .cp = 0xff67, .decomp = &.{
-        0x30a1,
-    } },
-    .{ .cp = 0xff68, .decomp = &.{
-        0x30a3,
-    } },
-    .{ .cp = 0xff69, .decomp = &.{
-        0x30a5,
-    } },
-    .{ .cp = 0xff6a, .decomp = &.{
-        0x30a7,
-    } },
-    .{ .cp = 0xff6b, .decomp = &.{
-        0x30a9,
-    } },
-    .{ .cp = 0xff6c, .decomp = &.{
-        0x30e3,
-    } },
-    .{ .cp = 0xff6d, .decomp = &.{
-        0x30e5,
-    } },
-    .{ .cp = 0xff6e, .decomp = &.{
-        0x30e7,
-    } },
-    .{ .cp = 0xff6f, .decomp = &.{
-        0x30c3,
-    } },
-    .{ .cp = 0xff70, .decomp = &.{
-        0x30fc,
-    } },
-    .{ .cp = 0xff71, .decomp = &.{
-        0x30a2,
-    } },
-    .{ .cp = 0xff72, .decomp = &.{
-        0x30a4,
-    } },
-    .{ .cp = 0xff73, .decomp = &.{
-        0x30a6,
-    } },
-    .{ .cp = 0xff74, .decomp = &.{
-        0x30a8,
-    } },
-    .{ .cp = 0xff75, .decomp = &.{
-        0x30aa,
-    } },
-    .{ .cp = 0xff76, .decomp = &.{
-        0x30ab,
-    } },
-    .{ .cp = 0xff77, .decomp = &.{
-        0x30ad,
-    } },
-    .{ .cp = 0xff78, .decomp = &.{
-        0x30af,
-    } },
-    .{ .cp = 0xff79, .decomp = &.{
-        0x30b1,
-    } },
-    .{ .cp = 0xff7a, .decomp = &.{
-        0x30b3,
-    } },
-    .{ .cp = 0xff7b, .decomp = &.{
-        0x30b5,
-    } },
-    .{ .cp = 0xff7c, .decomp = &.{
-        0x30b7,
-    } },
-    .{ .cp = 0xff7d, .decomp = &.{
-        0x30b9,
-    } },
-    .{ .cp = 0xff7e, .decomp = &.{
-        0x30bb,
-    } },
-    .{ .cp = 0xff7f, .decomp = &.{
-        0x30bd,
-    } },
-    .{ .cp = 0xff80, .decomp = &.{
-        0x30bf,
-    } },
-    .{ .cp = 0xff81, .decomp = &.{
-        0x30c1,
-    } },
-    .{ .cp = 0xff82, .decomp = &.{
-        0x30c4,
-    } },
-    .{ .cp = 0xff83, .decomp = &.{
-        0x30c6,
-    } },
-    .{ .cp = 0xff84, .decomp = &.{
-        0x30c8,
-    } },
-    .{ .cp = 0xff85, .decomp = &.{
-        0x30ca,
-    } },
-    .{ .cp = 0xff86, .decomp = &.{
-        0x30cb,
-    } },
-    .{ .cp = 0xff87, .decomp = &.{
-        0x30cc,
-    } },
-    .{ .cp = 0xff88, .decomp = &.{
-        0x30cd,
-    } },
-    .{ .cp = 0xff89, .decomp = &.{
-        0x30ce,
-    } },
-    .{ .cp = 0xff8a, .decomp = &.{
-        0x30cf,
-    } },
-    .{ .cp = 0xff8b, .decomp = &.{
-        0x30d2,
-    } },
-    .{ .cp = 0xff8c, .decomp = &.{
-        0x30d5,
-    } },
-    .{ .cp = 0xff8d, .decomp = &.{
-        0x30d8,
-    } },
-    .{ .cp = 0xff8e, .decomp = &.{
-        0x30db,
-    } },
-    .{ .cp = 0xff8f, .decomp = &.{
-        0x30de,
-    } },
-    .{ .cp = 0xff90, .decomp = &.{
-        0x30df,
-    } },
-    .{ .cp = 0xff91, .decomp = &.{
-        0x30e0,
-    } },
-    .{ .cp = 0xff92, .decomp = &.{
-        0x30e1,
-    } },
-    .{ .cp = 0xff93, .decomp = &.{
-        0x30e2,
-    } },
-    .{ .cp = 0xff94, .decomp = &.{
-        0x30e4,
-    } },
-    .{ .cp = 0xff95, .decomp = &.{
-        0x30e6,
-    } },
-    .{ .cp = 0xff96, .decomp = &.{
-        0x30e8,
-    } },
-    .{ .cp = 0xff97, .decomp = &.{
-        0x30e9,
-    } },
-    .{ .cp = 0xff98, .decomp = &.{
-        0x30ea,
-    } },
-    .{ .cp = 0xff99, .decomp = &.{
-        0x30eb,
-    } },
-    .{ .cp = 0xff9a, .decomp = &.{
-        0x30ec,
-    } },
-    .{ .cp = 0xff9b, .decomp = &.{
-        0x30ed,
-    } },
-    .{ .cp = 0xff9c, .decomp = &.{
-        0x30ef,
-    } },
-    .{ .cp = 0xff9d, .decomp = &.{
-        0x30f3,
-    } },
-    .{ .cp = 0xff9e, .decomp = &.{
-        0x3099,
-    } },
-    .{ .cp = 0xff9f, .decomp = &.{
-        0x309a,
-    } },
-    .{ .cp = 0xffa0, .decomp = &.{
-        0x3164,
-    } },
-    .{ .cp = 0xffa1, .decomp = &.{
-        0x3131,
-    } },
-    .{ .cp = 0xffa2, .decomp = &.{
-        0x3132,
-    } },
-    .{ .cp = 0xffa3, .decomp = &.{
-        0x3133,
-    } },
-    .{ .cp = 0xffa4, .decomp = &.{
-        0x3134,
-    } },
-    .{ .cp = 0xffa5, .decomp = &.{
-        0x3135,
-    } },
-    .{ .cp = 0xffa6, .decomp = &.{
-        0x3136,
-    } },
-    .{ .cp = 0xffa7, .decomp = &.{
-        0x3137,
-    } },
-    .{ .cp = 0xffa8, .decomp = &.{
-        0x3138,
-    } },
-    .{ .cp = 0xffa9, .decomp = &.{
-        0x3139,
-    } },
-    .{ .cp = 0xffaa, .decomp = &.{
-        0x313a,
-    } },
-    .{ .cp = 0xffab, .decomp = &.{
-        0x313b,
-    } },
-    .{ .cp = 0xffac, .decomp = &.{
-        0x313c,
-    } },
-    .{ .cp = 0xffad, .decomp = &.{
-        0x313d,
-    } },
-    .{ .cp = 0xffae, .decomp = &.{
-        0x313e,
-    } },
-    .{ .cp = 0xffaf, .decomp = &.{
-        0x313f,
-    } },
-    .{ .cp = 0xffb0, .decomp = &.{
-        0x3140,
-    } },
-    .{ .cp = 0xffb1, .decomp = &.{
-        0x3141,
-    } },
-    .{ .cp = 0xffb2, .decomp = &.{
-        0x3142,
-    } },
-    .{ .cp = 0xffb3, .decomp = &.{
-        0x3143,
-    } },
-    .{ .cp = 0xffb4, .decomp = &.{
-        0x3144,
-    } },
-    .{ .cp = 0xffb5, .decomp = &.{
-        0x3145,
-    } },
-    .{ .cp = 0xffb6, .decomp = &.{
-        0x3146,
-    } },
-    .{ .cp = 0xffb7, .decomp = &.{
-        0x3147,
-    } },
-    .{ .cp = 0xffb8, .decomp = &.{
-        0x3148,
-    } },
-    .{ .cp = 0xffb9, .decomp = &.{
-        0x3149,
-    } },
-    .{ .cp = 0xffba, .decomp = &.{
-        0x314a,
-    } },
-    .{ .cp = 0xffbb, .decomp = &.{
-        0x314b,
-    } },
-    .{ .cp = 0xffbc, .decomp = &.{
-        0x314c,
-    } },
-    .{ .cp = 0xffbd, .decomp = &.{
-        0x314d,
-    } },
-    .{ .cp = 0xffbe, .decomp = &.{
-        0x314e,
-    } },
-    .{ .cp = 0xffc2, .decomp = &.{
-        0x314f,
-    } },
-    .{ .cp = 0xffc3, .decomp = &.{
-        0x3150,
-    } },
-    .{ .cp = 0xffc4, .decomp = &.{
-        0x3151,
-    } },
-    .{ .cp = 0xffc5, .decomp = &.{
-        0x3152,
-    } },
-    .{ .cp = 0xffc6, .decomp = &.{
-        0x3153,
-    } },
-    .{ .cp = 0xffc7, .decomp = &.{
-        0x3154,
-    } },
-    .{ .cp = 0xffca, .decomp = &.{
-        0x3155,
-    } },
-    .{ .cp = 0xffcb, .decomp = &.{
-        0x3156,
-    } },
-    .{ .cp = 0xffcc, .decomp = &.{
-        0x3157,
-    } },
-    .{ .cp = 0xffcd, .decomp = &.{
-        0x3158,
-    } },
-    .{ .cp = 0xffce, .decomp = &.{
-        0x3159,
-    } },
-    .{ .cp = 0xffcf, .decomp = &.{
-        0x315a,
-    } },
-    .{ .cp = 0xffd2, .decomp = &.{
-        0x315b,
-    } },
-    .{ .cp = 0xffd3, .decomp = &.{
-        0x315c,
-    } },
-    .{ .cp = 0xffd4, .decomp = &.{
-        0x315d,
-    } },
-    .{ .cp = 0xffd5, .decomp = &.{
-        0x315e,
-    } },
-    .{ .cp = 0xffd6, .decomp = &.{
-        0x315f,
-    } },
-    .{ .cp = 0xffd7, .decomp = &.{
-        0x3160,
-    } },
-    .{ .cp = 0xffda, .decomp = &.{
-        0x3161,
-    } },
-    .{ .cp = 0xffdb, .decomp = &.{
-        0x3162,
-    } },
-    .{ .cp = 0xffdc, .decomp = &.{
-        0x3163,
-    } },
-    .{ .cp = 0xffe0, .decomp = &.{
-        0xa2,
-    } },
-    .{ .cp = 0xffe1, .decomp = &.{
-        0xa3,
-    } },
-    .{ .cp = 0xffe2, .decomp = &.{
-        0xac,
-    } },
-    .{ .cp = 0xffe3, .decomp = &.{
-        0xaf,
-    } },
-    .{ .cp = 0xffe4, .decomp = &.{
-        0xa6,
-    } },
-    .{ .cp = 0xffe5, .decomp = &.{
-        0xa5,
-    } },
-    .{ .cp = 0xffe6, .decomp = &.{
-        0x20a9,
-    } },
-    .{ .cp = 0xffe8, .decomp = &.{
-        0x2502,
-    } },
-    .{ .cp = 0xffe9, .decomp = &.{
-        0x2190,
-    } },
-    .{ .cp = 0xffea, .decomp = &.{
-        0x2191,
-    } },
-    .{ .cp = 0xffeb, .decomp = &.{
-        0x2192,
-    } },
-    .{ .cp = 0xffec, .decomp = &.{
-        0x2193,
-    } },
-    .{ .cp = 0xffed, .decomp = &.{
-        0x25a0,
-    } },
-    .{ .cp = 0xffee, .decomp = &.{
-        0x25cb,
-    } },
-    .{ .cp = 0x10781, .decomp = &.{
-        0x2d0,
-    } },
-    .{ .cp = 0x10782, .decomp = &.{
-        0x2d1,
-    } },
-    .{ .cp = 0x10783, .decomp = &.{
-        0xe6,
-    } },
-    .{ .cp = 0x10784, .decomp = &.{
-        0x299,
-    } },
-    .{ .cp = 0x10785, .decomp = &.{
-        0x253,
-    } },
-    .{ .cp = 0x10787, .decomp = &.{
-        0x2a3,
-    } },
-    .{ .cp = 0x10788, .decomp = &.{
-        0xab66,
-    } },
-    .{ .cp = 0x10789, .decomp = &.{
-        0x2a5,
-    } },
-    .{ .cp = 0x1078a, .decomp = &.{
-        0x2a4,
-    } },
-    .{ .cp = 0x1078b, .decomp = &.{
-        0x256,
-    } },
-    .{ .cp = 0x1078c, .decomp = &.{
-        0x257,
-    } },
-    .{ .cp = 0x1078d, .decomp = &.{
-        0x1d91,
-    } },
-    .{ .cp = 0x1078e, .decomp = &.{
-        0x258,
-    } },
-    .{ .cp = 0x1078f, .decomp = &.{
-        0x25e,
-    } },
-    .{ .cp = 0x10790, .decomp = &.{
-        0x2a9,
-    } },
-    .{ .cp = 0x10791, .decomp = &.{
-        0x264,
-    } },
-    .{ .cp = 0x10792, .decomp = &.{
-        0x262,
-    } },
-    .{ .cp = 0x10793, .decomp = &.{
-        0x260,
-    } },
-    .{ .cp = 0x10794, .decomp = &.{
-        0x29b,
-    } },
-    .{ .cp = 0x10795, .decomp = &.{
-        0x127,
-    } },
-    .{ .cp = 0x10796, .decomp = &.{
-        0x29c,
-    } },
-    .{ .cp = 0x10797, .decomp = &.{
-        0x267,
-    } },
-    .{ .cp = 0x10798, .decomp = &.{
-        0x284,
-    } },
-    .{ .cp = 0x10799, .decomp = &.{
-        0x2aa,
-    } },
-    .{ .cp = 0x1079a, .decomp = &.{
-        0x2ab,
-    } },
-    .{ .cp = 0x1079b, .decomp = &.{
-        0x26c,
-    } },
-    .{ .cp = 0x1079c, .decomp = &.{
-        0x1df04,
-    } },
-    .{ .cp = 0x1079d, .decomp = &.{
-        0xa78e,
-    } },
-    .{ .cp = 0x1079e, .decomp = &.{
-        0x26e,
-    } },
-    .{ .cp = 0x1079f, .decomp = &.{
-        0x1df05,
-    } },
-    .{ .cp = 0x107a0, .decomp = &.{
-        0x28e,
-    } },
-    .{ .cp = 0x107a1, .decomp = &.{
-        0x1df06,
-    } },
-    .{ .cp = 0x107a2, .decomp = &.{
-        0xf8,
-    } },
-    .{ .cp = 0x107a3, .decomp = &.{
-        0x276,
-    } },
-    .{ .cp = 0x107a4, .decomp = &.{
-        0x277,
-    } },
-    .{ .cp = 0x107a5, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x107a6, .decomp = &.{
-        0x27a,
-    } },
-    .{ .cp = 0x107a7, .decomp = &.{
-        0x1df08,
-    } },
-    .{ .cp = 0x107a8, .decomp = &.{
-        0x27d,
-    } },
-    .{ .cp = 0x107a9, .decomp = &.{
-        0x27e,
-    } },
-    .{ .cp = 0x107aa, .decomp = &.{
-        0x280,
-    } },
-    .{ .cp = 0x107ab, .decomp = &.{
-        0x2a8,
-    } },
-    .{ .cp = 0x107ac, .decomp = &.{
-        0x2a6,
-    } },
-    .{ .cp = 0x107ad, .decomp = &.{
-        0xab67,
-    } },
-    .{ .cp = 0x107ae, .decomp = &.{
-        0x2a7,
-    } },
-    .{ .cp = 0x107af, .decomp = &.{
-        0x288,
-    } },
-    .{ .cp = 0x107b0, .decomp = &.{
-        0x2c71,
-    } },
-    .{ .cp = 0x107b2, .decomp = &.{
-        0x28f,
-    } },
-    .{ .cp = 0x107b3, .decomp = &.{
-        0x2a1,
-    } },
-    .{ .cp = 0x107b4, .decomp = &.{
-        0x2a2,
-    } },
-    .{ .cp = 0x107b5, .decomp = &.{
-        0x298,
-    } },
-    .{ .cp = 0x107b6, .decomp = &.{
-        0x1c0,
-    } },
-    .{ .cp = 0x107b7, .decomp = &.{
-        0x1c1,
-    } },
-    .{ .cp = 0x107b8, .decomp = &.{
-        0x1c2,
-    } },
-    .{ .cp = 0x107b9, .decomp = &.{
-        0x1df0a,
-    } },
-    .{ .cp = 0x107ba, .decomp = &.{
-        0x1df1e,
-    } },
-    .{ .cp = 0x1ccd6, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1ccd7, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1ccd8, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1ccd9, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1ccda, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1ccdb, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1ccdc, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1ccdd, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1ccde, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1ccdf, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1cce0, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1cce1, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1cce2, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1cce3, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1cce4, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1cce5, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1cce6, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1cce7, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1cce8, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1cce9, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1ccea, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1cceb, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1ccec, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1cced, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1ccee, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1ccef, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1ccf0, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1ccf1, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1ccf2, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1ccf3, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1ccf4, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1ccf5, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1ccf6, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1ccf7, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1ccf8, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1ccf9, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x1d400, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d401, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d402, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d403, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d404, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d405, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d406, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d407, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d408, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d409, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d40a, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d40b, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d40c, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d40d, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d40e, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d40f, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d410, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d411, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d412, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d413, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d414, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d415, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d416, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d417, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d418, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d419, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d41a, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d41b, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d41c, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d41d, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d41e, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d41f, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d420, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d421, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d422, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d423, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d424, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d425, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d426, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d427, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d428, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d429, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d42a, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d42b, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d42c, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d42d, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d42e, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d42f, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d430, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d431, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d432, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d433, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d434, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d435, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d436, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d437, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d438, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d439, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d43a, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d43b, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d43c, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d43d, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d43e, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d43f, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d440, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d441, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d442, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d443, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d444, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d445, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d446, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d447, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d448, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d449, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d44a, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d44b, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d44c, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d44d, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d44e, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d44f, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d450, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d451, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d452, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d453, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d454, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d456, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d457, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d458, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d459, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d45a, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d45b, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d45c, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d45d, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d45e, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d45f, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d460, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d461, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d462, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d463, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d464, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d465, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d466, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d467, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d468, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d469, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d46a, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d46b, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d46c, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d46d, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d46e, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d46f, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d470, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d471, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d472, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d473, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d474, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d475, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d476, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d477, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d478, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d479, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d47a, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d47b, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d47c, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d47d, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d47e, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d47f, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d480, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d481, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d482, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d483, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d484, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d485, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d486, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d487, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d488, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d489, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d48a, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d48b, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d48c, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d48d, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d48e, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d48f, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d490, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d491, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d492, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d493, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d494, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d495, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d496, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d497, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d498, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d499, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d49a, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d49b, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d49c, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d49e, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d49f, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d4a2, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d4a5, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d4a6, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d4a9, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d4aa, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d4ab, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d4ac, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d4ae, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d4af, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d4b0, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d4b1, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d4b2, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d4b3, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d4b4, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d4b5, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d4b6, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d4b7, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d4b8, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d4b9, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d4bb, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d4bd, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d4be, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d4bf, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d4c0, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d4c1, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d4c2, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d4c3, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d4c5, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d4c6, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d4c7, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d4c8, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d4c9, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d4ca, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d4cb, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d4cc, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d4cd, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d4ce, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d4cf, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d4d0, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d4d1, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d4d2, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d4d3, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d4d4, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d4d5, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d4d6, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d4d7, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d4d8, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d4d9, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d4da, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d4db, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d4dc, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d4dd, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d4de, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d4df, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d4e0, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d4e1, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d4e2, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d4e3, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d4e4, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d4e5, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d4e6, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d4e7, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d4e8, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d4e9, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d4ea, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d4eb, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d4ec, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d4ed, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d4ee, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d4ef, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d4f0, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d4f1, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d4f2, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d4f3, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d4f4, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d4f5, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d4f6, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d4f7, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d4f8, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d4f9, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d4fa, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d4fb, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d4fc, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d4fd, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d4fe, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d4ff, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d500, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d501, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d502, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d503, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d504, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d505, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d507, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d508, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d509, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d50a, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d50d, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d50e, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d50f, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d510, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d511, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d512, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d513, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d514, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d516, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d517, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d518, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d519, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d51a, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d51b, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d51c, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d51e, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d51f, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d520, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d521, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d522, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d523, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d524, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d525, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d526, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d527, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d528, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d529, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d52a, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d52b, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d52c, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d52d, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d52e, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d52f, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d530, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d531, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d532, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d533, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d534, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d535, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d536, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d537, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d538, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d539, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d53b, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d53c, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d53d, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d53e, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d540, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d541, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d542, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d543, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d544, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d546, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d54a, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d54b, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d54c, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d54d, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d54e, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d54f, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d550, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d552, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d553, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d554, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d555, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d556, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d557, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d558, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d559, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d55a, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d55b, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d55c, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d55d, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d55e, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d55f, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d560, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d561, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d562, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d563, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d564, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d565, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d566, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d567, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d568, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d569, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d56a, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d56b, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d56c, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d56d, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d56e, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d56f, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d570, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d571, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d572, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d573, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d574, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d575, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d576, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d577, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d578, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d579, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d57a, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d57b, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d57c, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d57d, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d57e, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d57f, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d580, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d581, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d582, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d583, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d584, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d585, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d586, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d587, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d588, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d589, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d58a, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d58b, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d58c, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d58d, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d58e, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d58f, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d590, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d591, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d592, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d593, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d594, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d595, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d596, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d597, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d598, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d599, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d59a, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d59b, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d59c, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d59d, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d59e, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d59f, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d5a0, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d5a1, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d5a2, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d5a3, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d5a4, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d5a5, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d5a6, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d5a7, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d5a8, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d5a9, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d5aa, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d5ab, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d5ac, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d5ad, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d5ae, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d5af, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d5b0, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d5b1, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d5b2, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d5b3, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d5b4, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d5b5, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d5b6, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d5b7, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d5b8, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d5b9, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d5ba, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d5bb, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d5bc, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d5bd, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d5be, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d5bf, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d5c0, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d5c1, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d5c2, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d5c3, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d5c4, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d5c5, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d5c6, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d5c7, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d5c8, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d5c9, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d5ca, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d5cb, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d5cc, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d5cd, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d5ce, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d5cf, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d5d0, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d5d1, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d5d2, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d5d3, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d5d4, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d5d5, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d5d6, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d5d7, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d5d8, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d5d9, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d5da, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d5db, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d5dc, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d5dd, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d5de, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d5df, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d5e0, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d5e1, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d5e2, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d5e3, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d5e4, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d5e5, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d5e6, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d5e7, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d5e8, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d5e9, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d5ea, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d5eb, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d5ec, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d5ed, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d5ee, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d5ef, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d5f0, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d5f1, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d5f2, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d5f3, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d5f4, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d5f5, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d5f6, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d5f7, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d5f8, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d5f9, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d5fa, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d5fb, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d5fc, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d5fd, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d5fe, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d5ff, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d600, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d601, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d602, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d603, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d604, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d605, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d606, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d607, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d608, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d609, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d60a, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d60b, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d60c, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d60d, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d60e, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d60f, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d610, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d611, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d612, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d613, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d614, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d615, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d616, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d617, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d618, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d619, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d61a, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d61b, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d61c, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d61d, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d61e, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d61f, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d620, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d621, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d622, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d623, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d624, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d625, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d626, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d627, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d628, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d629, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d62a, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d62b, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d62c, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d62d, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d62e, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d62f, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d630, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d631, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d632, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d633, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d634, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d635, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d636, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d637, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d638, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d639, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d63a, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d63b, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d63c, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d63d, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d63e, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d63f, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d640, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d641, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d642, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d643, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d644, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d645, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d646, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d647, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d648, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d649, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d64a, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d64b, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d64c, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d64d, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d64e, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d64f, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d650, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d651, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d652, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d653, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d654, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d655, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d656, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d657, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d658, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d659, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d65a, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d65b, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d65c, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d65d, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d65e, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d65f, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d660, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d661, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d662, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d663, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d664, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d665, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d666, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d667, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d668, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d669, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d66a, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d66b, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d66c, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d66d, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d66e, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d66f, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d670, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1d671, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1d672, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1d673, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1d674, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1d675, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1d676, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1d677, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1d678, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1d679, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1d67a, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1d67b, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1d67c, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1d67d, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1d67e, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1d67f, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1d680, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1d681, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1d682, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1d683, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1d684, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1d685, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1d686, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1d687, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1d688, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1d689, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1d68a, .decomp = &.{
-        0x61,
-    } },
-    .{ .cp = 0x1d68b, .decomp = &.{
-        0x62,
-    } },
-    .{ .cp = 0x1d68c, .decomp = &.{
-        0x63,
-    } },
-    .{ .cp = 0x1d68d, .decomp = &.{
-        0x64,
-    } },
-    .{ .cp = 0x1d68e, .decomp = &.{
-        0x65,
-    } },
-    .{ .cp = 0x1d68f, .decomp = &.{
-        0x66,
-    } },
-    .{ .cp = 0x1d690, .decomp = &.{
-        0x67,
-    } },
-    .{ .cp = 0x1d691, .decomp = &.{
-        0x68,
-    } },
-    .{ .cp = 0x1d692, .decomp = &.{
-        0x69,
-    } },
-    .{ .cp = 0x1d693, .decomp = &.{
-        0x6a,
-    } },
-    .{ .cp = 0x1d694, .decomp = &.{
-        0x6b,
-    } },
-    .{ .cp = 0x1d695, .decomp = &.{
-        0x6c,
-    } },
-    .{ .cp = 0x1d696, .decomp = &.{
-        0x6d,
-    } },
-    .{ .cp = 0x1d697, .decomp = &.{
-        0x6e,
-    } },
-    .{ .cp = 0x1d698, .decomp = &.{
-        0x6f,
-    } },
-    .{ .cp = 0x1d699, .decomp = &.{
-        0x70,
-    } },
-    .{ .cp = 0x1d69a, .decomp = &.{
-        0x71,
-    } },
-    .{ .cp = 0x1d69b, .decomp = &.{
-        0x72,
-    } },
-    .{ .cp = 0x1d69c, .decomp = &.{
-        0x73,
-    } },
-    .{ .cp = 0x1d69d, .decomp = &.{
-        0x74,
-    } },
-    .{ .cp = 0x1d69e, .decomp = &.{
-        0x75,
-    } },
-    .{ .cp = 0x1d69f, .decomp = &.{
-        0x76,
-    } },
-    .{ .cp = 0x1d6a0, .decomp = &.{
-        0x77,
-    } },
-    .{ .cp = 0x1d6a1, .decomp = &.{
-        0x78,
-    } },
-    .{ .cp = 0x1d6a2, .decomp = &.{
-        0x79,
-    } },
-    .{ .cp = 0x1d6a3, .decomp = &.{
-        0x7a,
-    } },
-    .{ .cp = 0x1d6a4, .decomp = &.{
-        0x131,
-    } },
-    .{ .cp = 0x1d6a5, .decomp = &.{
-        0x237,
-    } },
-    .{ .cp = 0x1d6a8, .decomp = &.{
-        0x391,
-    } },
-    .{ .cp = 0x1d6a9, .decomp = &.{
-        0x392,
-    } },
-    .{ .cp = 0x1d6aa, .decomp = &.{
-        0x393,
-    } },
-    .{ .cp = 0x1d6ab, .decomp = &.{
-        0x394,
-    } },
-    .{ .cp = 0x1d6ac, .decomp = &.{
-        0x395,
-    } },
-    .{ .cp = 0x1d6ad, .decomp = &.{
-        0x396,
-    } },
-    .{ .cp = 0x1d6ae, .decomp = &.{
-        0x397,
-    } },
-    .{ .cp = 0x1d6af, .decomp = &.{
-        0x398,
-    } },
-    .{ .cp = 0x1d6b0, .decomp = &.{
-        0x399,
-    } },
-    .{ .cp = 0x1d6b1, .decomp = &.{
-        0x39a,
-    } },
-    .{ .cp = 0x1d6b2, .decomp = &.{
-        0x39b,
-    } },
-    .{ .cp = 0x1d6b3, .decomp = &.{
-        0x39c,
-    } },
-    .{ .cp = 0x1d6b4, .decomp = &.{
-        0x39d,
-    } },
-    .{ .cp = 0x1d6b5, .decomp = &.{
-        0x39e,
-    } },
-    .{ .cp = 0x1d6b6, .decomp = &.{
-        0x39f,
-    } },
-    .{ .cp = 0x1d6b7, .decomp = &.{
-        0x3a0,
-    } },
-    .{ .cp = 0x1d6b8, .decomp = &.{
-        0x3a1,
-    } },
-    .{ .cp = 0x1d6b9, .decomp = &.{
-        0x3f4,
-    } },
-    .{ .cp = 0x1d6ba, .decomp = &.{
-        0x3a3,
-    } },
-    .{ .cp = 0x1d6bb, .decomp = &.{
-        0x3a4,
-    } },
-    .{ .cp = 0x1d6bc, .decomp = &.{
-        0x3a5,
-    } },
-    .{ .cp = 0x1d6bd, .decomp = &.{
-        0x3a6,
-    } },
-    .{ .cp = 0x1d6be, .decomp = &.{
-        0x3a7,
-    } },
-    .{ .cp = 0x1d6bf, .decomp = &.{
-        0x3a8,
-    } },
-    .{ .cp = 0x1d6c0, .decomp = &.{
-        0x3a9,
-    } },
-    .{ .cp = 0x1d6c1, .decomp = &.{
-        0x2207,
-    } },
-    .{ .cp = 0x1d6c2, .decomp = &.{
-        0x3b1,
-    } },
-    .{ .cp = 0x1d6c3, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d6c4, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d6c5, .decomp = &.{
-        0x3b4,
-    } },
-    .{ .cp = 0x1d6c6, .decomp = &.{
-        0x3b5,
-    } },
-    .{ .cp = 0x1d6c7, .decomp = &.{
-        0x3b6,
-    } },
-    .{ .cp = 0x1d6c8, .decomp = &.{
-        0x3b7,
-    } },
-    .{ .cp = 0x1d6c9, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x1d6ca, .decomp = &.{
-        0x3b9,
-    } },
-    .{ .cp = 0x1d6cb, .decomp = &.{
-        0x3ba,
-    } },
-    .{ .cp = 0x1d6cc, .decomp = &.{
-        0x3bb,
-    } },
-    .{ .cp = 0x1d6cd, .decomp = &.{
-        0x3bc,
-    } },
-    .{ .cp = 0x1d6ce, .decomp = &.{
-        0x3bd,
-    } },
-    .{ .cp = 0x1d6cf, .decomp = &.{
-        0x3be,
-    } },
-    .{ .cp = 0x1d6d0, .decomp = &.{
-        0x3bf,
-    } },
-    .{ .cp = 0x1d6d1, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x1d6d2, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x1d6d3, .decomp = &.{
-        0x3c2,
-    } },
-    .{ .cp = 0x1d6d4, .decomp = &.{
-        0x3c3,
-    } },
-    .{ .cp = 0x1d6d5, .decomp = &.{
-        0x3c4,
-    } },
-    .{ .cp = 0x1d6d6, .decomp = &.{
-        0x3c5,
-    } },
-    .{ .cp = 0x1d6d7, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d6d8, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d6d9, .decomp = &.{
-        0x3c8,
-    } },
-    .{ .cp = 0x1d6da, .decomp = &.{
-        0x3c9,
-    } },
-    .{ .cp = 0x1d6db, .decomp = &.{
-        0x2202,
-    } },
-    .{ .cp = 0x1d6dc, .decomp = &.{
-        0x3f5,
-    } },
-    .{ .cp = 0x1d6dd, .decomp = &.{
-        0x3d1,
-    } },
-    .{ .cp = 0x1d6de, .decomp = &.{
-        0x3f0,
-    } },
-    .{ .cp = 0x1d6df, .decomp = &.{
-        0x3d5,
-    } },
-    .{ .cp = 0x1d6e0, .decomp = &.{
-        0x3f1,
-    } },
-    .{ .cp = 0x1d6e1, .decomp = &.{
-        0x3d6,
-    } },
-    .{ .cp = 0x1d6e2, .decomp = &.{
-        0x391,
-    } },
-    .{ .cp = 0x1d6e3, .decomp = &.{
-        0x392,
-    } },
-    .{ .cp = 0x1d6e4, .decomp = &.{
-        0x393,
-    } },
-    .{ .cp = 0x1d6e5, .decomp = &.{
-        0x394,
-    } },
-    .{ .cp = 0x1d6e6, .decomp = &.{
-        0x395,
-    } },
-    .{ .cp = 0x1d6e7, .decomp = &.{
-        0x396,
-    } },
-    .{ .cp = 0x1d6e8, .decomp = &.{
-        0x397,
-    } },
-    .{ .cp = 0x1d6e9, .decomp = &.{
-        0x398,
-    } },
-    .{ .cp = 0x1d6ea, .decomp = &.{
-        0x399,
-    } },
-    .{ .cp = 0x1d6eb, .decomp = &.{
-        0x39a,
-    } },
-    .{ .cp = 0x1d6ec, .decomp = &.{
-        0x39b,
-    } },
-    .{ .cp = 0x1d6ed, .decomp = &.{
-        0x39c,
-    } },
-    .{ .cp = 0x1d6ee, .decomp = &.{
-        0x39d,
-    } },
-    .{ .cp = 0x1d6ef, .decomp = &.{
-        0x39e,
-    } },
-    .{ .cp = 0x1d6f0, .decomp = &.{
-        0x39f,
-    } },
-    .{ .cp = 0x1d6f1, .decomp = &.{
-        0x3a0,
-    } },
-    .{ .cp = 0x1d6f2, .decomp = &.{
-        0x3a1,
-    } },
-    .{ .cp = 0x1d6f3, .decomp = &.{
-        0x3f4,
-    } },
-    .{ .cp = 0x1d6f4, .decomp = &.{
-        0x3a3,
-    } },
-    .{ .cp = 0x1d6f5, .decomp = &.{
-        0x3a4,
-    } },
-    .{ .cp = 0x1d6f6, .decomp = &.{
-        0x3a5,
-    } },
-    .{ .cp = 0x1d6f7, .decomp = &.{
-        0x3a6,
-    } },
-    .{ .cp = 0x1d6f8, .decomp = &.{
-        0x3a7,
-    } },
-    .{ .cp = 0x1d6f9, .decomp = &.{
-        0x3a8,
-    } },
-    .{ .cp = 0x1d6fa, .decomp = &.{
-        0x3a9,
-    } },
-    .{ .cp = 0x1d6fb, .decomp = &.{
-        0x2207,
-    } },
-    .{ .cp = 0x1d6fc, .decomp = &.{
-        0x3b1,
-    } },
-    .{ .cp = 0x1d6fd, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d6fe, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d6ff, .decomp = &.{
-        0x3b4,
-    } },
-    .{ .cp = 0x1d700, .decomp = &.{
-        0x3b5,
-    } },
-    .{ .cp = 0x1d701, .decomp = &.{
-        0x3b6,
-    } },
-    .{ .cp = 0x1d702, .decomp = &.{
-        0x3b7,
-    } },
-    .{ .cp = 0x1d703, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x1d704, .decomp = &.{
-        0x3b9,
-    } },
-    .{ .cp = 0x1d705, .decomp = &.{
-        0x3ba,
-    } },
-    .{ .cp = 0x1d706, .decomp = &.{
-        0x3bb,
-    } },
-    .{ .cp = 0x1d707, .decomp = &.{
-        0x3bc,
-    } },
-    .{ .cp = 0x1d708, .decomp = &.{
-        0x3bd,
-    } },
-    .{ .cp = 0x1d709, .decomp = &.{
-        0x3be,
-    } },
-    .{ .cp = 0x1d70a, .decomp = &.{
-        0x3bf,
-    } },
-    .{ .cp = 0x1d70b, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x1d70c, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x1d70d, .decomp = &.{
-        0x3c2,
-    } },
-    .{ .cp = 0x1d70e, .decomp = &.{
-        0x3c3,
-    } },
-    .{ .cp = 0x1d70f, .decomp = &.{
-        0x3c4,
-    } },
-    .{ .cp = 0x1d710, .decomp = &.{
-        0x3c5,
-    } },
-    .{ .cp = 0x1d711, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d712, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d713, .decomp = &.{
-        0x3c8,
-    } },
-    .{ .cp = 0x1d714, .decomp = &.{
-        0x3c9,
-    } },
-    .{ .cp = 0x1d715, .decomp = &.{
-        0x2202,
-    } },
-    .{ .cp = 0x1d716, .decomp = &.{
-        0x3f5,
-    } },
-    .{ .cp = 0x1d717, .decomp = &.{
-        0x3d1,
-    } },
-    .{ .cp = 0x1d718, .decomp = &.{
-        0x3f0,
-    } },
-    .{ .cp = 0x1d719, .decomp = &.{
-        0x3d5,
-    } },
-    .{ .cp = 0x1d71a, .decomp = &.{
-        0x3f1,
-    } },
-    .{ .cp = 0x1d71b, .decomp = &.{
-        0x3d6,
-    } },
-    .{ .cp = 0x1d71c, .decomp = &.{
-        0x391,
-    } },
-    .{ .cp = 0x1d71d, .decomp = &.{
-        0x392,
-    } },
-    .{ .cp = 0x1d71e, .decomp = &.{
-        0x393,
-    } },
-    .{ .cp = 0x1d71f, .decomp = &.{
-        0x394,
-    } },
-    .{ .cp = 0x1d720, .decomp = &.{
-        0x395,
-    } },
-    .{ .cp = 0x1d721, .decomp = &.{
-        0x396,
-    } },
-    .{ .cp = 0x1d722, .decomp = &.{
-        0x397,
-    } },
-    .{ .cp = 0x1d723, .decomp = &.{
-        0x398,
-    } },
-    .{ .cp = 0x1d724, .decomp = &.{
-        0x399,
-    } },
-    .{ .cp = 0x1d725, .decomp = &.{
-        0x39a,
-    } },
-    .{ .cp = 0x1d726, .decomp = &.{
-        0x39b,
-    } },
-    .{ .cp = 0x1d727, .decomp = &.{
-        0x39c,
-    } },
-    .{ .cp = 0x1d728, .decomp = &.{
-        0x39d,
-    } },
-    .{ .cp = 0x1d729, .decomp = &.{
-        0x39e,
-    } },
-    .{ .cp = 0x1d72a, .decomp = &.{
-        0x39f,
-    } },
-    .{ .cp = 0x1d72b, .decomp = &.{
-        0x3a0,
-    } },
-    .{ .cp = 0x1d72c, .decomp = &.{
-        0x3a1,
-    } },
-    .{ .cp = 0x1d72d, .decomp = &.{
-        0x3f4,
-    } },
-    .{ .cp = 0x1d72e, .decomp = &.{
-        0x3a3,
-    } },
-    .{ .cp = 0x1d72f, .decomp = &.{
-        0x3a4,
-    } },
-    .{ .cp = 0x1d730, .decomp = &.{
-        0x3a5,
-    } },
-    .{ .cp = 0x1d731, .decomp = &.{
-        0x3a6,
-    } },
-    .{ .cp = 0x1d732, .decomp = &.{
-        0x3a7,
-    } },
-    .{ .cp = 0x1d733, .decomp = &.{
-        0x3a8,
-    } },
-    .{ .cp = 0x1d734, .decomp = &.{
-        0x3a9,
-    } },
-    .{ .cp = 0x1d735, .decomp = &.{
-        0x2207,
-    } },
-    .{ .cp = 0x1d736, .decomp = &.{
-        0x3b1,
-    } },
-    .{ .cp = 0x1d737, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d738, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d739, .decomp = &.{
-        0x3b4,
-    } },
-    .{ .cp = 0x1d73a, .decomp = &.{
-        0x3b5,
-    } },
-    .{ .cp = 0x1d73b, .decomp = &.{
-        0x3b6,
-    } },
-    .{ .cp = 0x1d73c, .decomp = &.{
-        0x3b7,
-    } },
-    .{ .cp = 0x1d73d, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x1d73e, .decomp = &.{
-        0x3b9,
-    } },
-    .{ .cp = 0x1d73f, .decomp = &.{
-        0x3ba,
-    } },
-    .{ .cp = 0x1d740, .decomp = &.{
-        0x3bb,
-    } },
-    .{ .cp = 0x1d741, .decomp = &.{
-        0x3bc,
-    } },
-    .{ .cp = 0x1d742, .decomp = &.{
-        0x3bd,
-    } },
-    .{ .cp = 0x1d743, .decomp = &.{
-        0x3be,
-    } },
-    .{ .cp = 0x1d744, .decomp = &.{
-        0x3bf,
-    } },
-    .{ .cp = 0x1d745, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x1d746, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x1d747, .decomp = &.{
-        0x3c2,
-    } },
-    .{ .cp = 0x1d748, .decomp = &.{
-        0x3c3,
-    } },
-    .{ .cp = 0x1d749, .decomp = &.{
-        0x3c4,
-    } },
-    .{ .cp = 0x1d74a, .decomp = &.{
-        0x3c5,
-    } },
-    .{ .cp = 0x1d74b, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d74c, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d74d, .decomp = &.{
-        0x3c8,
-    } },
-    .{ .cp = 0x1d74e, .decomp = &.{
-        0x3c9,
-    } },
-    .{ .cp = 0x1d74f, .decomp = &.{
-        0x2202,
-    } },
-    .{ .cp = 0x1d750, .decomp = &.{
-        0x3f5,
-    } },
-    .{ .cp = 0x1d751, .decomp = &.{
-        0x3d1,
-    } },
-    .{ .cp = 0x1d752, .decomp = &.{
-        0x3f0,
-    } },
-    .{ .cp = 0x1d753, .decomp = &.{
-        0x3d5,
-    } },
-    .{ .cp = 0x1d754, .decomp = &.{
-        0x3f1,
-    } },
-    .{ .cp = 0x1d755, .decomp = &.{
-        0x3d6,
-    } },
-    .{ .cp = 0x1d756, .decomp = &.{
-        0x391,
-    } },
-    .{ .cp = 0x1d757, .decomp = &.{
-        0x392,
-    } },
-    .{ .cp = 0x1d758, .decomp = &.{
-        0x393,
-    } },
-    .{ .cp = 0x1d759, .decomp = &.{
-        0x394,
-    } },
-    .{ .cp = 0x1d75a, .decomp = &.{
-        0x395,
-    } },
-    .{ .cp = 0x1d75b, .decomp = &.{
-        0x396,
-    } },
-    .{ .cp = 0x1d75c, .decomp = &.{
-        0x397,
-    } },
-    .{ .cp = 0x1d75d, .decomp = &.{
-        0x398,
-    } },
-    .{ .cp = 0x1d75e, .decomp = &.{
-        0x399,
-    } },
-    .{ .cp = 0x1d75f, .decomp = &.{
-        0x39a,
-    } },
-    .{ .cp = 0x1d760, .decomp = &.{
-        0x39b,
-    } },
-    .{ .cp = 0x1d761, .decomp = &.{
-        0x39c,
-    } },
-    .{ .cp = 0x1d762, .decomp = &.{
-        0x39d,
-    } },
-    .{ .cp = 0x1d763, .decomp = &.{
-        0x39e,
-    } },
-    .{ .cp = 0x1d764, .decomp = &.{
-        0x39f,
-    } },
-    .{ .cp = 0x1d765, .decomp = &.{
-        0x3a0,
-    } },
-    .{ .cp = 0x1d766, .decomp = &.{
-        0x3a1,
-    } },
-    .{ .cp = 0x1d767, .decomp = &.{
-        0x3f4,
-    } },
-    .{ .cp = 0x1d768, .decomp = &.{
-        0x3a3,
-    } },
-    .{ .cp = 0x1d769, .decomp = &.{
-        0x3a4,
-    } },
-    .{ .cp = 0x1d76a, .decomp = &.{
-        0x3a5,
-    } },
-    .{ .cp = 0x1d76b, .decomp = &.{
-        0x3a6,
-    } },
-    .{ .cp = 0x1d76c, .decomp = &.{
-        0x3a7,
-    } },
-    .{ .cp = 0x1d76d, .decomp = &.{
-        0x3a8,
-    } },
-    .{ .cp = 0x1d76e, .decomp = &.{
-        0x3a9,
-    } },
-    .{ .cp = 0x1d76f, .decomp = &.{
-        0x2207,
-    } },
-    .{ .cp = 0x1d770, .decomp = &.{
-        0x3b1,
-    } },
-    .{ .cp = 0x1d771, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d772, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d773, .decomp = &.{
-        0x3b4,
-    } },
-    .{ .cp = 0x1d774, .decomp = &.{
-        0x3b5,
-    } },
-    .{ .cp = 0x1d775, .decomp = &.{
-        0x3b6,
-    } },
-    .{ .cp = 0x1d776, .decomp = &.{
-        0x3b7,
-    } },
-    .{ .cp = 0x1d777, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x1d778, .decomp = &.{
-        0x3b9,
-    } },
-    .{ .cp = 0x1d779, .decomp = &.{
-        0x3ba,
-    } },
-    .{ .cp = 0x1d77a, .decomp = &.{
-        0x3bb,
-    } },
-    .{ .cp = 0x1d77b, .decomp = &.{
-        0x3bc,
-    } },
-    .{ .cp = 0x1d77c, .decomp = &.{
-        0x3bd,
-    } },
-    .{ .cp = 0x1d77d, .decomp = &.{
-        0x3be,
-    } },
-    .{ .cp = 0x1d77e, .decomp = &.{
-        0x3bf,
-    } },
-    .{ .cp = 0x1d77f, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x1d780, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x1d781, .decomp = &.{
-        0x3c2,
-    } },
-    .{ .cp = 0x1d782, .decomp = &.{
-        0x3c3,
-    } },
-    .{ .cp = 0x1d783, .decomp = &.{
-        0x3c4,
-    } },
-    .{ .cp = 0x1d784, .decomp = &.{
-        0x3c5,
-    } },
-    .{ .cp = 0x1d785, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d786, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d787, .decomp = &.{
-        0x3c8,
-    } },
-    .{ .cp = 0x1d788, .decomp = &.{
-        0x3c9,
-    } },
-    .{ .cp = 0x1d789, .decomp = &.{
-        0x2202,
-    } },
-    .{ .cp = 0x1d78a, .decomp = &.{
-        0x3f5,
-    } },
-    .{ .cp = 0x1d78b, .decomp = &.{
-        0x3d1,
-    } },
-    .{ .cp = 0x1d78c, .decomp = &.{
-        0x3f0,
-    } },
-    .{ .cp = 0x1d78d, .decomp = &.{
-        0x3d5,
-    } },
-    .{ .cp = 0x1d78e, .decomp = &.{
-        0x3f1,
-    } },
-    .{ .cp = 0x1d78f, .decomp = &.{
-        0x3d6,
-    } },
-    .{ .cp = 0x1d790, .decomp = &.{
-        0x391,
-    } },
-    .{ .cp = 0x1d791, .decomp = &.{
-        0x392,
-    } },
-    .{ .cp = 0x1d792, .decomp = &.{
-        0x393,
-    } },
-    .{ .cp = 0x1d793, .decomp = &.{
-        0x394,
-    } },
-    .{ .cp = 0x1d794, .decomp = &.{
-        0x395,
-    } },
-    .{ .cp = 0x1d795, .decomp = &.{
-        0x396,
-    } },
-    .{ .cp = 0x1d796, .decomp = &.{
-        0x397,
-    } },
-    .{ .cp = 0x1d797, .decomp = &.{
-        0x398,
-    } },
-    .{ .cp = 0x1d798, .decomp = &.{
-        0x399,
-    } },
-    .{ .cp = 0x1d799, .decomp = &.{
-        0x39a,
-    } },
-    .{ .cp = 0x1d79a, .decomp = &.{
-        0x39b,
-    } },
-    .{ .cp = 0x1d79b, .decomp = &.{
-        0x39c,
-    } },
-    .{ .cp = 0x1d79c, .decomp = &.{
-        0x39d,
-    } },
-    .{ .cp = 0x1d79d, .decomp = &.{
-        0x39e,
-    } },
-    .{ .cp = 0x1d79e, .decomp = &.{
-        0x39f,
-    } },
-    .{ .cp = 0x1d79f, .decomp = &.{
-        0x3a0,
-    } },
-    .{ .cp = 0x1d7a0, .decomp = &.{
-        0x3a1,
-    } },
-    .{ .cp = 0x1d7a1, .decomp = &.{
-        0x3f4,
-    } },
-    .{ .cp = 0x1d7a2, .decomp = &.{
-        0x3a3,
-    } },
-    .{ .cp = 0x1d7a3, .decomp = &.{
-        0x3a4,
-    } },
-    .{ .cp = 0x1d7a4, .decomp = &.{
-        0x3a5,
-    } },
-    .{ .cp = 0x1d7a5, .decomp = &.{
-        0x3a6,
-    } },
-    .{ .cp = 0x1d7a6, .decomp = &.{
-        0x3a7,
-    } },
-    .{ .cp = 0x1d7a7, .decomp = &.{
-        0x3a8,
-    } },
-    .{ .cp = 0x1d7a8, .decomp = &.{
-        0x3a9,
-    } },
-    .{ .cp = 0x1d7a9, .decomp = &.{
-        0x2207,
-    } },
-    .{ .cp = 0x1d7aa, .decomp = &.{
-        0x3b1,
-    } },
-    .{ .cp = 0x1d7ab, .decomp = &.{
-        0x3b2,
-    } },
-    .{ .cp = 0x1d7ac, .decomp = &.{
-        0x3b3,
-    } },
-    .{ .cp = 0x1d7ad, .decomp = &.{
-        0x3b4,
-    } },
-    .{ .cp = 0x1d7ae, .decomp = &.{
-        0x3b5,
-    } },
-    .{ .cp = 0x1d7af, .decomp = &.{
-        0x3b6,
-    } },
-    .{ .cp = 0x1d7b0, .decomp = &.{
-        0x3b7,
-    } },
-    .{ .cp = 0x1d7b1, .decomp = &.{
-        0x3b8,
-    } },
-    .{ .cp = 0x1d7b2, .decomp = &.{
-        0x3b9,
-    } },
-    .{ .cp = 0x1d7b3, .decomp = &.{
-        0x3ba,
-    } },
-    .{ .cp = 0x1d7b4, .decomp = &.{
-        0x3bb,
-    } },
-    .{ .cp = 0x1d7b5, .decomp = &.{
-        0x3bc,
-    } },
-    .{ .cp = 0x1d7b6, .decomp = &.{
-        0x3bd,
-    } },
-    .{ .cp = 0x1d7b7, .decomp = &.{
-        0x3be,
-    } },
-    .{ .cp = 0x1d7b8, .decomp = &.{
-        0x3bf,
-    } },
-    .{ .cp = 0x1d7b9, .decomp = &.{
-        0x3c0,
-    } },
-    .{ .cp = 0x1d7ba, .decomp = &.{
-        0x3c1,
-    } },
-    .{ .cp = 0x1d7bb, .decomp = &.{
-        0x3c2,
-    } },
-    .{ .cp = 0x1d7bc, .decomp = &.{
-        0x3c3,
-    } },
-    .{ .cp = 0x1d7bd, .decomp = &.{
-        0x3c4,
-    } },
-    .{ .cp = 0x1d7be, .decomp = &.{
-        0x3c5,
-    } },
-    .{ .cp = 0x1d7bf, .decomp = &.{
-        0x3c6,
-    } },
-    .{ .cp = 0x1d7c0, .decomp = &.{
-        0x3c7,
-    } },
-    .{ .cp = 0x1d7c1, .decomp = &.{
-        0x3c8,
-    } },
-    .{ .cp = 0x1d7c2, .decomp = &.{
-        0x3c9,
-    } },
-    .{ .cp = 0x1d7c3, .decomp = &.{
-        0x2202,
-    } },
-    .{ .cp = 0x1d7c4, .decomp = &.{
-        0x3f5,
-    } },
-    .{ .cp = 0x1d7c5, .decomp = &.{
-        0x3d1,
-    } },
-    .{ .cp = 0x1d7c6, .decomp = &.{
-        0x3f0,
-    } },
-    .{ .cp = 0x1d7c7, .decomp = &.{
-        0x3d5,
-    } },
-    .{ .cp = 0x1d7c8, .decomp = &.{
-        0x3f1,
-    } },
-    .{ .cp = 0x1d7c9, .decomp = &.{
-        0x3d6,
-    } },
-    .{ .cp = 0x1d7ca, .decomp = &.{
-        0x3dc,
-    } },
-    .{ .cp = 0x1d7cb, .decomp = &.{
-        0x3dd,
-    } },
-    .{ .cp = 0x1d7ce, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1d7cf, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1d7d0, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1d7d1, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1d7d2, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1d7d3, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1d7d4, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1d7d5, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1d7d6, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1d7d7, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x1d7d8, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1d7d9, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1d7da, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1d7db, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1d7dc, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1d7dd, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1d7de, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1d7df, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1d7e0, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1d7e1, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x1d7e2, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1d7e3, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1d7e4, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1d7e5, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1d7e6, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1d7e7, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1d7e8, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1d7e9, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1d7ea, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1d7eb, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x1d7ec, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1d7ed, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1d7ee, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1d7ef, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1d7f0, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1d7f1, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1d7f2, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1d7f3, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1d7f4, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1d7f5, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x1d7f6, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1d7f7, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1d7f8, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1d7f9, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1d7fa, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1d7fb, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1d7fc, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1d7fd, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1d7fe, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1d7ff, .decomp = &.{
-        0x39,
-    } },
-    .{ .cp = 0x1e030, .decomp = &.{
-        0x430,
-    } },
-    .{ .cp = 0x1e031, .decomp = &.{
-        0x431,
-    } },
-    .{ .cp = 0x1e032, .decomp = &.{
-        0x432,
-    } },
-    .{ .cp = 0x1e033, .decomp = &.{
-        0x433,
-    } },
-    .{ .cp = 0x1e034, .decomp = &.{
-        0x434,
-    } },
-    .{ .cp = 0x1e035, .decomp = &.{
-        0x435,
-    } },
-    .{ .cp = 0x1e036, .decomp = &.{
-        0x436,
-    } },
-    .{ .cp = 0x1e037, .decomp = &.{
-        0x437,
-    } },
-    .{ .cp = 0x1e038, .decomp = &.{
-        0x438,
-    } },
-    .{ .cp = 0x1e039, .decomp = &.{
-        0x43a,
-    } },
-    .{ .cp = 0x1e03a, .decomp = &.{
-        0x43b,
-    } },
-    .{ .cp = 0x1e03b, .decomp = &.{
-        0x43c,
-    } },
-    .{ .cp = 0x1e03c, .decomp = &.{
-        0x43e,
-    } },
-    .{ .cp = 0x1e03d, .decomp = &.{
-        0x43f,
-    } },
-    .{ .cp = 0x1e03e, .decomp = &.{
-        0x440,
-    } },
-    .{ .cp = 0x1e03f, .decomp = &.{
-        0x441,
-    } },
-    .{ .cp = 0x1e040, .decomp = &.{
-        0x442,
-    } },
-    .{ .cp = 0x1e041, .decomp = &.{
-        0x443,
-    } },
-    .{ .cp = 0x1e042, .decomp = &.{
-        0x444,
-    } },
-    .{ .cp = 0x1e043, .decomp = &.{
-        0x445,
-    } },
-    .{ .cp = 0x1e044, .decomp = &.{
-        0x446,
-    } },
-    .{ .cp = 0x1e045, .decomp = &.{
-        0x447,
-    } },
-    .{ .cp = 0x1e046, .decomp = &.{
-        0x448,
-    } },
-    .{ .cp = 0x1e047, .decomp = &.{
-        0x44b,
-    } },
-    .{ .cp = 0x1e048, .decomp = &.{
-        0x44d,
-    } },
-    .{ .cp = 0x1e049, .decomp = &.{
-        0x44e,
-    } },
-    .{ .cp = 0x1e04a, .decomp = &.{
-        0xa689,
-    } },
-    .{ .cp = 0x1e04b, .decomp = &.{
-        0x4d9,
-    } },
-    .{ .cp = 0x1e04c, .decomp = &.{
-        0x456,
-    } },
-    .{ .cp = 0x1e04d, .decomp = &.{
-        0x458,
-    } },
-    .{ .cp = 0x1e04e, .decomp = &.{
-        0x4e9,
-    } },
-    .{ .cp = 0x1e04f, .decomp = &.{
-        0x4af,
-    } },
-    .{ .cp = 0x1e050, .decomp = &.{
-        0x4cf,
-    } },
-    .{ .cp = 0x1e051, .decomp = &.{
-        0x430,
-    } },
-    .{ .cp = 0x1e052, .decomp = &.{
-        0x431,
-    } },
-    .{ .cp = 0x1e053, .decomp = &.{
-        0x432,
-    } },
-    .{ .cp = 0x1e054, .decomp = &.{
-        0x433,
-    } },
-    .{ .cp = 0x1e055, .decomp = &.{
-        0x434,
-    } },
-    .{ .cp = 0x1e056, .decomp = &.{
-        0x435,
-    } },
-    .{ .cp = 0x1e057, .decomp = &.{
-        0x436,
-    } },
-    .{ .cp = 0x1e058, .decomp = &.{
-        0x437,
-    } },
-    .{ .cp = 0x1e059, .decomp = &.{
-        0x438,
-    } },
-    .{ .cp = 0x1e05a, .decomp = &.{
-        0x43a,
-    } },
-    .{ .cp = 0x1e05b, .decomp = &.{
-        0x43b,
-    } },
-    .{ .cp = 0x1e05c, .decomp = &.{
-        0x43e,
-    } },
-    .{ .cp = 0x1e05d, .decomp = &.{
-        0x43f,
-    } },
-    .{ .cp = 0x1e05e, .decomp = &.{
-        0x441,
-    } },
-    .{ .cp = 0x1e05f, .decomp = &.{
-        0x443,
-    } },
-    .{ .cp = 0x1e060, .decomp = &.{
-        0x444,
-    } },
-    .{ .cp = 0x1e061, .decomp = &.{
-        0x445,
-    } },
-    .{ .cp = 0x1e062, .decomp = &.{
-        0x446,
-    } },
-    .{ .cp = 0x1e063, .decomp = &.{
-        0x447,
-    } },
-    .{ .cp = 0x1e064, .decomp = &.{
-        0x448,
-    } },
-    .{ .cp = 0x1e065, .decomp = &.{
-        0x44a,
-    } },
-    .{ .cp = 0x1e066, .decomp = &.{
-        0x44b,
-    } },
-    .{ .cp = 0x1e067, .decomp = &.{
-        0x491,
-    } },
-    .{ .cp = 0x1e068, .decomp = &.{
-        0x456,
-    } },
-    .{ .cp = 0x1e069, .decomp = &.{
-        0x455,
-    } },
-    .{ .cp = 0x1e06a, .decomp = &.{
-        0x45f,
-    } },
-    .{ .cp = 0x1e06b, .decomp = &.{
-        0x4ab,
-    } },
-    .{ .cp = 0x1e06c, .decomp = &.{
-        0xa651,
-    } },
-    .{ .cp = 0x1e06d, .decomp = &.{
-        0x4b1,
-    } },
-    .{ .cp = 0x1ee00, .decomp = &.{
-        0x627,
-    } },
-    .{ .cp = 0x1ee01, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0x1ee02, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0x1ee03, .decomp = &.{
-        0x62f,
-    } },
-    .{ .cp = 0x1ee05, .decomp = &.{
-        0x648,
-    } },
-    .{ .cp = 0x1ee06, .decomp = &.{
-        0x632,
-    } },
-    .{ .cp = 0x1ee07, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0x1ee08, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0x1ee09, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0x1ee0a, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0x1ee0b, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0x1ee0c, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0x1ee0d, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0x1ee0e, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0x1ee0f, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0x1ee10, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0x1ee11, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0x1ee12, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0x1ee13, .decomp = &.{
-        0x631,
-    } },
-    .{ .cp = 0x1ee14, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0x1ee15, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0x1ee16, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0x1ee17, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0x1ee18, .decomp = &.{
-        0x630,
-    } },
-    .{ .cp = 0x1ee19, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0x1ee1a, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0x1ee1b, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0x1ee1c, .decomp = &.{
-        0x66e,
-    } },
-    .{ .cp = 0x1ee1d, .decomp = &.{
-        0x6ba,
-    } },
-    .{ .cp = 0x1ee1e, .decomp = &.{
-        0x6a1,
-    } },
-    .{ .cp = 0x1ee1f, .decomp = &.{
-        0x66f,
-    } },
-    .{ .cp = 0x1ee21, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0x1ee22, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0x1ee24, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0x1ee27, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0x1ee29, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0x1ee2a, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0x1ee2b, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0x1ee2c, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0x1ee2d, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0x1ee2e, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0x1ee2f, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0x1ee30, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0x1ee31, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0x1ee32, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0x1ee34, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0x1ee35, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0x1ee36, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0x1ee37, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0x1ee39, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0x1ee3b, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0x1ee42, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0x1ee47, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0x1ee49, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0x1ee4b, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0x1ee4d, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0x1ee4e, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0x1ee4f, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0x1ee51, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0x1ee52, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0x1ee54, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0x1ee57, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0x1ee59, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0x1ee5b, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0x1ee5d, .decomp = &.{
-        0x6ba,
-    } },
-    .{ .cp = 0x1ee5f, .decomp = &.{
-        0x66f,
-    } },
-    .{ .cp = 0x1ee61, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0x1ee62, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0x1ee64, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0x1ee67, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0x1ee68, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0x1ee69, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0x1ee6a, .decomp = &.{
-        0x643,
-    } },
-    .{ .cp = 0x1ee6c, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0x1ee6d, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0x1ee6e, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0x1ee6f, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0x1ee70, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0x1ee71, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0x1ee72, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0x1ee74, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0x1ee75, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0x1ee76, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0x1ee77, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0x1ee79, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0x1ee7a, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0x1ee7b, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0x1ee7c, .decomp = &.{
-        0x66e,
-    } },
-    .{ .cp = 0x1ee7e, .decomp = &.{
-        0x6a1,
-    } },
-    .{ .cp = 0x1ee80, .decomp = &.{
-        0x627,
-    } },
-    .{ .cp = 0x1ee81, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0x1ee82, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0x1ee83, .decomp = &.{
-        0x62f,
-    } },
-    .{ .cp = 0x1ee84, .decomp = &.{
-        0x647,
-    } },
-    .{ .cp = 0x1ee85, .decomp = &.{
-        0x648,
-    } },
-    .{ .cp = 0x1ee86, .decomp = &.{
-        0x632,
-    } },
-    .{ .cp = 0x1ee87, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0x1ee88, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0x1ee89, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0x1ee8b, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0x1ee8c, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0x1ee8d, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0x1ee8e, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0x1ee8f, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0x1ee90, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0x1ee91, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0x1ee92, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0x1ee93, .decomp = &.{
-        0x631,
-    } },
-    .{ .cp = 0x1ee94, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0x1ee95, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0x1ee96, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0x1ee97, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0x1ee98, .decomp = &.{
-        0x630,
-    } },
-    .{ .cp = 0x1ee99, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0x1ee9a, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0x1ee9b, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0x1eea1, .decomp = &.{
-        0x628,
-    } },
-    .{ .cp = 0x1eea2, .decomp = &.{
-        0x62c,
-    } },
-    .{ .cp = 0x1eea3, .decomp = &.{
-        0x62f,
-    } },
-    .{ .cp = 0x1eea5, .decomp = &.{
-        0x648,
-    } },
-    .{ .cp = 0x1eea6, .decomp = &.{
-        0x632,
-    } },
-    .{ .cp = 0x1eea7, .decomp = &.{
-        0x62d,
-    } },
-    .{ .cp = 0x1eea8, .decomp = &.{
-        0x637,
-    } },
-    .{ .cp = 0x1eea9, .decomp = &.{
-        0x64a,
-    } },
-    .{ .cp = 0x1eeab, .decomp = &.{
-        0x644,
-    } },
-    .{ .cp = 0x1eeac, .decomp = &.{
-        0x645,
-    } },
-    .{ .cp = 0x1eead, .decomp = &.{
-        0x646,
-    } },
-    .{ .cp = 0x1eeae, .decomp = &.{
-        0x633,
-    } },
-    .{ .cp = 0x1eeaf, .decomp = &.{
-        0x639,
-    } },
-    .{ .cp = 0x1eeb0, .decomp = &.{
-        0x641,
-    } },
-    .{ .cp = 0x1eeb1, .decomp = &.{
-        0x635,
-    } },
-    .{ .cp = 0x1eeb2, .decomp = &.{
-        0x642,
-    } },
-    .{ .cp = 0x1eeb3, .decomp = &.{
-        0x631,
-    } },
-    .{ .cp = 0x1eeb4, .decomp = &.{
-        0x634,
-    } },
-    .{ .cp = 0x1eeb5, .decomp = &.{
-        0x62a,
-    } },
-    .{ .cp = 0x1eeb6, .decomp = &.{
-        0x62b,
-    } },
-    .{ .cp = 0x1eeb7, .decomp = &.{
-        0x62e,
-    } },
-    .{ .cp = 0x1eeb8, .decomp = &.{
-        0x630,
-    } },
-    .{ .cp = 0x1eeb9, .decomp = &.{
-        0x636,
-    } },
-    .{ .cp = 0x1eeba, .decomp = &.{
-        0x638,
-    } },
-    .{ .cp = 0x1eebb, .decomp = &.{
-        0x63a,
-    } },
-    .{ .cp = 0x1f100, .decomp = &.{
-        0x30,
-        0x2e,
-    } },
-    .{ .cp = 0x1f101, .decomp = &.{
-        0x30,
-        0x2c,
-    } },
-    .{ .cp = 0x1f102, .decomp = &.{
-        0x31,
-        0x2c,
-    } },
-    .{ .cp = 0x1f103, .decomp = &.{
-        0x32,
-        0x2c,
-    } },
-    .{ .cp = 0x1f104, .decomp = &.{
-        0x33,
-        0x2c,
-    } },
-    .{ .cp = 0x1f105, .decomp = &.{
-        0x34,
-        0x2c,
-    } },
-    .{ .cp = 0x1f106, .decomp = &.{
-        0x35,
-        0x2c,
-    } },
-    .{ .cp = 0x1f107, .decomp = &.{
-        0x36,
-        0x2c,
-    } },
-    .{ .cp = 0x1f108, .decomp = &.{
-        0x37,
-        0x2c,
-    } },
-    .{ .cp = 0x1f109, .decomp = &.{
-        0x38,
-        0x2c,
-    } },
-    .{ .cp = 0x1f10a, .decomp = &.{
-        0x39,
-        0x2c,
-    } },
-    .{ .cp = 0x1f110, .decomp = &.{
-        0x28,
-        0x41,
-        0x29,
-    } },
-    .{ .cp = 0x1f111, .decomp = &.{
-        0x28,
-        0x42,
-        0x29,
-    } },
-    .{ .cp = 0x1f112, .decomp = &.{
-        0x28,
-        0x43,
-        0x29,
-    } },
-    .{ .cp = 0x1f113, .decomp = &.{
-        0x28,
-        0x44,
-        0x29,
-    } },
-    .{ .cp = 0x1f114, .decomp = &.{
-        0x28,
-        0x45,
-        0x29,
-    } },
-    .{ .cp = 0x1f115, .decomp = &.{
-        0x28,
-        0x46,
-        0x29,
-    } },
-    .{ .cp = 0x1f116, .decomp = &.{
-        0x28,
-        0x47,
-        0x29,
-    } },
-    .{ .cp = 0x1f117, .decomp = &.{
-        0x28,
-        0x48,
-        0x29,
-    } },
-    .{ .cp = 0x1f118, .decomp = &.{
-        0x28,
-        0x49,
-        0x29,
-    } },
-    .{ .cp = 0x1f119, .decomp = &.{
-        0x28,
-        0x4a,
-        0x29,
-    } },
-    .{ .cp = 0x1f11a, .decomp = &.{
-        0x28,
-        0x4b,
-        0x29,
-    } },
-    .{ .cp = 0x1f11b, .decomp = &.{
-        0x28,
-        0x4c,
-        0x29,
-    } },
-    .{ .cp = 0x1f11c, .decomp = &.{
-        0x28,
-        0x4d,
-        0x29,
-    } },
-    .{ .cp = 0x1f11d, .decomp = &.{
-        0x28,
-        0x4e,
-        0x29,
-    } },
-    .{ .cp = 0x1f11e, .decomp = &.{
-        0x28,
-        0x4f,
-        0x29,
-    } },
-    .{ .cp = 0x1f11f, .decomp = &.{
-        0x28,
-        0x50,
-        0x29,
-    } },
-    .{ .cp = 0x1f120, .decomp = &.{
-        0x28,
-        0x51,
-        0x29,
-    } },
-    .{ .cp = 0x1f121, .decomp = &.{
-        0x28,
-        0x52,
-        0x29,
-    } },
-    .{ .cp = 0x1f122, .decomp = &.{
-        0x28,
-        0x53,
-        0x29,
-    } },
-    .{ .cp = 0x1f123, .decomp = &.{
-        0x28,
-        0x54,
-        0x29,
-    } },
-    .{ .cp = 0x1f124, .decomp = &.{
-        0x28,
-        0x55,
-        0x29,
-    } },
-    .{ .cp = 0x1f125, .decomp = &.{
-        0x28,
-        0x56,
-        0x29,
-    } },
-    .{ .cp = 0x1f126, .decomp = &.{
-        0x28,
-        0x57,
-        0x29,
-    } },
-    .{ .cp = 0x1f127, .decomp = &.{
-        0x28,
-        0x58,
-        0x29,
-    } },
-    .{ .cp = 0x1f128, .decomp = &.{
-        0x28,
-        0x59,
-        0x29,
-    } },
-    .{ .cp = 0x1f129, .decomp = &.{
-        0x28,
-        0x5a,
-        0x29,
-    } },
-    .{ .cp = 0x1f12a, .decomp = &.{
-        0x3014,
-        0x53,
-        0x3015,
-    } },
-    .{ .cp = 0x1f12b, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1f12c, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1f12d, .decomp = &.{
-        0x43,
-        0x44,
-    } },
-    .{ .cp = 0x1f12e, .decomp = &.{
-        0x57,
-        0x5a,
-    } },
-    .{ .cp = 0x1f130, .decomp = &.{
-        0x41,
-    } },
-    .{ .cp = 0x1f131, .decomp = &.{
-        0x42,
-    } },
-    .{ .cp = 0x1f132, .decomp = &.{
-        0x43,
-    } },
-    .{ .cp = 0x1f133, .decomp = &.{
-        0x44,
-    } },
-    .{ .cp = 0x1f134, .decomp = &.{
-        0x45,
-    } },
-    .{ .cp = 0x1f135, .decomp = &.{
-        0x46,
-    } },
-    .{ .cp = 0x1f136, .decomp = &.{
-        0x47,
-    } },
-    .{ .cp = 0x1f137, .decomp = &.{
-        0x48,
-    } },
-    .{ .cp = 0x1f138, .decomp = &.{
-        0x49,
-    } },
-    .{ .cp = 0x1f139, .decomp = &.{
-        0x4a,
-    } },
-    .{ .cp = 0x1f13a, .decomp = &.{
-        0x4b,
-    } },
-    .{ .cp = 0x1f13b, .decomp = &.{
-        0x4c,
-    } },
-    .{ .cp = 0x1f13c, .decomp = &.{
-        0x4d,
-    } },
-    .{ .cp = 0x1f13d, .decomp = &.{
-        0x4e,
-    } },
-    .{ .cp = 0x1f13e, .decomp = &.{
-        0x4f,
-    } },
-    .{ .cp = 0x1f13f, .decomp = &.{
-        0x50,
-    } },
-    .{ .cp = 0x1f140, .decomp = &.{
-        0x51,
-    } },
-    .{ .cp = 0x1f141, .decomp = &.{
-        0x52,
-    } },
-    .{ .cp = 0x1f142, .decomp = &.{
-        0x53,
-    } },
-    .{ .cp = 0x1f143, .decomp = &.{
-        0x54,
-    } },
-    .{ .cp = 0x1f144, .decomp = &.{
-        0x55,
-    } },
-    .{ .cp = 0x1f145, .decomp = &.{
-        0x56,
-    } },
-    .{ .cp = 0x1f146, .decomp = &.{
-        0x57,
-    } },
-    .{ .cp = 0x1f147, .decomp = &.{
-        0x58,
-    } },
-    .{ .cp = 0x1f148, .decomp = &.{
-        0x59,
-    } },
-    .{ .cp = 0x1f149, .decomp = &.{
-        0x5a,
-    } },
-    .{ .cp = 0x1f14a, .decomp = &.{
-        0x48,
-        0x56,
-    } },
-    .{ .cp = 0x1f14b, .decomp = &.{
-        0x4d,
-        0x56,
-    } },
-    .{ .cp = 0x1f14c, .decomp = &.{
-        0x53,
-        0x44,
-    } },
-    .{ .cp = 0x1f14d, .decomp = &.{
-        0x53,
-        0x53,
-    } },
-    .{ .cp = 0x1f14e, .decomp = &.{
-        0x50,
-        0x50,
-        0x56,
-    } },
-    .{ .cp = 0x1f14f, .decomp = &.{
-        0x57,
-        0x43,
-    } },
-    .{ .cp = 0x1f16a, .decomp = &.{
-        0x4d,
-        0x43,
-    } },
-    .{ .cp = 0x1f16b, .decomp = &.{
-        0x4d,
-        0x44,
-    } },
-    .{ .cp = 0x1f16c, .decomp = &.{
-        0x4d,
-        0x52,
-    } },
-    .{ .cp = 0x1f190, .decomp = &.{
-        0x44,
-        0x4a,
-    } },
-    .{ .cp = 0x1f200, .decomp = &.{
-        0x307b,
-        0x304b,
-    } },
-    .{ .cp = 0x1f201, .decomp = &.{
-        0x30b3,
-        0x30b3,
-    } },
-    .{ .cp = 0x1f202, .decomp = &.{
-        0x30b5,
-    } },
-    .{ .cp = 0x1f210, .decomp = &.{
-        0x624b,
-    } },
-    .{ .cp = 0x1f211, .decomp = &.{
-        0x5b57,
-    } },
-    .{ .cp = 0x1f212, .decomp = &.{
-        0x53cc,
-    } },
-    .{ .cp = 0x1f213, .decomp = &.{
-        0x30c7,
-    } },
-    .{ .cp = 0x1f214, .decomp = &.{
-        0x4e8c,
-    } },
-    .{ .cp = 0x1f215, .decomp = &.{
-        0x591a,
-    } },
-    .{ .cp = 0x1f216, .decomp = &.{
-        0x89e3,
-    } },
-    .{ .cp = 0x1f217, .decomp = &.{
-        0x5929,
-    } },
-    .{ .cp = 0x1f218, .decomp = &.{
-        0x4ea4,
-    } },
-    .{ .cp = 0x1f219, .decomp = &.{
-        0x6620,
-    } },
-    .{ .cp = 0x1f21a, .decomp = &.{
-        0x7121,
-    } },
-    .{ .cp = 0x1f21b, .decomp = &.{
-        0x6599,
-    } },
-    .{ .cp = 0x1f21c, .decomp = &.{
-        0x524d,
-    } },
-    .{ .cp = 0x1f21d, .decomp = &.{
-        0x5f8c,
-    } },
-    .{ .cp = 0x1f21e, .decomp = &.{
-        0x518d,
-    } },
-    .{ .cp = 0x1f21f, .decomp = &.{
-        0x65b0,
-    } },
-    .{ .cp = 0x1f220, .decomp = &.{
-        0x521d,
-    } },
-    .{ .cp = 0x1f221, .decomp = &.{
-        0x7d42,
-    } },
-    .{ .cp = 0x1f222, .decomp = &.{
-        0x751f,
-    } },
-    .{ .cp = 0x1f223, .decomp = &.{
-        0x8ca9,
-    } },
-    .{ .cp = 0x1f224, .decomp = &.{
-        0x58f0,
-    } },
-    .{ .cp = 0x1f225, .decomp = &.{
-        0x5439,
-    } },
-    .{ .cp = 0x1f226, .decomp = &.{
-        0x6f14,
-    } },
-    .{ .cp = 0x1f227, .decomp = &.{
-        0x6295,
-    } },
-    .{ .cp = 0x1f228, .decomp = &.{
-        0x6355,
-    } },
-    .{ .cp = 0x1f229, .decomp = &.{
-        0x4e00,
-    } },
-    .{ .cp = 0x1f22a, .decomp = &.{
-        0x4e09,
-    } },
-    .{ .cp = 0x1f22b, .decomp = &.{
-        0x904a,
-    } },
-    .{ .cp = 0x1f22c, .decomp = &.{
-        0x5de6,
-    } },
-    .{ .cp = 0x1f22d, .decomp = &.{
-        0x4e2d,
-    } },
-    .{ .cp = 0x1f22e, .decomp = &.{
-        0x53f3,
-    } },
-    .{ .cp = 0x1f22f, .decomp = &.{
-        0x6307,
-    } },
-    .{ .cp = 0x1f230, .decomp = &.{
-        0x8d70,
-    } },
-    .{ .cp = 0x1f231, .decomp = &.{
-        0x6253,
-    } },
-    .{ .cp = 0x1f232, .decomp = &.{
-        0x7981,
-    } },
-    .{ .cp = 0x1f233, .decomp = &.{
-        0x7a7a,
-    } },
-    .{ .cp = 0x1f234, .decomp = &.{
-        0x5408,
-    } },
-    .{ .cp = 0x1f235, .decomp = &.{
-        0x6e80,
-    } },
-    .{ .cp = 0x1f236, .decomp = &.{
-        0x6709,
-    } },
-    .{ .cp = 0x1f237, .decomp = &.{
-        0x6708,
-    } },
-    .{ .cp = 0x1f238, .decomp = &.{
-        0x7533,
-    } },
-    .{ .cp = 0x1f239, .decomp = &.{
-        0x5272,
-    } },
-    .{ .cp = 0x1f23a, .decomp = &.{
-        0x55b6,
-    } },
-    .{ .cp = 0x1f23b, .decomp = &.{
-        0x914d,
-    } },
-    .{ .cp = 0x1f240, .decomp = &.{
-        0x3014,
-        0x672c,
-        0x3015,
-    } },
-    .{ .cp = 0x1f241, .decomp = &.{
-        0x3014,
-        0x4e09,
-        0x3015,
-    } },
-    .{ .cp = 0x1f242, .decomp = &.{
-        0x3014,
-        0x4e8c,
-        0x3015,
-    } },
-    .{ .cp = 0x1f243, .decomp = &.{
-        0x3014,
-        0x5b89,
-        0x3015,
-    } },
-    .{ .cp = 0x1f244, .decomp = &.{
-        0x3014,
-        0x70b9,
-        0x3015,
-    } },
-    .{ .cp = 0x1f245, .decomp = &.{
-        0x3014,
-        0x6253,
-        0x3015,
-    } },
-    .{ .cp = 0x1f246, .decomp = &.{
-        0x3014,
-        0x76d7,
-        0x3015,
-    } },
-    .{ .cp = 0x1f247, .decomp = &.{
-        0x3014,
-        0x52dd,
-        0x3015,
-    } },
-    .{ .cp = 0x1f248, .decomp = &.{
-        0x3014,
-        0x6557,
-        0x3015,
-    } },
-    .{ .cp = 0x1f250, .decomp = &.{
-        0x5f97,
-    } },
-    .{ .cp = 0x1f251, .decomp = &.{
-        0x53ef,
-    } },
-    .{ .cp = 0x1fbf0, .decomp = &.{
-        0x30,
-    } },
-    .{ .cp = 0x1fbf1, .decomp = &.{
-        0x31,
-    } },
-    .{ .cp = 0x1fbf2, .decomp = &.{
-        0x32,
-    } },
-    .{ .cp = 0x1fbf3, .decomp = &.{
-        0x33,
-    } },
-    .{ .cp = 0x1fbf4, .decomp = &.{
-        0x34,
-    } },
-    .{ .cp = 0x1fbf5, .decomp = &.{
-        0x35,
-    } },
-    .{ .cp = 0x1fbf6, .decomp = &.{
-        0x36,
-    } },
-    .{ .cp = 0x1fbf7, .decomp = &.{
-        0x37,
-    } },
-    .{ .cp = 0x1fbf8, .decomp = &.{
-        0x38,
-    } },
-    .{ .cp = 0x1fbf9, .decomp = &.{
-        0x39,
-    } },
+pub const decomp_entries = .{
+.{ "0xa0", &.{0x20,} },
+.{ "0xa8", &.{0x20,0x308,} },
+.{ "0xaa", &.{0x61,} },
+.{ "0xaf", &.{0x20,0x304,} },
+.{ "0xb2", &.{0x32,} },
+.{ "0xb3", &.{0x33,} },
+.{ "0xb4", &.{0x20,0x301,} },
+.{ "0xb5", &.{0x3bc,} },
+.{ "0xb8", &.{0x20,0x327,} },
+.{ "0xb9", &.{0x31,} },
+.{ "0xba", &.{0x6f,} },
+.{ "0xbc", &.{0x31,0x2044,0x34,} },
+.{ "0xbd", &.{0x31,0x2044,0x32,} },
+.{ "0xbe", &.{0x33,0x2044,0x34,} },
+.{ "0x132", &.{0x49,0x4a,} },
+.{ "0x133", &.{0x69,0x6a,} },
+.{ "0x13f", &.{0x4c,0xb7,} },
+.{ "0x140", &.{0x6c,0xb7,} },
+.{ "0x149", &.{0x2bc,0x6e,} },
+.{ "0x17f", &.{0x73,} },
+.{ "0x1c4", &.{0x44,0x17d,} },
+.{ "0x1c5", &.{0x44,0x17e,} },
+.{ "0x1c6", &.{0x64,0x17e,} },
+.{ "0x1c7", &.{0x4c,0x4a,} },
+.{ "0x1c8", &.{0x4c,0x6a,} },
+.{ "0x1c9", &.{0x6c,0x6a,} },
+.{ "0x1ca", &.{0x4e,0x4a,} },
+.{ "0x1cb", &.{0x4e,0x6a,} },
+.{ "0x1cc", &.{0x6e,0x6a,} },
+.{ "0x1f1", &.{0x44,0x5a,} },
+.{ "0x1f2", &.{0x44,0x7a,} },
+.{ "0x1f3", &.{0x64,0x7a,} },
+.{ "0x2b0", &.{0x68,} },
+.{ "0x2b1", &.{0x266,} },
+.{ "0x2b2", &.{0x6a,} },
+.{ "0x2b3", &.{0x72,} },
+.{ "0x2b4", &.{0x279,} },
+.{ "0x2b5", &.{0x27b,} },
+.{ "0x2b6", &.{0x281,} },
+.{ "0x2b7", &.{0x77,} },
+.{ "0x2b8", &.{0x79,} },
+.{ "0x2d8", &.{0x20,0x306,} },
+.{ "0x2d9", &.{0x20,0x307,} },
+.{ "0x2da", &.{0x20,0x30a,} },
+.{ "0x2db", &.{0x20,0x328,} },
+.{ "0x2dc", &.{0x20,0x303,} },
+.{ "0x2dd", &.{0x20,0x30b,} },
+.{ "0x2e0", &.{0x263,} },
+.{ "0x2e1", &.{0x6c,} },
+.{ "0x2e2", &.{0x73,} },
+.{ "0x2e3", &.{0x78,} },
+.{ "0x2e4", &.{0x295,} },
+.{ "0x37a", &.{0x20,0x345,} },
+.{ "0x384", &.{0x20,0x301,} },
+.{ "0x3d0", &.{0x3b2,} },
+.{ "0x3d1", &.{0x3b8,} },
+.{ "0x3d2", &.{0x3a5,} },
+.{ "0x3d5", &.{0x3c6,} },
+.{ "0x3d6", &.{0x3c0,} },
+.{ "0x3f0", &.{0x3ba,} },
+.{ "0x3f1", &.{0x3c1,} },
+.{ "0x3f2", &.{0x3c2,} },
+.{ "0x3f4", &.{0x398,} },
+.{ "0x3f5", &.{0x3b5,} },
+.{ "0x3f9", &.{0x3a3,} },
+.{ "0x587", &.{0x565,0x582,} },
+.{ "0x675", &.{0x627,0x674,} },
+.{ "0x676", &.{0x648,0x674,} },
+.{ "0x677", &.{0x6c7,0x674,} },
+.{ "0x678", &.{0x64a,0x674,} },
+.{ "0xe33", &.{0xe4d,0xe32,} },
+.{ "0xeb3", &.{0xecd,0xeb2,} },
+.{ "0xedc", &.{0xeab,0xe99,} },
+.{ "0xedd", &.{0xeab,0xea1,} },
+.{ "0xf0c", &.{0xf0b,} },
+.{ "0xf77", &.{0xfb2,0xf81,} },
+.{ "0xf79", &.{0xfb3,0xf81,} },
+.{ "0x10fc", &.{0x10dc,} },
+.{ "0x1d2c", &.{0x41,} },
+.{ "0x1d2d", &.{0xc6,} },
+.{ "0x1d2e", &.{0x42,} },
+.{ "0x1d30", &.{0x44,} },
+.{ "0x1d31", &.{0x45,} },
+.{ "0x1d32", &.{0x18e,} },
+.{ "0x1d33", &.{0x47,} },
+.{ "0x1d34", &.{0x48,} },
+.{ "0x1d35", &.{0x49,} },
+.{ "0x1d36", &.{0x4a,} },
+.{ "0x1d37", &.{0x4b,} },
+.{ "0x1d38", &.{0x4c,} },
+.{ "0x1d39", &.{0x4d,} },
+.{ "0x1d3a", &.{0x4e,} },
+.{ "0x1d3c", &.{0x4f,} },
+.{ "0x1d3d", &.{0x222,} },
+.{ "0x1d3e", &.{0x50,} },
+.{ "0x1d3f", &.{0x52,} },
+.{ "0x1d40", &.{0x54,} },
+.{ "0x1d41", &.{0x55,} },
+.{ "0x1d42", &.{0x57,} },
+.{ "0x1d43", &.{0x61,} },
+.{ "0x1d44", &.{0x250,} },
+.{ "0x1d45", &.{0x251,} },
+.{ "0x1d46", &.{0x1d02,} },
+.{ "0x1d47", &.{0x62,} },
+.{ "0x1d48", &.{0x64,} },
+.{ "0x1d49", &.{0x65,} },
+.{ "0x1d4a", &.{0x259,} },
+.{ "0x1d4b", &.{0x25b,} },
+.{ "0x1d4c", &.{0x25c,} },
+.{ "0x1d4d", &.{0x67,} },
+.{ "0x1d4f", &.{0x6b,} },
+.{ "0x1d50", &.{0x6d,} },
+.{ "0x1d51", &.{0x14b,} },
+.{ "0x1d52", &.{0x6f,} },
+.{ "0x1d53", &.{0x254,} },
+.{ "0x1d54", &.{0x1d16,} },
+.{ "0x1d55", &.{0x1d17,} },
+.{ "0x1d56", &.{0x70,} },
+.{ "0x1d57", &.{0x74,} },
+.{ "0x1d58", &.{0x75,} },
+.{ "0x1d59", &.{0x1d1d,} },
+.{ "0x1d5a", &.{0x26f,} },
+.{ "0x1d5b", &.{0x76,} },
+.{ "0x1d5c", &.{0x1d25,} },
+.{ "0x1d5d", &.{0x3b2,} },
+.{ "0x1d5e", &.{0x3b3,} },
+.{ "0x1d5f", &.{0x3b4,} },
+.{ "0x1d60", &.{0x3c6,} },
+.{ "0x1d61", &.{0x3c7,} },
+.{ "0x1d62", &.{0x69,} },
+.{ "0x1d63", &.{0x72,} },
+.{ "0x1d64", &.{0x75,} },
+.{ "0x1d65", &.{0x76,} },
+.{ "0x1d66", &.{0x3b2,} },
+.{ "0x1d67", &.{0x3b3,} },
+.{ "0x1d68", &.{0x3c1,} },
+.{ "0x1d69", &.{0x3c6,} },
+.{ "0x1d6a", &.{0x3c7,} },
+.{ "0x1d78", &.{0x43d,} },
+.{ "0x1d9b", &.{0x252,} },
+.{ "0x1d9c", &.{0x63,} },
+.{ "0x1d9d", &.{0x255,} },
+.{ "0x1d9e", &.{0xf0,} },
+.{ "0x1d9f", &.{0x25c,} },
+.{ "0x1da0", &.{0x66,} },
+.{ "0x1da1", &.{0x25f,} },
+.{ "0x1da2", &.{0x261,} },
+.{ "0x1da3", &.{0x265,} },
+.{ "0x1da4", &.{0x268,} },
+.{ "0x1da5", &.{0x269,} },
+.{ "0x1da6", &.{0x26a,} },
+.{ "0x1da7", &.{0x1d7b,} },
+.{ "0x1da8", &.{0x29d,} },
+.{ "0x1da9", &.{0x26d,} },
+.{ "0x1daa", &.{0x1d85,} },
+.{ "0x1dab", &.{0x29f,} },
+.{ "0x1dac", &.{0x271,} },
+.{ "0x1dad", &.{0x270,} },
+.{ "0x1dae", &.{0x272,} },
+.{ "0x1daf", &.{0x273,} },
+.{ "0x1db0", &.{0x274,} },
+.{ "0x1db1", &.{0x275,} },
+.{ "0x1db2", &.{0x278,} },
+.{ "0x1db3", &.{0x282,} },
+.{ "0x1db4", &.{0x283,} },
+.{ "0x1db5", &.{0x1ab,} },
+.{ "0x1db6", &.{0x289,} },
+.{ "0x1db7", &.{0x28a,} },
+.{ "0x1db8", &.{0x1d1c,} },
+.{ "0x1db9", &.{0x28b,} },
+.{ "0x1dba", &.{0x28c,} },
+.{ "0x1dbb", &.{0x7a,} },
+.{ "0x1dbc", &.{0x290,} },
+.{ "0x1dbd", &.{0x291,} },
+.{ "0x1dbe", &.{0x292,} },
+.{ "0x1dbf", &.{0x3b8,} },
+.{ "0x1e9a", &.{0x61,0x2be,} },
+.{ "0x1fbd", &.{0x20,0x313,} },
+.{ "0x1fbf", &.{0x20,0x313,} },
+.{ "0x1fc0", &.{0x20,0x342,} },
+.{ "0x1ffe", &.{0x20,0x314,} },
+.{ "0x2002", &.{0x20,} },
+.{ "0x2003", &.{0x20,} },
+.{ "0x2004", &.{0x20,} },
+.{ "0x2005", &.{0x20,} },
+.{ "0x2006", &.{0x20,} },
+.{ "0x2007", &.{0x20,} },
+.{ "0x2008", &.{0x20,} },
+.{ "0x2009", &.{0x20,} },
+.{ "0x200a", &.{0x20,} },
+.{ "0x2011", &.{0x2010,} },
+.{ "0x2017", &.{0x20,0x333,} },
+.{ "0x2024", &.{0x2e,} },
+.{ "0x2025", &.{0x2e,0x2e,} },
+.{ "0x2026", &.{0x2e,0x2e,0x2e,} },
+.{ "0x202f", &.{0x20,} },
+.{ "0x2033", &.{0x2032,0x2032,} },
+.{ "0x2034", &.{0x2032,0x2032,0x2032,} },
+.{ "0x2036", &.{0x2035,0x2035,} },
+.{ "0x2037", &.{0x2035,0x2035,0x2035,} },
+.{ "0x203c", &.{0x21,0x21,} },
+.{ "0x203e", &.{0x20,0x305,} },
+.{ "0x2047", &.{0x3f,0x3f,} },
+.{ "0x2048", &.{0x3f,0x21,} },
+.{ "0x2049", &.{0x21,0x3f,} },
+.{ "0x2057", &.{0x2032,0x2032,0x2032,0x2032,} },
+.{ "0x205f", &.{0x20,} },
+.{ "0x2070", &.{0x30,} },
+.{ "0x2071", &.{0x69,} },
+.{ "0x2074", &.{0x34,} },
+.{ "0x2075", &.{0x35,} },
+.{ "0x2076", &.{0x36,} },
+.{ "0x2077", &.{0x37,} },
+.{ "0x2078", &.{0x38,} },
+.{ "0x2079", &.{0x39,} },
+.{ "0x207a", &.{0x2b,} },
+.{ "0x207b", &.{0x2212,} },
+.{ "0x207c", &.{0x3d,} },
+.{ "0x207d", &.{0x28,} },
+.{ "0x207e", &.{0x29,} },
+.{ "0x207f", &.{0x6e,} },
+.{ "0x2080", &.{0x30,} },
+.{ "0x2081", &.{0x31,} },
+.{ "0x2082", &.{0x32,} },
+.{ "0x2083", &.{0x33,} },
+.{ "0x2084", &.{0x34,} },
+.{ "0x2085", &.{0x35,} },
+.{ "0x2086", &.{0x36,} },
+.{ "0x2087", &.{0x37,} },
+.{ "0x2088", &.{0x38,} },
+.{ "0x2089", &.{0x39,} },
+.{ "0x208a", &.{0x2b,} },
+.{ "0x208b", &.{0x2212,} },
+.{ "0x208c", &.{0x3d,} },
+.{ "0x208d", &.{0x28,} },
+.{ "0x208e", &.{0x29,} },
+.{ "0x2090", &.{0x61,} },
+.{ "0x2091", &.{0x65,} },
+.{ "0x2092", &.{0x6f,} },
+.{ "0x2093", &.{0x78,} },
+.{ "0x2094", &.{0x259,} },
+.{ "0x2095", &.{0x68,} },
+.{ "0x2096", &.{0x6b,} },
+.{ "0x2097", &.{0x6c,} },
+.{ "0x2098", &.{0x6d,} },
+.{ "0x2099", &.{0x6e,} },
+.{ "0x209a", &.{0x70,} },
+.{ "0x209b", &.{0x73,} },
+.{ "0x209c", &.{0x74,} },
+.{ "0x20a8", &.{0x52,0x73,} },
+.{ "0x2100", &.{0x61,0x2f,0x63,} },
+.{ "0x2101", &.{0x61,0x2f,0x73,} },
+.{ "0x2102", &.{0x43,} },
+.{ "0x2103", &.{0xb0,0x43,} },
+.{ "0x2105", &.{0x63,0x2f,0x6f,} },
+.{ "0x2106", &.{0x63,0x2f,0x75,} },
+.{ "0x2107", &.{0x190,} },
+.{ "0x2109", &.{0xb0,0x46,} },
+.{ "0x210a", &.{0x67,} },
+.{ "0x210b", &.{0x48,} },
+.{ "0x210c", &.{0x48,} },
+.{ "0x210d", &.{0x48,} },
+.{ "0x210e", &.{0x68,} },
+.{ "0x210f", &.{0x127,} },
+.{ "0x2110", &.{0x49,} },
+.{ "0x2111", &.{0x49,} },
+.{ "0x2112", &.{0x4c,} },
+.{ "0x2113", &.{0x6c,} },
+.{ "0x2115", &.{0x4e,} },
+.{ "0x2116", &.{0x4e,0x6f,} },
+.{ "0x2119", &.{0x50,} },
+.{ "0x211a", &.{0x51,} },
+.{ "0x211b", &.{0x52,} },
+.{ "0x211c", &.{0x52,} },
+.{ "0x211d", &.{0x52,} },
+.{ "0x2120", &.{0x53,0x4d,} },
+.{ "0x2121", &.{0x54,0x45,0x4c,} },
+.{ "0x2122", &.{0x54,0x4d,} },
+.{ "0x2124", &.{0x5a,} },
+.{ "0x2128", &.{0x5a,} },
+.{ "0x212c", &.{0x42,} },
+.{ "0x212d", &.{0x43,} },
+.{ "0x212f", &.{0x65,} },
+.{ "0x2130", &.{0x45,} },
+.{ "0x2131", &.{0x46,} },
+.{ "0x2133", &.{0x4d,} },
+.{ "0x2134", &.{0x6f,} },
+.{ "0x2135", &.{0x5d0,} },
+.{ "0x2136", &.{0x5d1,} },
+.{ "0x2137", &.{0x5d2,} },
+.{ "0x2138", &.{0x5d3,} },
+.{ "0x2139", &.{0x69,} },
+.{ "0x213b", &.{0x46,0x41,0x58,} },
+.{ "0x213c", &.{0x3c0,} },
+.{ "0x213d", &.{0x3b3,} },
+.{ "0x213e", &.{0x393,} },
+.{ "0x213f", &.{0x3a0,} },
+.{ "0x2140", &.{0x2211,} },
+.{ "0x2145", &.{0x44,} },
+.{ "0x2146", &.{0x64,} },
+.{ "0x2147", &.{0x65,} },
+.{ "0x2148", &.{0x69,} },
+.{ "0x2149", &.{0x6a,} },
+.{ "0x2150", &.{0x31,0x2044,0x37,} },
+.{ "0x2151", &.{0x31,0x2044,0x39,} },
+.{ "0x2152", &.{0x31,0x2044,0x31,0x30,} },
+.{ "0x2153", &.{0x31,0x2044,0x33,} },
+.{ "0x2154", &.{0x32,0x2044,0x33,} },
+.{ "0x2155", &.{0x31,0x2044,0x35,} },
+.{ "0x2156", &.{0x32,0x2044,0x35,} },
+.{ "0x2157", &.{0x33,0x2044,0x35,} },
+.{ "0x2158", &.{0x34,0x2044,0x35,} },
+.{ "0x2159", &.{0x31,0x2044,0x36,} },
+.{ "0x215a", &.{0x35,0x2044,0x36,} },
+.{ "0x215b", &.{0x31,0x2044,0x38,} },
+.{ "0x215c", &.{0x33,0x2044,0x38,} },
+.{ "0x215d", &.{0x35,0x2044,0x38,} },
+.{ "0x215e", &.{0x37,0x2044,0x38,} },
+.{ "0x215f", &.{0x31,0x2044,} },
+.{ "0x2160", &.{0x49,} },
+.{ "0x2161", &.{0x49,0x49,} },
+.{ "0x2162", &.{0x49,0x49,0x49,} },
+.{ "0x2163", &.{0x49,0x56,} },
+.{ "0x2164", &.{0x56,} },
+.{ "0x2165", &.{0x56,0x49,} },
+.{ "0x2166", &.{0x56,0x49,0x49,} },
+.{ "0x2167", &.{0x56,0x49,0x49,0x49,} },
+.{ "0x2168", &.{0x49,0x58,} },
+.{ "0x2169", &.{0x58,} },
+.{ "0x216a", &.{0x58,0x49,} },
+.{ "0x216b", &.{0x58,0x49,0x49,} },
+.{ "0x216c", &.{0x4c,} },
+.{ "0x216d", &.{0x43,} },
+.{ "0x216e", &.{0x44,} },
+.{ "0x216f", &.{0x4d,} },
+.{ "0x2170", &.{0x69,} },
+.{ "0x2171", &.{0x69,0x69,} },
+.{ "0x2172", &.{0x69,0x69,0x69,} },
+.{ "0x2173", &.{0x69,0x76,} },
+.{ "0x2174", &.{0x76,} },
+.{ "0x2175", &.{0x76,0x69,} },
+.{ "0x2176", &.{0x76,0x69,0x69,} },
+.{ "0x2177", &.{0x76,0x69,0x69,0x69,} },
+.{ "0x2178", &.{0x69,0x78,} },
+.{ "0x2179", &.{0x78,} },
+.{ "0x217a", &.{0x78,0x69,} },
+.{ "0x217b", &.{0x78,0x69,0x69,} },
+.{ "0x217c", &.{0x6c,} },
+.{ "0x217d", &.{0x63,} },
+.{ "0x217e", &.{0x64,} },
+.{ "0x217f", &.{0x6d,} },
+.{ "0x2189", &.{0x30,0x2044,0x33,} },
+.{ "0x222c", &.{0x222b,0x222b,} },
+.{ "0x222d", &.{0x222b,0x222b,0x222b,} },
+.{ "0x222f", &.{0x222e,0x222e,} },
+.{ "0x2230", &.{0x222e,0x222e,0x222e,} },
+.{ "0x2460", &.{0x31,} },
+.{ "0x2461", &.{0x32,} },
+.{ "0x2462", &.{0x33,} },
+.{ "0x2463", &.{0x34,} },
+.{ "0x2464", &.{0x35,} },
+.{ "0x2465", &.{0x36,} },
+.{ "0x2466", &.{0x37,} },
+.{ "0x2467", &.{0x38,} },
+.{ "0x2468", &.{0x39,} },
+.{ "0x2469", &.{0x31,0x30,} },
+.{ "0x246a", &.{0x31,0x31,} },
+.{ "0x246b", &.{0x31,0x32,} },
+.{ "0x246c", &.{0x31,0x33,} },
+.{ "0x246d", &.{0x31,0x34,} },
+.{ "0x246e", &.{0x31,0x35,} },
+.{ "0x246f", &.{0x31,0x36,} },
+.{ "0x2470", &.{0x31,0x37,} },
+.{ "0x2471", &.{0x31,0x38,} },
+.{ "0x2472", &.{0x31,0x39,} },
+.{ "0x2473", &.{0x32,0x30,} },
+.{ "0x2474", &.{0x28,0x31,0x29,} },
+.{ "0x2475", &.{0x28,0x32,0x29,} },
+.{ "0x2476", &.{0x28,0x33,0x29,} },
+.{ "0x2477", &.{0x28,0x34,0x29,} },
+.{ "0x2478", &.{0x28,0x35,0x29,} },
+.{ "0x2479", &.{0x28,0x36,0x29,} },
+.{ "0x247a", &.{0x28,0x37,0x29,} },
+.{ "0x247b", &.{0x28,0x38,0x29,} },
+.{ "0x247c", &.{0x28,0x39,0x29,} },
+.{ "0x247d", &.{0x28,0x31,0x30,0x29,} },
+.{ "0x247e", &.{0x28,0x31,0x31,0x29,} },
+.{ "0x247f", &.{0x28,0x31,0x32,0x29,} },
+.{ "0x2480", &.{0x28,0x31,0x33,0x29,} },
+.{ "0x2481", &.{0x28,0x31,0x34,0x29,} },
+.{ "0x2482", &.{0x28,0x31,0x35,0x29,} },
+.{ "0x2483", &.{0x28,0x31,0x36,0x29,} },
+.{ "0x2484", &.{0x28,0x31,0x37,0x29,} },
+.{ "0x2485", &.{0x28,0x31,0x38,0x29,} },
+.{ "0x2486", &.{0x28,0x31,0x39,0x29,} },
+.{ "0x2487", &.{0x28,0x32,0x30,0x29,} },
+.{ "0x2488", &.{0x31,0x2e,} },
+.{ "0x2489", &.{0x32,0x2e,} },
+.{ "0x248a", &.{0x33,0x2e,} },
+.{ "0x248b", &.{0x34,0x2e,} },
+.{ "0x248c", &.{0x35,0x2e,} },
+.{ "0x248d", &.{0x36,0x2e,} },
+.{ "0x248e", &.{0x37,0x2e,} },
+.{ "0x248f", &.{0x38,0x2e,} },
+.{ "0x2490", &.{0x39,0x2e,} },
+.{ "0x2491", &.{0x31,0x30,0x2e,} },
+.{ "0x2492", &.{0x31,0x31,0x2e,} },
+.{ "0x2493", &.{0x31,0x32,0x2e,} },
+.{ "0x2494", &.{0x31,0x33,0x2e,} },
+.{ "0x2495", &.{0x31,0x34,0x2e,} },
+.{ "0x2496", &.{0x31,0x35,0x2e,} },
+.{ "0x2497", &.{0x31,0x36,0x2e,} },
+.{ "0x2498", &.{0x31,0x37,0x2e,} },
+.{ "0x2499", &.{0x31,0x38,0x2e,} },
+.{ "0x249a", &.{0x31,0x39,0x2e,} },
+.{ "0x249b", &.{0x32,0x30,0x2e,} },
+.{ "0x249c", &.{0x28,0x61,0x29,} },
+.{ "0x249d", &.{0x28,0x62,0x29,} },
+.{ "0x249e", &.{0x28,0x63,0x29,} },
+.{ "0x249f", &.{0x28,0x64,0x29,} },
+.{ "0x24a0", &.{0x28,0x65,0x29,} },
+.{ "0x24a1", &.{0x28,0x66,0x29,} },
+.{ "0x24a2", &.{0x28,0x67,0x29,} },
+.{ "0x24a3", &.{0x28,0x68,0x29,} },
+.{ "0x24a4", &.{0x28,0x69,0x29,} },
+.{ "0x24a5", &.{0x28,0x6a,0x29,} },
+.{ "0x24a6", &.{0x28,0x6b,0x29,} },
+.{ "0x24a7", &.{0x28,0x6c,0x29,} },
+.{ "0x24a8", &.{0x28,0x6d,0x29,} },
+.{ "0x24a9", &.{0x28,0x6e,0x29,} },
+.{ "0x24aa", &.{0x28,0x6f,0x29,} },
+.{ "0x24ab", &.{0x28,0x70,0x29,} },
+.{ "0x24ac", &.{0x28,0x71,0x29,} },
+.{ "0x24ad", &.{0x28,0x72,0x29,} },
+.{ "0x24ae", &.{0x28,0x73,0x29,} },
+.{ "0x24af", &.{0x28,0x74,0x29,} },
+.{ "0x24b0", &.{0x28,0x75,0x29,} },
+.{ "0x24b1", &.{0x28,0x76,0x29,} },
+.{ "0x24b2", &.{0x28,0x77,0x29,} },
+.{ "0x24b3", &.{0x28,0x78,0x29,} },
+.{ "0x24b4", &.{0x28,0x79,0x29,} },
+.{ "0x24b5", &.{0x28,0x7a,0x29,} },
+.{ "0x24b6", &.{0x41,} },
+.{ "0x24b7", &.{0x42,} },
+.{ "0x24b8", &.{0x43,} },
+.{ "0x24b9", &.{0x44,} },
+.{ "0x24ba", &.{0x45,} },
+.{ "0x24bb", &.{0x46,} },
+.{ "0x24bc", &.{0x47,} },
+.{ "0x24bd", &.{0x48,} },
+.{ "0x24be", &.{0x49,} },
+.{ "0x24bf", &.{0x4a,} },
+.{ "0x24c0", &.{0x4b,} },
+.{ "0x24c1", &.{0x4c,} },
+.{ "0x24c2", &.{0x4d,} },
+.{ "0x24c3", &.{0x4e,} },
+.{ "0x24c4", &.{0x4f,} },
+.{ "0x24c5", &.{0x50,} },
+.{ "0x24c6", &.{0x51,} },
+.{ "0x24c7", &.{0x52,} },
+.{ "0x24c8", &.{0x53,} },
+.{ "0x24c9", &.{0x54,} },
+.{ "0x24ca", &.{0x55,} },
+.{ "0x24cb", &.{0x56,} },
+.{ "0x24cc", &.{0x57,} },
+.{ "0x24cd", &.{0x58,} },
+.{ "0x24ce", &.{0x59,} },
+.{ "0x24cf", &.{0x5a,} },
+.{ "0x24d0", &.{0x61,} },
+.{ "0x24d1", &.{0x62,} },
+.{ "0x24d2", &.{0x63,} },
+.{ "0x24d3", &.{0x64,} },
+.{ "0x24d4", &.{0x65,} },
+.{ "0x24d5", &.{0x66,} },
+.{ "0x24d6", &.{0x67,} },
+.{ "0x24d7", &.{0x68,} },
+.{ "0x24d8", &.{0x69,} },
+.{ "0x24d9", &.{0x6a,} },
+.{ "0x24da", &.{0x6b,} },
+.{ "0x24db", &.{0x6c,} },
+.{ "0x24dc", &.{0x6d,} },
+.{ "0x24dd", &.{0x6e,} },
+.{ "0x24de", &.{0x6f,} },
+.{ "0x24df", &.{0x70,} },
+.{ "0x24e0", &.{0x71,} },
+.{ "0x24e1", &.{0x72,} },
+.{ "0x24e2", &.{0x73,} },
+.{ "0x24e3", &.{0x74,} },
+.{ "0x24e4", &.{0x75,} },
+.{ "0x24e5", &.{0x76,} },
+.{ "0x24e6", &.{0x77,} },
+.{ "0x24e7", &.{0x78,} },
+.{ "0x24e8", &.{0x79,} },
+.{ "0x24e9", &.{0x7a,} },
+.{ "0x24ea", &.{0x30,} },
+.{ "0x2a0c", &.{0x222b,0x222b,0x222b,0x222b,} },
+.{ "0x2a74", &.{0x3a,0x3a,0x3d,} },
+.{ "0x2a75", &.{0x3d,0x3d,} },
+.{ "0x2a76", &.{0x3d,0x3d,0x3d,} },
+.{ "0x2c7c", &.{0x6a,} },
+.{ "0x2c7d", &.{0x56,} },
+.{ "0x2d6f", &.{0x2d61,} },
+.{ "0x2e9f", &.{0x6bcd,} },
+.{ "0x2ef3", &.{0x9f9f,} },
+.{ "0x2f00", &.{0x4e00,} },
+.{ "0x2f01", &.{0x4e28,} },
+.{ "0x2f02", &.{0x4e36,} },
+.{ "0x2f03", &.{0x4e3f,} },
+.{ "0x2f04", &.{0x4e59,} },
+.{ "0x2f05", &.{0x4e85,} },
+.{ "0x2f06", &.{0x4e8c,} },
+.{ "0x2f07", &.{0x4ea0,} },
+.{ "0x2f08", &.{0x4eba,} },
+.{ "0x2f09", &.{0x513f,} },
+.{ "0x2f0a", &.{0x5165,} },
+.{ "0x2f0b", &.{0x516b,} },
+.{ "0x2f0c", &.{0x5182,} },
+.{ "0x2f0d", &.{0x5196,} },
+.{ "0x2f0e", &.{0x51ab,} },
+.{ "0x2f0f", &.{0x51e0,} },
+.{ "0x2f10", &.{0x51f5,} },
+.{ "0x2f11", &.{0x5200,} },
+.{ "0x2f12", &.{0x529b,} },
+.{ "0x2f13", &.{0x52f9,} },
+.{ "0x2f14", &.{0x5315,} },
+.{ "0x2f15", &.{0x531a,} },
+.{ "0x2f16", &.{0x5338,} },
+.{ "0x2f17", &.{0x5341,} },
+.{ "0x2f18", &.{0x535c,} },
+.{ "0x2f19", &.{0x5369,} },
+.{ "0x2f1a", &.{0x5382,} },
+.{ "0x2f1b", &.{0x53b6,} },
+.{ "0x2f1c", &.{0x53c8,} },
+.{ "0x2f1d", &.{0x53e3,} },
+.{ "0x2f1e", &.{0x56d7,} },
+.{ "0x2f1f", &.{0x571f,} },
+.{ "0x2f20", &.{0x58eb,} },
+.{ "0x2f21", &.{0x5902,} },
+.{ "0x2f22", &.{0x590a,} },
+.{ "0x2f23", &.{0x5915,} },
+.{ "0x2f24", &.{0x5927,} },
+.{ "0x2f25", &.{0x5973,} },
+.{ "0x2f26", &.{0x5b50,} },
+.{ "0x2f27", &.{0x5b80,} },
+.{ "0x2f28", &.{0x5bf8,} },
+.{ "0x2f29", &.{0x5c0f,} },
+.{ "0x2f2a", &.{0x5c22,} },
+.{ "0x2f2b", &.{0x5c38,} },
+.{ "0x2f2c", &.{0x5c6e,} },
+.{ "0x2f2d", &.{0x5c71,} },
+.{ "0x2f2e", &.{0x5ddb,} },
+.{ "0x2f2f", &.{0x5de5,} },
+.{ "0x2f30", &.{0x5df1,} },
+.{ "0x2f31", &.{0x5dfe,} },
+.{ "0x2f32", &.{0x5e72,} },
+.{ "0x2f33", &.{0x5e7a,} },
+.{ "0x2f34", &.{0x5e7f,} },
+.{ "0x2f35", &.{0x5ef4,} },
+.{ "0x2f36", &.{0x5efe,} },
+.{ "0x2f37", &.{0x5f0b,} },
+.{ "0x2f38", &.{0x5f13,} },
+.{ "0x2f39", &.{0x5f50,} },
+.{ "0x2f3a", &.{0x5f61,} },
+.{ "0x2f3b", &.{0x5f73,} },
+.{ "0x2f3c", &.{0x5fc3,} },
+.{ "0x2f3d", &.{0x6208,} },
+.{ "0x2f3e", &.{0x6236,} },
+.{ "0x2f3f", &.{0x624b,} },
+.{ "0x2f40", &.{0x652f,} },
+.{ "0x2f41", &.{0x6534,} },
+.{ "0x2f42", &.{0x6587,} },
+.{ "0x2f43", &.{0x6597,} },
+.{ "0x2f44", &.{0x65a4,} },
+.{ "0x2f45", &.{0x65b9,} },
+.{ "0x2f46", &.{0x65e0,} },
+.{ "0x2f47", &.{0x65e5,} },
+.{ "0x2f48", &.{0x66f0,} },
+.{ "0x2f49", &.{0x6708,} },
+.{ "0x2f4a", &.{0x6728,} },
+.{ "0x2f4b", &.{0x6b20,} },
+.{ "0x2f4c", &.{0x6b62,} },
+.{ "0x2f4d", &.{0x6b79,} },
+.{ "0x2f4e", &.{0x6bb3,} },
+.{ "0x2f4f", &.{0x6bcb,} },
+.{ "0x2f50", &.{0x6bd4,} },
+.{ "0x2f51", &.{0x6bdb,} },
+.{ "0x2f52", &.{0x6c0f,} },
+.{ "0x2f53", &.{0x6c14,} },
+.{ "0x2f54", &.{0x6c34,} },
+.{ "0x2f55", &.{0x706b,} },
+.{ "0x2f56", &.{0x722a,} },
+.{ "0x2f57", &.{0x7236,} },
+.{ "0x2f58", &.{0x723b,} },
+.{ "0x2f59", &.{0x723f,} },
+.{ "0x2f5a", &.{0x7247,} },
+.{ "0x2f5b", &.{0x7259,} },
+.{ "0x2f5c", &.{0x725b,} },
+.{ "0x2f5d", &.{0x72ac,} },
+.{ "0x2f5e", &.{0x7384,} },
+.{ "0x2f5f", &.{0x7389,} },
+.{ "0x2f60", &.{0x74dc,} },
+.{ "0x2f61", &.{0x74e6,} },
+.{ "0x2f62", &.{0x7518,} },
+.{ "0x2f63", &.{0x751f,} },
+.{ "0x2f64", &.{0x7528,} },
+.{ "0x2f65", &.{0x7530,} },
+.{ "0x2f66", &.{0x758b,} },
+.{ "0x2f67", &.{0x7592,} },
+.{ "0x2f68", &.{0x7676,} },
+.{ "0x2f69", &.{0x767d,} },
+.{ "0x2f6a", &.{0x76ae,} },
+.{ "0x2f6b", &.{0x76bf,} },
+.{ "0x2f6c", &.{0x76ee,} },
+.{ "0x2f6d", &.{0x77db,} },
+.{ "0x2f6e", &.{0x77e2,} },
+.{ "0x2f6f", &.{0x77f3,} },
+.{ "0x2f70", &.{0x793a,} },
+.{ "0x2f71", &.{0x79b8,} },
+.{ "0x2f72", &.{0x79be,} },
+.{ "0x2f73", &.{0x7a74,} },
+.{ "0x2f74", &.{0x7acb,} },
+.{ "0x2f75", &.{0x7af9,} },
+.{ "0x2f76", &.{0x7c73,} },
+.{ "0x2f77", &.{0x7cf8,} },
+.{ "0x2f78", &.{0x7f36,} },
+.{ "0x2f79", &.{0x7f51,} },
+.{ "0x2f7a", &.{0x7f8a,} },
+.{ "0x2f7b", &.{0x7fbd,} },
+.{ "0x2f7c", &.{0x8001,} },
+.{ "0x2f7d", &.{0x800c,} },
+.{ "0x2f7e", &.{0x8012,} },
+.{ "0x2f7f", &.{0x8033,} },
+.{ "0x2f80", &.{0x807f,} },
+.{ "0x2f81", &.{0x8089,} },
+.{ "0x2f82", &.{0x81e3,} },
+.{ "0x2f83", &.{0x81ea,} },
+.{ "0x2f84", &.{0x81f3,} },
+.{ "0x2f85", &.{0x81fc,} },
+.{ "0x2f86", &.{0x820c,} },
+.{ "0x2f87", &.{0x821b,} },
+.{ "0x2f88", &.{0x821f,} },
+.{ "0x2f89", &.{0x826e,} },
+.{ "0x2f8a", &.{0x8272,} },
+.{ "0x2f8b", &.{0x8278,} },
+.{ "0x2f8c", &.{0x864d,} },
+.{ "0x2f8d", &.{0x866b,} },
+.{ "0x2f8e", &.{0x8840,} },
+.{ "0x2f8f", &.{0x884c,} },
+.{ "0x2f90", &.{0x8863,} },
+.{ "0x2f91", &.{0x897e,} },
+.{ "0x2f92", &.{0x898b,} },
+.{ "0x2f93", &.{0x89d2,} },
+.{ "0x2f94", &.{0x8a00,} },
+.{ "0x2f95", &.{0x8c37,} },
+.{ "0x2f96", &.{0x8c46,} },
+.{ "0x2f97", &.{0x8c55,} },
+.{ "0x2f98", &.{0x8c78,} },
+.{ "0x2f99", &.{0x8c9d,} },
+.{ "0x2f9a", &.{0x8d64,} },
+.{ "0x2f9b", &.{0x8d70,} },
+.{ "0x2f9c", &.{0x8db3,} },
+.{ "0x2f9d", &.{0x8eab,} },
+.{ "0x2f9e", &.{0x8eca,} },
+.{ "0x2f9f", &.{0x8f9b,} },
+.{ "0x2fa0", &.{0x8fb0,} },
+.{ "0x2fa1", &.{0x8fb5,} },
+.{ "0x2fa2", &.{0x9091,} },
+.{ "0x2fa3", &.{0x9149,} },
+.{ "0x2fa4", &.{0x91c6,} },
+.{ "0x2fa5", &.{0x91cc,} },
+.{ "0x2fa6", &.{0x91d1,} },
+.{ "0x2fa7", &.{0x9577,} },
+.{ "0x2fa8", &.{0x9580,} },
+.{ "0x2fa9", &.{0x961c,} },
+.{ "0x2faa", &.{0x96b6,} },
+.{ "0x2fab", &.{0x96b9,} },
+.{ "0x2fac", &.{0x96e8,} },
+.{ "0x2fad", &.{0x9751,} },
+.{ "0x2fae", &.{0x975e,} },
+.{ "0x2faf", &.{0x9762,} },
+.{ "0x2fb0", &.{0x9769,} },
+.{ "0x2fb1", &.{0x97cb,} },
+.{ "0x2fb2", &.{0x97ed,} },
+.{ "0x2fb3", &.{0x97f3,} },
+.{ "0x2fb4", &.{0x9801,} },
+.{ "0x2fb5", &.{0x98a8,} },
+.{ "0x2fb6", &.{0x98db,} },
+.{ "0x2fb7", &.{0x98df,} },
+.{ "0x2fb8", &.{0x9996,} },
+.{ "0x2fb9", &.{0x9999,} },
+.{ "0x2fba", &.{0x99ac,} },
+.{ "0x2fbb", &.{0x9aa8,} },
+.{ "0x2fbc", &.{0x9ad8,} },
+.{ "0x2fbd", &.{0x9adf,} },
+.{ "0x2fbe", &.{0x9b25,} },
+.{ "0x2fbf", &.{0x9b2f,} },
+.{ "0x2fc0", &.{0x9b32,} },
+.{ "0x2fc1", &.{0x9b3c,} },
+.{ "0x2fc2", &.{0x9b5a,} },
+.{ "0x2fc3", &.{0x9ce5,} },
+.{ "0x2fc4", &.{0x9e75,} },
+.{ "0x2fc5", &.{0x9e7f,} },
+.{ "0x2fc6", &.{0x9ea5,} },
+.{ "0x2fc7", &.{0x9ebb,} },
+.{ "0x2fc8", &.{0x9ec3,} },
+.{ "0x2fc9", &.{0x9ecd,} },
+.{ "0x2fca", &.{0x9ed1,} },
+.{ "0x2fcb", &.{0x9ef9,} },
+.{ "0x2fcc", &.{0x9efd,} },
+.{ "0x2fcd", &.{0x9f0e,} },
+.{ "0x2fce", &.{0x9f13,} },
+.{ "0x2fcf", &.{0x9f20,} },
+.{ "0x2fd0", &.{0x9f3b,} },
+.{ "0x2fd1", &.{0x9f4a,} },
+.{ "0x2fd2", &.{0x9f52,} },
+.{ "0x2fd3", &.{0x9f8d,} },
+.{ "0x2fd4", &.{0x9f9c,} },
+.{ "0x2fd5", &.{0x9fa0,} },
+.{ "0x3000", &.{0x20,} },
+.{ "0x3036", &.{0x3012,} },
+.{ "0x3038", &.{0x5341,} },
+.{ "0x3039", &.{0x5344,} },
+.{ "0x303a", &.{0x5345,} },
+.{ "0x309b", &.{0x20,0x3099,} },
+.{ "0x309c", &.{0x20,0x309a,} },
+.{ "0x309f", &.{0x3088,0x308a,} },
+.{ "0x30ff", &.{0x30b3,0x30c8,} },
+.{ "0x3131", &.{0x1100,} },
+.{ "0x3132", &.{0x1101,} },
+.{ "0x3133", &.{0x11aa,} },
+.{ "0x3134", &.{0x1102,} },
+.{ "0x3135", &.{0x11ac,} },
+.{ "0x3136", &.{0x11ad,} },
+.{ "0x3137", &.{0x1103,} },
+.{ "0x3138", &.{0x1104,} },
+.{ "0x3139", &.{0x1105,} },
+.{ "0x313a", &.{0x11b0,} },
+.{ "0x313b", &.{0x11b1,} },
+.{ "0x313c", &.{0x11b2,} },
+.{ "0x313d", &.{0x11b3,} },
+.{ "0x313e", &.{0x11b4,} },
+.{ "0x313f", &.{0x11b5,} },
+.{ "0x3140", &.{0x111a,} },
+.{ "0x3141", &.{0x1106,} },
+.{ "0x3142", &.{0x1107,} },
+.{ "0x3143", &.{0x1108,} },
+.{ "0x3144", &.{0x1121,} },
+.{ "0x3145", &.{0x1109,} },
+.{ "0x3146", &.{0x110a,} },
+.{ "0x3147", &.{0x110b,} },
+.{ "0x3148", &.{0x110c,} },
+.{ "0x3149", &.{0x110d,} },
+.{ "0x314a", &.{0x110e,} },
+.{ "0x314b", &.{0x110f,} },
+.{ "0x314c", &.{0x1110,} },
+.{ "0x314d", &.{0x1111,} },
+.{ "0x314e", &.{0x1112,} },
+.{ "0x314f", &.{0x1161,} },
+.{ "0x3150", &.{0x1162,} },
+.{ "0x3151", &.{0x1163,} },
+.{ "0x3152", &.{0x1164,} },
+.{ "0x3153", &.{0x1165,} },
+.{ "0x3154", &.{0x1166,} },
+.{ "0x3155", &.{0x1167,} },
+.{ "0x3156", &.{0x1168,} },
+.{ "0x3157", &.{0x1169,} },
+.{ "0x3158", &.{0x116a,} },
+.{ "0x3159", &.{0x116b,} },
+.{ "0x315a", &.{0x116c,} },
+.{ "0x315b", &.{0x116d,} },
+.{ "0x315c", &.{0x116e,} },
+.{ "0x315d", &.{0x116f,} },
+.{ "0x315e", &.{0x1170,} },
+.{ "0x315f", &.{0x1171,} },
+.{ "0x3160", &.{0x1172,} },
+.{ "0x3161", &.{0x1173,} },
+.{ "0x3162", &.{0x1174,} },
+.{ "0x3163", &.{0x1175,} },
+.{ "0x3164", &.{0x1160,} },
+.{ "0x3165", &.{0x1114,} },
+.{ "0x3166", &.{0x1115,} },
+.{ "0x3167", &.{0x11c7,} },
+.{ "0x3168", &.{0x11c8,} },
+.{ "0x3169", &.{0x11cc,} },
+.{ "0x316a", &.{0x11ce,} },
+.{ "0x316b", &.{0x11d3,} },
+.{ "0x316c", &.{0x11d7,} },
+.{ "0x316d", &.{0x11d9,} },
+.{ "0x316e", &.{0x111c,} },
+.{ "0x316f", &.{0x11dd,} },
+.{ "0x3170", &.{0x11df,} },
+.{ "0x3171", &.{0x111d,} },
+.{ "0x3172", &.{0x111e,} },
+.{ "0x3173", &.{0x1120,} },
+.{ "0x3174", &.{0x1122,} },
+.{ "0x3175", &.{0x1123,} },
+.{ "0x3176", &.{0x1127,} },
+.{ "0x3177", &.{0x1129,} },
+.{ "0x3178", &.{0x112b,} },
+.{ "0x3179", &.{0x112c,} },
+.{ "0x317a", &.{0x112d,} },
+.{ "0x317b", &.{0x112e,} },
+.{ "0x317c", &.{0x112f,} },
+.{ "0x317d", &.{0x1132,} },
+.{ "0x317e", &.{0x1136,} },
+.{ "0x317f", &.{0x1140,} },
+.{ "0x3180", &.{0x1147,} },
+.{ "0x3181", &.{0x114c,} },
+.{ "0x3182", &.{0x11f1,} },
+.{ "0x3183", &.{0x11f2,} },
+.{ "0x3184", &.{0x1157,} },
+.{ "0x3185", &.{0x1158,} },
+.{ "0x3186", &.{0x1159,} },
+.{ "0x3187", &.{0x1184,} },
+.{ "0x3188", &.{0x1185,} },
+.{ "0x3189", &.{0x1188,} },
+.{ "0x318a", &.{0x1191,} },
+.{ "0x318b", &.{0x1192,} },
+.{ "0x318c", &.{0x1194,} },
+.{ "0x318d", &.{0x119e,} },
+.{ "0x318e", &.{0x11a1,} },
+.{ "0x3192", &.{0x4e00,} },
+.{ "0x3193", &.{0x4e8c,} },
+.{ "0x3194", &.{0x4e09,} },
+.{ "0x3195", &.{0x56db,} },
+.{ "0x3196", &.{0x4e0a,} },
+.{ "0x3197", &.{0x4e2d,} },
+.{ "0x3198", &.{0x4e0b,} },
+.{ "0x3199", &.{0x7532,} },
+.{ "0x319a", &.{0x4e59,} },
+.{ "0x319b", &.{0x4e19,} },
+.{ "0x319c", &.{0x4e01,} },
+.{ "0x319d", &.{0x5929,} },
+.{ "0x319e", &.{0x5730,} },
+.{ "0x319f", &.{0x4eba,} },
+.{ "0x3200", &.{0x28,0x1100,0x29,} },
+.{ "0x3201", &.{0x28,0x1102,0x29,} },
+.{ "0x3202", &.{0x28,0x1103,0x29,} },
+.{ "0x3203", &.{0x28,0x1105,0x29,} },
+.{ "0x3204", &.{0x28,0x1106,0x29,} },
+.{ "0x3205", &.{0x28,0x1107,0x29,} },
+.{ "0x3206", &.{0x28,0x1109,0x29,} },
+.{ "0x3207", &.{0x28,0x110b,0x29,} },
+.{ "0x3208", &.{0x28,0x110c,0x29,} },
+.{ "0x3209", &.{0x28,0x110e,0x29,} },
+.{ "0x320a", &.{0x28,0x110f,0x29,} },
+.{ "0x320b", &.{0x28,0x1110,0x29,} },
+.{ "0x320c", &.{0x28,0x1111,0x29,} },
+.{ "0x320d", &.{0x28,0x1112,0x29,} },
+.{ "0x320e", &.{0x28,0x1100,0x1161,0x29,} },
+.{ "0x320f", &.{0x28,0x1102,0x1161,0x29,} },
+.{ "0x3210", &.{0x28,0x1103,0x1161,0x29,} },
+.{ "0x3211", &.{0x28,0x1105,0x1161,0x29,} },
+.{ "0x3212", &.{0x28,0x1106,0x1161,0x29,} },
+.{ "0x3213", &.{0x28,0x1107,0x1161,0x29,} },
+.{ "0x3214", &.{0x28,0x1109,0x1161,0x29,} },
+.{ "0x3215", &.{0x28,0x110b,0x1161,0x29,} },
+.{ "0x3216", &.{0x28,0x110c,0x1161,0x29,} },
+.{ "0x3217", &.{0x28,0x110e,0x1161,0x29,} },
+.{ "0x3218", &.{0x28,0x110f,0x1161,0x29,} },
+.{ "0x3219", &.{0x28,0x1110,0x1161,0x29,} },
+.{ "0x321a", &.{0x28,0x1111,0x1161,0x29,} },
+.{ "0x321b", &.{0x28,0x1112,0x1161,0x29,} },
+.{ "0x321c", &.{0x28,0x110c,0x116e,0x29,} },
+.{ "0x321d", &.{0x28,0x110b,0x1169,0x110c,0x1165,0x11ab,0x29,} },
+.{ "0x321e", &.{0x28,0x110b,0x1169,0x1112,0x116e,0x29,} },
+.{ "0x3220", &.{0x28,0x4e00,0x29,} },
+.{ "0x3221", &.{0x28,0x4e8c,0x29,} },
+.{ "0x3222", &.{0x28,0x4e09,0x29,} },
+.{ "0x3223", &.{0x28,0x56db,0x29,} },
+.{ "0x3224", &.{0x28,0x4e94,0x29,} },
+.{ "0x3225", &.{0x28,0x516d,0x29,} },
+.{ "0x3226", &.{0x28,0x4e03,0x29,} },
+.{ "0x3227", &.{0x28,0x516b,0x29,} },
+.{ "0x3228", &.{0x28,0x4e5d,0x29,} },
+.{ "0x3229", &.{0x28,0x5341,0x29,} },
+.{ "0x322a", &.{0x28,0x6708,0x29,} },
+.{ "0x322b", &.{0x28,0x706b,0x29,} },
+.{ "0x322c", &.{0x28,0x6c34,0x29,} },
+.{ "0x322d", &.{0x28,0x6728,0x29,} },
+.{ "0x322e", &.{0x28,0x91d1,0x29,} },
+.{ "0x322f", &.{0x28,0x571f,0x29,} },
+.{ "0x3230", &.{0x28,0x65e5,0x29,} },
+.{ "0x3231", &.{0x28,0x682a,0x29,} },
+.{ "0x3232", &.{0x28,0x6709,0x29,} },
+.{ "0x3233", &.{0x28,0x793e,0x29,} },
+.{ "0x3234", &.{0x28,0x540d,0x29,} },
+.{ "0x3235", &.{0x28,0x7279,0x29,} },
+.{ "0x3236", &.{0x28,0x8ca1,0x29,} },
+.{ "0x3237", &.{0x28,0x795d,0x29,} },
+.{ "0x3238", &.{0x28,0x52b4,0x29,} },
+.{ "0x3239", &.{0x28,0x4ee3,0x29,} },
+.{ "0x323a", &.{0x28,0x547c,0x29,} },
+.{ "0x323b", &.{0x28,0x5b66,0x29,} },
+.{ "0x323c", &.{0x28,0x76e3,0x29,} },
+.{ "0x323d", &.{0x28,0x4f01,0x29,} },
+.{ "0x323e", &.{0x28,0x8cc7,0x29,} },
+.{ "0x323f", &.{0x28,0x5354,0x29,} },
+.{ "0x3240", &.{0x28,0x796d,0x29,} },
+.{ "0x3241", &.{0x28,0x4f11,0x29,} },
+.{ "0x3242", &.{0x28,0x81ea,0x29,} },
+.{ "0x3243", &.{0x28,0x81f3,0x29,} },
+.{ "0x3244", &.{0x554f,} },
+.{ "0x3245", &.{0x5e7c,} },
+.{ "0x3246", &.{0x6587,} },
+.{ "0x3247", &.{0x7b8f,} },
+.{ "0x3250", &.{0x50,0x54,0x45,} },
+.{ "0x3251", &.{0x32,0x31,} },
+.{ "0x3252", &.{0x32,0x32,} },
+.{ "0x3253", &.{0x32,0x33,} },
+.{ "0x3254", &.{0x32,0x34,} },
+.{ "0x3255", &.{0x32,0x35,} },
+.{ "0x3256", &.{0x32,0x36,} },
+.{ "0x3257", &.{0x32,0x37,} },
+.{ "0x3258", &.{0x32,0x38,} },
+.{ "0x3259", &.{0x32,0x39,} },
+.{ "0x325a", &.{0x33,0x30,} },
+.{ "0x325b", &.{0x33,0x31,} },
+.{ "0x325c", &.{0x33,0x32,} },
+.{ "0x325d", &.{0x33,0x33,} },
+.{ "0x325e", &.{0x33,0x34,} },
+.{ "0x325f", &.{0x33,0x35,} },
+.{ "0x3260", &.{0x1100,} },
+.{ "0x3261", &.{0x1102,} },
+.{ "0x3262", &.{0x1103,} },
+.{ "0x3263", &.{0x1105,} },
+.{ "0x3264", &.{0x1106,} },
+.{ "0x3265", &.{0x1107,} },
+.{ "0x3266", &.{0x1109,} },
+.{ "0x3267", &.{0x110b,} },
+.{ "0x3268", &.{0x110c,} },
+.{ "0x3269", &.{0x110e,} },
+.{ "0x326a", &.{0x110f,} },
+.{ "0x326b", &.{0x1110,} },
+.{ "0x326c", &.{0x1111,} },
+.{ "0x326d", &.{0x1112,} },
+.{ "0x326e", &.{0x1100,0x1161,} },
+.{ "0x326f", &.{0x1102,0x1161,} },
+.{ "0x3270", &.{0x1103,0x1161,} },
+.{ "0x3271", &.{0x1105,0x1161,} },
+.{ "0x3272", &.{0x1106,0x1161,} },
+.{ "0x3273", &.{0x1107,0x1161,} },
+.{ "0x3274", &.{0x1109,0x1161,} },
+.{ "0x3275", &.{0x110b,0x1161,} },
+.{ "0x3276", &.{0x110c,0x1161,} },
+.{ "0x3277", &.{0x110e,0x1161,} },
+.{ "0x3278", &.{0x110f,0x1161,} },
+.{ "0x3279", &.{0x1110,0x1161,} },
+.{ "0x327a", &.{0x1111,0x1161,} },
+.{ "0x327b", &.{0x1112,0x1161,} },
+.{ "0x327c", &.{0x110e,0x1161,0x11b7,0x1100,0x1169,} },
+.{ "0x327d", &.{0x110c,0x116e,0x110b,0x1174,} },
+.{ "0x327e", &.{0x110b,0x116e,} },
+.{ "0x3280", &.{0x4e00,} },
+.{ "0x3281", &.{0x4e8c,} },
+.{ "0x3282", &.{0x4e09,} },
+.{ "0x3283", &.{0x56db,} },
+.{ "0x3284", &.{0x4e94,} },
+.{ "0x3285", &.{0x516d,} },
+.{ "0x3286", &.{0x4e03,} },
+.{ "0x3287", &.{0x516b,} },
+.{ "0x3288", &.{0x4e5d,} },
+.{ "0x3289", &.{0x5341,} },
+.{ "0x328a", &.{0x6708,} },
+.{ "0x328b", &.{0x706b,} },
+.{ "0x328c", &.{0x6c34,} },
+.{ "0x328d", &.{0x6728,} },
+.{ "0x328e", &.{0x91d1,} },
+.{ "0x328f", &.{0x571f,} },
+.{ "0x3290", &.{0x65e5,} },
+.{ "0x3291", &.{0x682a,} },
+.{ "0x3292", &.{0x6709,} },
+.{ "0x3293", &.{0x793e,} },
+.{ "0x3294", &.{0x540d,} },
+.{ "0x3295", &.{0x7279,} },
+.{ "0x3296", &.{0x8ca1,} },
+.{ "0x3297", &.{0x795d,} },
+.{ "0x3298", &.{0x52b4,} },
+.{ "0x3299", &.{0x79d8,} },
+.{ "0x329a", &.{0x7537,} },
+.{ "0x329b", &.{0x5973,} },
+.{ "0x329c", &.{0x9069,} },
+.{ "0x329d", &.{0x512a,} },
+.{ "0x329e", &.{0x5370,} },
+.{ "0x329f", &.{0x6ce8,} },
+.{ "0x32a0", &.{0x9805,} },
+.{ "0x32a1", &.{0x4f11,} },
+.{ "0x32a2", &.{0x5199,} },
+.{ "0x32a3", &.{0x6b63,} },
+.{ "0x32a4", &.{0x4e0a,} },
+.{ "0x32a5", &.{0x4e2d,} },
+.{ "0x32a6", &.{0x4e0b,} },
+.{ "0x32a7", &.{0x5de6,} },
+.{ "0x32a8", &.{0x53f3,} },
+.{ "0x32a9", &.{0x533b,} },
+.{ "0x32aa", &.{0x5b97,} },
+.{ "0x32ab", &.{0x5b66,} },
+.{ "0x32ac", &.{0x76e3,} },
+.{ "0x32ad", &.{0x4f01,} },
+.{ "0x32ae", &.{0x8cc7,} },
+.{ "0x32af", &.{0x5354,} },
+.{ "0x32b0", &.{0x591c,} },
+.{ "0x32b1", &.{0x33,0x36,} },
+.{ "0x32b2", &.{0x33,0x37,} },
+.{ "0x32b3", &.{0x33,0x38,} },
+.{ "0x32b4", &.{0x33,0x39,} },
+.{ "0x32b5", &.{0x34,0x30,} },
+.{ "0x32b6", &.{0x34,0x31,} },
+.{ "0x32b7", &.{0x34,0x32,} },
+.{ "0x32b8", &.{0x34,0x33,} },
+.{ "0x32b9", &.{0x34,0x34,} },
+.{ "0x32ba", &.{0x34,0x35,} },
+.{ "0x32bb", &.{0x34,0x36,} },
+.{ "0x32bc", &.{0x34,0x37,} },
+.{ "0x32bd", &.{0x34,0x38,} },
+.{ "0x32be", &.{0x34,0x39,} },
+.{ "0x32bf", &.{0x35,0x30,} },
+.{ "0x32c0", &.{0x31,0x6708,} },
+.{ "0x32c1", &.{0x32,0x6708,} },
+.{ "0x32c2", &.{0x33,0x6708,} },
+.{ "0x32c3", &.{0x34,0x6708,} },
+.{ "0x32c4", &.{0x35,0x6708,} },
+.{ "0x32c5", &.{0x36,0x6708,} },
+.{ "0x32c6", &.{0x37,0x6708,} },
+.{ "0x32c7", &.{0x38,0x6708,} },
+.{ "0x32c8", &.{0x39,0x6708,} },
+.{ "0x32c9", &.{0x31,0x30,0x6708,} },
+.{ "0x32ca", &.{0x31,0x31,0x6708,} },
+.{ "0x32cb", &.{0x31,0x32,0x6708,} },
+.{ "0x32cc", &.{0x48,0x67,} },
+.{ "0x32cd", &.{0x65,0x72,0x67,} },
+.{ "0x32ce", &.{0x65,0x56,} },
+.{ "0x32cf", &.{0x4c,0x54,0x44,} },
+.{ "0x32d0", &.{0x30a2,} },
+.{ "0x32d1", &.{0x30a4,} },
+.{ "0x32d2", &.{0x30a6,} },
+.{ "0x32d3", &.{0x30a8,} },
+.{ "0x32d4", &.{0x30aa,} },
+.{ "0x32d5", &.{0x30ab,} },
+.{ "0x32d6", &.{0x30ad,} },
+.{ "0x32d7", &.{0x30af,} },
+.{ "0x32d8", &.{0x30b1,} },
+.{ "0x32d9", &.{0x30b3,} },
+.{ "0x32da", &.{0x30b5,} },
+.{ "0x32db", &.{0x30b7,} },
+.{ "0x32dc", &.{0x30b9,} },
+.{ "0x32dd", &.{0x30bb,} },
+.{ "0x32de", &.{0x30bd,} },
+.{ "0x32df", &.{0x30bf,} },
+.{ "0x32e0", &.{0x30c1,} },
+.{ "0x32e1", &.{0x30c4,} },
+.{ "0x32e2", &.{0x30c6,} },
+.{ "0x32e3", &.{0x30c8,} },
+.{ "0x32e4", &.{0x30ca,} },
+.{ "0x32e5", &.{0x30cb,} },
+.{ "0x32e6", &.{0x30cc,} },
+.{ "0x32e7", &.{0x30cd,} },
+.{ "0x32e8", &.{0x30ce,} },
+.{ "0x32e9", &.{0x30cf,} },
+.{ "0x32ea", &.{0x30d2,} },
+.{ "0x32eb", &.{0x30d5,} },
+.{ "0x32ec", &.{0x30d8,} },
+.{ "0x32ed", &.{0x30db,} },
+.{ "0x32ee", &.{0x30de,} },
+.{ "0x32ef", &.{0x30df,} },
+.{ "0x32f0", &.{0x30e0,} },
+.{ "0x32f1", &.{0x30e1,} },
+.{ "0x32f2", &.{0x30e2,} },
+.{ "0x32f3", &.{0x30e4,} },
+.{ "0x32f4", &.{0x30e6,} },
+.{ "0x32f5", &.{0x30e8,} },
+.{ "0x32f6", &.{0x30e9,} },
+.{ "0x32f7", &.{0x30ea,} },
+.{ "0x32f8", &.{0x30eb,} },
+.{ "0x32f9", &.{0x30ec,} },
+.{ "0x32fa", &.{0x30ed,} },
+.{ "0x32fb", &.{0x30ef,} },
+.{ "0x32fc", &.{0x30f0,} },
+.{ "0x32fd", &.{0x30f1,} },
+.{ "0x32fe", &.{0x30f2,} },
+.{ "0x32ff", &.{0x4ee4,0x548c,} },
+.{ "0x3300", &.{0x30a2,0x30d1,0x30fc,0x30c8,} },
+.{ "0x3301", &.{0x30a2,0x30eb,0x30d5,0x30a1,} },
+.{ "0x3302", &.{0x30a2,0x30f3,0x30da,0x30a2,} },
+.{ "0x3303", &.{0x30a2,0x30fc,0x30eb,} },
+.{ "0x3304", &.{0x30a4,0x30cb,0x30f3,0x30b0,} },
+.{ "0x3305", &.{0x30a4,0x30f3,0x30c1,} },
+.{ "0x3306", &.{0x30a6,0x30a9,0x30f3,} },
+.{ "0x3307", &.{0x30a8,0x30b9,0x30af,0x30fc,0x30c9,} },
+.{ "0x3308", &.{0x30a8,0x30fc,0x30ab,0x30fc,} },
+.{ "0x3309", &.{0x30aa,0x30f3,0x30b9,} },
+.{ "0x330a", &.{0x30aa,0x30fc,0x30e0,} },
+.{ "0x330b", &.{0x30ab,0x30a4,0x30ea,} },
+.{ "0x330c", &.{0x30ab,0x30e9,0x30c3,0x30c8,} },
+.{ "0x330d", &.{0x30ab,0x30ed,0x30ea,0x30fc,} },
+.{ "0x330e", &.{0x30ac,0x30ed,0x30f3,} },
+.{ "0x330f", &.{0x30ac,0x30f3,0x30de,} },
+.{ "0x3310", &.{0x30ae,0x30ac,} },
+.{ "0x3311", &.{0x30ae,0x30cb,0x30fc,} },
+.{ "0x3312", &.{0x30ad,0x30e5,0x30ea,0x30fc,} },
+.{ "0x3313", &.{0x30ae,0x30eb,0x30c0,0x30fc,} },
+.{ "0x3314", &.{0x30ad,0x30ed,} },
+.{ "0x3315", &.{0x30ad,0x30ed,0x30b0,0x30e9,0x30e0,} },
+.{ "0x3316", &.{0x30ad,0x30ed,0x30e1,0x30fc,0x30c8,0x30eb,} },
+.{ "0x3317", &.{0x30ad,0x30ed,0x30ef,0x30c3,0x30c8,} },
+.{ "0x3318", &.{0x30b0,0x30e9,0x30e0,} },
+.{ "0x3319", &.{0x30b0,0x30e9,0x30e0,0x30c8,0x30f3,} },
+.{ "0x331a", &.{0x30af,0x30eb,0x30bc,0x30a4,0x30ed,} },
+.{ "0x331b", &.{0x30af,0x30ed,0x30fc,0x30cd,} },
+.{ "0x331c", &.{0x30b1,0x30fc,0x30b9,} },
+.{ "0x331d", &.{0x30b3,0x30eb,0x30ca,} },
+.{ "0x331e", &.{0x30b3,0x30fc,0x30dd,} },
+.{ "0x331f", &.{0x30b5,0x30a4,0x30af,0x30eb,} },
+.{ "0x3320", &.{0x30b5,0x30f3,0x30c1,0x30fc,0x30e0,} },
+.{ "0x3321", &.{0x30b7,0x30ea,0x30f3,0x30b0,} },
+.{ "0x3322", &.{0x30bb,0x30f3,0x30c1,} },
+.{ "0x3323", &.{0x30bb,0x30f3,0x30c8,} },
+.{ "0x3324", &.{0x30c0,0x30fc,0x30b9,} },
+.{ "0x3325", &.{0x30c7,0x30b7,} },
+.{ "0x3326", &.{0x30c9,0x30eb,} },
+.{ "0x3327", &.{0x30c8,0x30f3,} },
+.{ "0x3328", &.{0x30ca,0x30ce,} },
+.{ "0x3329", &.{0x30ce,0x30c3,0x30c8,} },
+.{ "0x332a", &.{0x30cf,0x30a4,0x30c4,} },
+.{ "0x332b", &.{0x30d1,0x30fc,0x30bb,0x30f3,0x30c8,} },
+.{ "0x332c", &.{0x30d1,0x30fc,0x30c4,} },
+.{ "0x332d", &.{0x30d0,0x30fc,0x30ec,0x30eb,} },
+.{ "0x332e", &.{0x30d4,0x30a2,0x30b9,0x30c8,0x30eb,} },
+.{ "0x332f", &.{0x30d4,0x30af,0x30eb,} },
+.{ "0x3330", &.{0x30d4,0x30b3,} },
+.{ "0x3331", &.{0x30d3,0x30eb,} },
+.{ "0x3332", &.{0x30d5,0x30a1,0x30e9,0x30c3,0x30c9,} },
+.{ "0x3333", &.{0x30d5,0x30a3,0x30fc,0x30c8,} },
+.{ "0x3334", &.{0x30d6,0x30c3,0x30b7,0x30a7,0x30eb,} },
+.{ "0x3335", &.{0x30d5,0x30e9,0x30f3,} },
+.{ "0x3336", &.{0x30d8,0x30af,0x30bf,0x30fc,0x30eb,} },
+.{ "0x3337", &.{0x30da,0x30bd,} },
+.{ "0x3338", &.{0x30da,0x30cb,0x30d2,} },
+.{ "0x3339", &.{0x30d8,0x30eb,0x30c4,} },
+.{ "0x333a", &.{0x30da,0x30f3,0x30b9,} },
+.{ "0x333b", &.{0x30da,0x30fc,0x30b8,} },
+.{ "0x333c", &.{0x30d9,0x30fc,0x30bf,} },
+.{ "0x333d", &.{0x30dd,0x30a4,0x30f3,0x30c8,} },
+.{ "0x333e", &.{0x30dc,0x30eb,0x30c8,} },
+.{ "0x333f", &.{0x30db,0x30f3,} },
+.{ "0x3340", &.{0x30dd,0x30f3,0x30c9,} },
+.{ "0x3341", &.{0x30db,0x30fc,0x30eb,} },
+.{ "0x3342", &.{0x30db,0x30fc,0x30f3,} },
+.{ "0x3343", &.{0x30de,0x30a4,0x30af,0x30ed,} },
+.{ "0x3344", &.{0x30de,0x30a4,0x30eb,} },
+.{ "0x3345", &.{0x30de,0x30c3,0x30cf,} },
+.{ "0x3346", &.{0x30de,0x30eb,0x30af,} },
+.{ "0x3347", &.{0x30de,0x30f3,0x30b7,0x30e7,0x30f3,} },
+.{ "0x3348", &.{0x30df,0x30af,0x30ed,0x30f3,} },
+.{ "0x3349", &.{0x30df,0x30ea,} },
+.{ "0x334a", &.{0x30df,0x30ea,0x30d0,0x30fc,0x30eb,} },
+.{ "0x334b", &.{0x30e1,0x30ac,} },
+.{ "0x334c", &.{0x30e1,0x30ac,0x30c8,0x30f3,} },
+.{ "0x334d", &.{0x30e1,0x30fc,0x30c8,0x30eb,} },
+.{ "0x334e", &.{0x30e4,0x30fc,0x30c9,} },
+.{ "0x334f", &.{0x30e4,0x30fc,0x30eb,} },
+.{ "0x3350", &.{0x30e6,0x30a2,0x30f3,} },
+.{ "0x3351", &.{0x30ea,0x30c3,0x30c8,0x30eb,} },
+.{ "0x3352", &.{0x30ea,0x30e9,} },
+.{ "0x3353", &.{0x30eb,0x30d4,0x30fc,} },
+.{ "0x3354", &.{0x30eb,0x30fc,0x30d6,0x30eb,} },
+.{ "0x3355", &.{0x30ec,0x30e0,} },
+.{ "0x3356", &.{0x30ec,0x30f3,0x30c8,0x30b2,0x30f3,} },
+.{ "0x3357", &.{0x30ef,0x30c3,0x30c8,} },
+.{ "0x3358", &.{0x30,0x70b9,} },
+.{ "0x3359", &.{0x31,0x70b9,} },
+.{ "0x335a", &.{0x32,0x70b9,} },
+.{ "0x335b", &.{0x33,0x70b9,} },
+.{ "0x335c", &.{0x34,0x70b9,} },
+.{ "0x335d", &.{0x35,0x70b9,} },
+.{ "0x335e", &.{0x36,0x70b9,} },
+.{ "0x335f", &.{0x37,0x70b9,} },
+.{ "0x3360", &.{0x38,0x70b9,} },
+.{ "0x3361", &.{0x39,0x70b9,} },
+.{ "0x3362", &.{0x31,0x30,0x70b9,} },
+.{ "0x3363", &.{0x31,0x31,0x70b9,} },
+.{ "0x3364", &.{0x31,0x32,0x70b9,} },
+.{ "0x3365", &.{0x31,0x33,0x70b9,} },
+.{ "0x3366", &.{0x31,0x34,0x70b9,} },
+.{ "0x3367", &.{0x31,0x35,0x70b9,} },
+.{ "0x3368", &.{0x31,0x36,0x70b9,} },
+.{ "0x3369", &.{0x31,0x37,0x70b9,} },
+.{ "0x336a", &.{0x31,0x38,0x70b9,} },
+.{ "0x336b", &.{0x31,0x39,0x70b9,} },
+.{ "0x336c", &.{0x32,0x30,0x70b9,} },
+.{ "0x336d", &.{0x32,0x31,0x70b9,} },
+.{ "0x336e", &.{0x32,0x32,0x70b9,} },
+.{ "0x336f", &.{0x32,0x33,0x70b9,} },
+.{ "0x3370", &.{0x32,0x34,0x70b9,} },
+.{ "0x3371", &.{0x68,0x50,0x61,} },
+.{ "0x3372", &.{0x64,0x61,} },
+.{ "0x3373", &.{0x41,0x55,} },
+.{ "0x3374", &.{0x62,0x61,0x72,} },
+.{ "0x3375", &.{0x6f,0x56,} },
+.{ "0x3376", &.{0x70,0x63,} },
+.{ "0x3377", &.{0x64,0x6d,} },
+.{ "0x3378", &.{0x64,0x6d,0xb2,} },
+.{ "0x3379", &.{0x64,0x6d,0xb3,} },
+.{ "0x337a", &.{0x49,0x55,} },
+.{ "0x337b", &.{0x5e73,0x6210,} },
+.{ "0x337c", &.{0x662d,0x548c,} },
+.{ "0x337d", &.{0x5927,0x6b63,} },
+.{ "0x337e", &.{0x660e,0x6cbb,} },
+.{ "0x337f", &.{0x682a,0x5f0f,0x4f1a,0x793e,} },
+.{ "0x3380", &.{0x70,0x41,} },
+.{ "0x3381", &.{0x6e,0x41,} },
+.{ "0x3382", &.{0x3bc,0x41,} },
+.{ "0x3383", &.{0x6d,0x41,} },
+.{ "0x3384", &.{0x6b,0x41,} },
+.{ "0x3385", &.{0x4b,0x42,} },
+.{ "0x3386", &.{0x4d,0x42,} },
+.{ "0x3387", &.{0x47,0x42,} },
+.{ "0x3388", &.{0x63,0x61,0x6c,} },
+.{ "0x3389", &.{0x6b,0x63,0x61,0x6c,} },
+.{ "0x338a", &.{0x70,0x46,} },
+.{ "0x338b", &.{0x6e,0x46,} },
+.{ "0x338c", &.{0x3bc,0x46,} },
+.{ "0x338d", &.{0x3bc,0x67,} },
+.{ "0x338e", &.{0x6d,0x67,} },
+.{ "0x338f", &.{0x6b,0x67,} },
+.{ "0x3390", &.{0x48,0x7a,} },
+.{ "0x3391", &.{0x6b,0x48,0x7a,} },
+.{ "0x3392", &.{0x4d,0x48,0x7a,} },
+.{ "0x3393", &.{0x47,0x48,0x7a,} },
+.{ "0x3394", &.{0x54,0x48,0x7a,} },
+.{ "0x3395", &.{0x3bc,0x2113,} },
+.{ "0x3396", &.{0x6d,0x2113,} },
+.{ "0x3397", &.{0x64,0x2113,} },
+.{ "0x3398", &.{0x6b,0x2113,} },
+.{ "0x3399", &.{0x66,0x6d,} },
+.{ "0x339a", &.{0x6e,0x6d,} },
+.{ "0x339b", &.{0x3bc,0x6d,} },
+.{ "0x339c", &.{0x6d,0x6d,} },
+.{ "0x339d", &.{0x63,0x6d,} },
+.{ "0x339e", &.{0x6b,0x6d,} },
+.{ "0x339f", &.{0x6d,0x6d,0xb2,} },
+.{ "0x33a0", &.{0x63,0x6d,0xb2,} },
+.{ "0x33a1", &.{0x6d,0xb2,} },
+.{ "0x33a2", &.{0x6b,0x6d,0xb2,} },
+.{ "0x33a3", &.{0x6d,0x6d,0xb3,} },
+.{ "0x33a4", &.{0x63,0x6d,0xb3,} },
+.{ "0x33a5", &.{0x6d,0xb3,} },
+.{ "0x33a6", &.{0x6b,0x6d,0xb3,} },
+.{ "0x33a7", &.{0x6d,0x2215,0x73,} },
+.{ "0x33a8", &.{0x6d,0x2215,0x73,0xb2,} },
+.{ "0x33a9", &.{0x50,0x61,} },
+.{ "0x33aa", &.{0x6b,0x50,0x61,} },
+.{ "0x33ab", &.{0x4d,0x50,0x61,} },
+.{ "0x33ac", &.{0x47,0x50,0x61,} },
+.{ "0x33ad", &.{0x72,0x61,0x64,} },
+.{ "0x33ae", &.{0x72,0x61,0x64,0x2215,0x73,} },
+.{ "0x33af", &.{0x72,0x61,0x64,0x2215,0x73,0xb2,} },
+.{ "0x33b0", &.{0x70,0x73,} },
+.{ "0x33b1", &.{0x6e,0x73,} },
+.{ "0x33b2", &.{0x3bc,0x73,} },
+.{ "0x33b3", &.{0x6d,0x73,} },
+.{ "0x33b4", &.{0x70,0x56,} },
+.{ "0x33b5", &.{0x6e,0x56,} },
+.{ "0x33b6", &.{0x3bc,0x56,} },
+.{ "0x33b7", &.{0x6d,0x56,} },
+.{ "0x33b8", &.{0x6b,0x56,} },
+.{ "0x33b9", &.{0x4d,0x56,} },
+.{ "0x33ba", &.{0x70,0x57,} },
+.{ "0x33bb", &.{0x6e,0x57,} },
+.{ "0x33bc", &.{0x3bc,0x57,} },
+.{ "0x33bd", &.{0x6d,0x57,} },
+.{ "0x33be", &.{0x6b,0x57,} },
+.{ "0x33bf", &.{0x4d,0x57,} },
+.{ "0x33c0", &.{0x6b,0x3a9,} },
+.{ "0x33c1", &.{0x4d,0x3a9,} },
+.{ "0x33c2", &.{0x61,0x2e,0x6d,0x2e,} },
+.{ "0x33c3", &.{0x42,0x71,} },
+.{ "0x33c4", &.{0x63,0x63,} },
+.{ "0x33c5", &.{0x63,0x64,} },
+.{ "0x33c6", &.{0x43,0x2215,0x6b,0x67,} },
+.{ "0x33c7", &.{0x43,0x6f,0x2e,} },
+.{ "0x33c8", &.{0x64,0x42,} },
+.{ "0x33c9", &.{0x47,0x79,} },
+.{ "0x33ca", &.{0x68,0x61,} },
+.{ "0x33cb", &.{0x48,0x50,} },
+.{ "0x33cc", &.{0x69,0x6e,} },
+.{ "0x33cd", &.{0x4b,0x4b,} },
+.{ "0x33ce", &.{0x4b,0x4d,} },
+.{ "0x33cf", &.{0x6b,0x74,} },
+.{ "0x33d0", &.{0x6c,0x6d,} },
+.{ "0x33d1", &.{0x6c,0x6e,} },
+.{ "0x33d2", &.{0x6c,0x6f,0x67,} },
+.{ "0x33d3", &.{0x6c,0x78,} },
+.{ "0x33d4", &.{0x6d,0x62,} },
+.{ "0x33d5", &.{0x6d,0x69,0x6c,} },
+.{ "0x33d6", &.{0x6d,0x6f,0x6c,} },
+.{ "0x33d7", &.{0x50,0x48,} },
+.{ "0x33d8", &.{0x70,0x2e,0x6d,0x2e,} },
+.{ "0x33d9", &.{0x50,0x50,0x4d,} },
+.{ "0x33da", &.{0x50,0x52,} },
+.{ "0x33db", &.{0x73,0x72,} },
+.{ "0x33dc", &.{0x53,0x76,} },
+.{ "0x33dd", &.{0x57,0x62,} },
+.{ "0x33de", &.{0x56,0x2215,0x6d,} },
+.{ "0x33df", &.{0x41,0x2215,0x6d,} },
+.{ "0x33e0", &.{0x31,0x65e5,} },
+.{ "0x33e1", &.{0x32,0x65e5,} },
+.{ "0x33e2", &.{0x33,0x65e5,} },
+.{ "0x33e3", &.{0x34,0x65e5,} },
+.{ "0x33e4", &.{0x35,0x65e5,} },
+.{ "0x33e5", &.{0x36,0x65e5,} },
+.{ "0x33e6", &.{0x37,0x65e5,} },
+.{ "0x33e7", &.{0x38,0x65e5,} },
+.{ "0x33e8", &.{0x39,0x65e5,} },
+.{ "0x33e9", &.{0x31,0x30,0x65e5,} },
+.{ "0x33ea", &.{0x31,0x31,0x65e5,} },
+.{ "0x33eb", &.{0x31,0x32,0x65e5,} },
+.{ "0x33ec", &.{0x31,0x33,0x65e5,} },
+.{ "0x33ed", &.{0x31,0x34,0x65e5,} },
+.{ "0x33ee", &.{0x31,0x35,0x65e5,} },
+.{ "0x33ef", &.{0x31,0x36,0x65e5,} },
+.{ "0x33f0", &.{0x31,0x37,0x65e5,} },
+.{ "0x33f1", &.{0x31,0x38,0x65e5,} },
+.{ "0x33f2", &.{0x31,0x39,0x65e5,} },
+.{ "0x33f3", &.{0x32,0x30,0x65e5,} },
+.{ "0x33f4", &.{0x32,0x31,0x65e5,} },
+.{ "0x33f5", &.{0x32,0x32,0x65e5,} },
+.{ "0x33f6", &.{0x32,0x33,0x65e5,} },
+.{ "0x33f7", &.{0x32,0x34,0x65e5,} },
+.{ "0x33f8", &.{0x32,0x35,0x65e5,} },
+.{ "0x33f9", &.{0x32,0x36,0x65e5,} },
+.{ "0x33fa", &.{0x32,0x37,0x65e5,} },
+.{ "0x33fb", &.{0x32,0x38,0x65e5,} },
+.{ "0x33fc", &.{0x32,0x39,0x65e5,} },
+.{ "0x33fd", &.{0x33,0x30,0x65e5,} },
+.{ "0x33fe", &.{0x33,0x31,0x65e5,} },
+.{ "0x33ff", &.{0x67,0x61,0x6c,} },
+.{ "0xa69c", &.{0x44a,} },
+.{ "0xa69d", &.{0x44c,} },
+.{ "0xa770", &.{0xa76f,} },
+.{ "0xa7f1", &.{0x53,} },
+.{ "0xa7f2", &.{0x43,} },
+.{ "0xa7f3", &.{0x46,} },
+.{ "0xa7f4", &.{0x51,} },
+.{ "0xa7f8", &.{0x126,} },
+.{ "0xa7f9", &.{0x153,} },
+.{ "0xab5c", &.{0xa727,} },
+.{ "0xab5d", &.{0xab37,} },
+.{ "0xab5e", &.{0x26b,} },
+.{ "0xab5f", &.{0xab52,} },
+.{ "0xab69", &.{0x28d,} },
+.{ "0xfb00", &.{0x66,0x66,} },
+.{ "0xfb01", &.{0x66,0x69,} },
+.{ "0xfb02", &.{0x66,0x6c,} },
+.{ "0xfb03", &.{0x66,0x66,0x69,} },
+.{ "0xfb04", &.{0x66,0x66,0x6c,} },
+.{ "0xfb05", &.{0x17f,0x74,} },
+.{ "0xfb06", &.{0x73,0x74,} },
+.{ "0xfb13", &.{0x574,0x576,} },
+.{ "0xfb14", &.{0x574,0x565,} },
+.{ "0xfb15", &.{0x574,0x56b,} },
+.{ "0xfb16", &.{0x57e,0x576,} },
+.{ "0xfb17", &.{0x574,0x56d,} },
+.{ "0xfb20", &.{0x5e2,} },
+.{ "0xfb21", &.{0x5d0,} },
+.{ "0xfb22", &.{0x5d3,} },
+.{ "0xfb23", &.{0x5d4,} },
+.{ "0xfb24", &.{0x5db,} },
+.{ "0xfb25", &.{0x5dc,} },
+.{ "0xfb26", &.{0x5dd,} },
+.{ "0xfb27", &.{0x5e8,} },
+.{ "0xfb28", &.{0x5ea,} },
+.{ "0xfb29", &.{0x2b,} },
+.{ "0xfb4f", &.{0x5d0,0x5dc,} },
+.{ "0xfb50", &.{0x671,} },
+.{ "0xfb51", &.{0x671,} },
+.{ "0xfb52", &.{0x67b,} },
+.{ "0xfb53", &.{0x67b,} },
+.{ "0xfb54", &.{0x67b,} },
+.{ "0xfb55", &.{0x67b,} },
+.{ "0xfb56", &.{0x67e,} },
+.{ "0xfb57", &.{0x67e,} },
+.{ "0xfb58", &.{0x67e,} },
+.{ "0xfb59", &.{0x67e,} },
+.{ "0xfb5a", &.{0x680,} },
+.{ "0xfb5b", &.{0x680,} },
+.{ "0xfb5c", &.{0x680,} },
+.{ "0xfb5d", &.{0x680,} },
+.{ "0xfb5e", &.{0x67a,} },
+.{ "0xfb5f", &.{0x67a,} },
+.{ "0xfb60", &.{0x67a,} },
+.{ "0xfb61", &.{0x67a,} },
+.{ "0xfb62", &.{0x67f,} },
+.{ "0xfb63", &.{0x67f,} },
+.{ "0xfb64", &.{0x67f,} },
+.{ "0xfb65", &.{0x67f,} },
+.{ "0xfb66", &.{0x679,} },
+.{ "0xfb67", &.{0x679,} },
+.{ "0xfb68", &.{0x679,} },
+.{ "0xfb69", &.{0x679,} },
+.{ "0xfb6a", &.{0x6a4,} },
+.{ "0xfb6b", &.{0x6a4,} },
+.{ "0xfb6c", &.{0x6a4,} },
+.{ "0xfb6d", &.{0x6a4,} },
+.{ "0xfb6e", &.{0x6a6,} },
+.{ "0xfb6f", &.{0x6a6,} },
+.{ "0xfb70", &.{0x6a6,} },
+.{ "0xfb71", &.{0x6a6,} },
+.{ "0xfb72", &.{0x684,} },
+.{ "0xfb73", &.{0x684,} },
+.{ "0xfb74", &.{0x684,} },
+.{ "0xfb75", &.{0x684,} },
+.{ "0xfb76", &.{0x683,} },
+.{ "0xfb77", &.{0x683,} },
+.{ "0xfb78", &.{0x683,} },
+.{ "0xfb79", &.{0x683,} },
+.{ "0xfb7a", &.{0x686,} },
+.{ "0xfb7b", &.{0x686,} },
+.{ "0xfb7c", &.{0x686,} },
+.{ "0xfb7d", &.{0x686,} },
+.{ "0xfb7e", &.{0x687,} },
+.{ "0xfb7f", &.{0x687,} },
+.{ "0xfb80", &.{0x687,} },
+.{ "0xfb81", &.{0x687,} },
+.{ "0xfb82", &.{0x68d,} },
+.{ "0xfb83", &.{0x68d,} },
+.{ "0xfb84", &.{0x68c,} },
+.{ "0xfb85", &.{0x68c,} },
+.{ "0xfb86", &.{0x68e,} },
+.{ "0xfb87", &.{0x68e,} },
+.{ "0xfb88", &.{0x688,} },
+.{ "0xfb89", &.{0x688,} },
+.{ "0xfb8a", &.{0x698,} },
+.{ "0xfb8b", &.{0x698,} },
+.{ "0xfb8c", &.{0x691,} },
+.{ "0xfb8d", &.{0x691,} },
+.{ "0xfb8e", &.{0x6a9,} },
+.{ "0xfb8f", &.{0x6a9,} },
+.{ "0xfb90", &.{0x6a9,} },
+.{ "0xfb91", &.{0x6a9,} },
+.{ "0xfb92", &.{0x6af,} },
+.{ "0xfb93", &.{0x6af,} },
+.{ "0xfb94", &.{0x6af,} },
+.{ "0xfb95", &.{0x6af,} },
+.{ "0xfb96", &.{0x6b3,} },
+.{ "0xfb97", &.{0x6b3,} },
+.{ "0xfb98", &.{0x6b3,} },
+.{ "0xfb99", &.{0x6b3,} },
+.{ "0xfb9a", &.{0x6b1,} },
+.{ "0xfb9b", &.{0x6b1,} },
+.{ "0xfb9c", &.{0x6b1,} },
+.{ "0xfb9d", &.{0x6b1,} },
+.{ "0xfb9e", &.{0x6ba,} },
+.{ "0xfb9f", &.{0x6ba,} },
+.{ "0xfba0", &.{0x6bb,} },
+.{ "0xfba1", &.{0x6bb,} },
+.{ "0xfba2", &.{0x6bb,} },
+.{ "0xfba3", &.{0x6bb,} },
+.{ "0xfba4", &.{0x6c0,} },
+.{ "0xfba5", &.{0x6c0,} },
+.{ "0xfba6", &.{0x6c1,} },
+.{ "0xfba7", &.{0x6c1,} },
+.{ "0xfba8", &.{0x6c1,} },
+.{ "0xfba9", &.{0x6c1,} },
+.{ "0xfbaa", &.{0x6be,} },
+.{ "0xfbab", &.{0x6be,} },
+.{ "0xfbac", &.{0x6be,} },
+.{ "0xfbad", &.{0x6be,} },
+.{ "0xfbae", &.{0x6d2,} },
+.{ "0xfbaf", &.{0x6d2,} },
+.{ "0xfbb0", &.{0x6d3,} },
+.{ "0xfbb1", &.{0x6d3,} },
+.{ "0xfbd3", &.{0x6ad,} },
+.{ "0xfbd4", &.{0x6ad,} },
+.{ "0xfbd5", &.{0x6ad,} },
+.{ "0xfbd6", &.{0x6ad,} },
+.{ "0xfbd7", &.{0x6c7,} },
+.{ "0xfbd8", &.{0x6c7,} },
+.{ "0xfbd9", &.{0x6c6,} },
+.{ "0xfbda", &.{0x6c6,} },
+.{ "0xfbdb", &.{0x6c8,} },
+.{ "0xfbdc", &.{0x6c8,} },
+.{ "0xfbdd", &.{0x677,} },
+.{ "0xfbde", &.{0x6cb,} },
+.{ "0xfbdf", &.{0x6cb,} },
+.{ "0xfbe0", &.{0x6c5,} },
+.{ "0xfbe1", &.{0x6c5,} },
+.{ "0xfbe2", &.{0x6c9,} },
+.{ "0xfbe3", &.{0x6c9,} },
+.{ "0xfbe4", &.{0x6d0,} },
+.{ "0xfbe5", &.{0x6d0,} },
+.{ "0xfbe6", &.{0x6d0,} },
+.{ "0xfbe7", &.{0x6d0,} },
+.{ "0xfbe8", &.{0x649,} },
+.{ "0xfbe9", &.{0x649,} },
+.{ "0xfbea", &.{0x626,0x627,} },
+.{ "0xfbeb", &.{0x626,0x627,} },
+.{ "0xfbec", &.{0x626,0x6d5,} },
+.{ "0xfbed", &.{0x626,0x6d5,} },
+.{ "0xfbee", &.{0x626,0x648,} },
+.{ "0xfbef", &.{0x626,0x648,} },
+.{ "0xfbf0", &.{0x626,0x6c7,} },
+.{ "0xfbf1", &.{0x626,0x6c7,} },
+.{ "0xfbf2", &.{0x626,0x6c6,} },
+.{ "0xfbf3", &.{0x626,0x6c6,} },
+.{ "0xfbf4", &.{0x626,0x6c8,} },
+.{ "0xfbf5", &.{0x626,0x6c8,} },
+.{ "0xfbf6", &.{0x626,0x6d0,} },
+.{ "0xfbf7", &.{0x626,0x6d0,} },
+.{ "0xfbf8", &.{0x626,0x6d0,} },
+.{ "0xfbf9", &.{0x626,0x649,} },
+.{ "0xfbfa", &.{0x626,0x649,} },
+.{ "0xfbfb", &.{0x626,0x649,} },
+.{ "0xfbfc", &.{0x6cc,} },
+.{ "0xfbfd", &.{0x6cc,} },
+.{ "0xfbfe", &.{0x6cc,} },
+.{ "0xfbff", &.{0x6cc,} },
+.{ "0xfc00", &.{0x626,0x62c,} },
+.{ "0xfc01", &.{0x626,0x62d,} },
+.{ "0xfc02", &.{0x626,0x645,} },
+.{ "0xfc03", &.{0x626,0x649,} },
+.{ "0xfc04", &.{0x626,0x64a,} },
+.{ "0xfc05", &.{0x628,0x62c,} },
+.{ "0xfc06", &.{0x628,0x62d,} },
+.{ "0xfc07", &.{0x628,0x62e,} },
+.{ "0xfc08", &.{0x628,0x645,} },
+.{ "0xfc09", &.{0x628,0x649,} },
+.{ "0xfc0a", &.{0x628,0x64a,} },
+.{ "0xfc0b", &.{0x62a,0x62c,} },
+.{ "0xfc0c", &.{0x62a,0x62d,} },
+.{ "0xfc0d", &.{0x62a,0x62e,} },
+.{ "0xfc0e", &.{0x62a,0x645,} },
+.{ "0xfc0f", &.{0x62a,0x649,} },
+.{ "0xfc10", &.{0x62a,0x64a,} },
+.{ "0xfc11", &.{0x62b,0x62c,} },
+.{ "0xfc12", &.{0x62b,0x645,} },
+.{ "0xfc13", &.{0x62b,0x649,} },
+.{ "0xfc14", &.{0x62b,0x64a,} },
+.{ "0xfc15", &.{0x62c,0x62d,} },
+.{ "0xfc16", &.{0x62c,0x645,} },
+.{ "0xfc17", &.{0x62d,0x62c,} },
+.{ "0xfc18", &.{0x62d,0x645,} },
+.{ "0xfc19", &.{0x62e,0x62c,} },
+.{ "0xfc1a", &.{0x62e,0x62d,} },
+.{ "0xfc1b", &.{0x62e,0x645,} },
+.{ "0xfc1c", &.{0x633,0x62c,} },
+.{ "0xfc1d", &.{0x633,0x62d,} },
+.{ "0xfc1e", &.{0x633,0x62e,} },
+.{ "0xfc1f", &.{0x633,0x645,} },
+.{ "0xfc20", &.{0x635,0x62d,} },
+.{ "0xfc21", &.{0x635,0x645,} },
+.{ "0xfc22", &.{0x636,0x62c,} },
+.{ "0xfc23", &.{0x636,0x62d,} },
+.{ "0xfc24", &.{0x636,0x62e,} },
+.{ "0xfc25", &.{0x636,0x645,} },
+.{ "0xfc26", &.{0x637,0x62d,} },
+.{ "0xfc27", &.{0x637,0x645,} },
+.{ "0xfc28", &.{0x638,0x645,} },
+.{ "0xfc29", &.{0x639,0x62c,} },
+.{ "0xfc2a", &.{0x639,0x645,} },
+.{ "0xfc2b", &.{0x63a,0x62c,} },
+.{ "0xfc2c", &.{0x63a,0x645,} },
+.{ "0xfc2d", &.{0x641,0x62c,} },
+.{ "0xfc2e", &.{0x641,0x62d,} },
+.{ "0xfc2f", &.{0x641,0x62e,} },
+.{ "0xfc30", &.{0x641,0x645,} },
+.{ "0xfc31", &.{0x641,0x649,} },
+.{ "0xfc32", &.{0x641,0x64a,} },
+.{ "0xfc33", &.{0x642,0x62d,} },
+.{ "0xfc34", &.{0x642,0x645,} },
+.{ "0xfc35", &.{0x642,0x649,} },
+.{ "0xfc36", &.{0x642,0x64a,} },
+.{ "0xfc37", &.{0x643,0x627,} },
+.{ "0xfc38", &.{0x643,0x62c,} },
+.{ "0xfc39", &.{0x643,0x62d,} },
+.{ "0xfc3a", &.{0x643,0x62e,} },
+.{ "0xfc3b", &.{0x643,0x644,} },
+.{ "0xfc3c", &.{0x643,0x645,} },
+.{ "0xfc3d", &.{0x643,0x649,} },
+.{ "0xfc3e", &.{0x643,0x64a,} },
+.{ "0xfc3f", &.{0x644,0x62c,} },
+.{ "0xfc40", &.{0x644,0x62d,} },
+.{ "0xfc41", &.{0x644,0x62e,} },
+.{ "0xfc42", &.{0x644,0x645,} },
+.{ "0xfc43", &.{0x644,0x649,} },
+.{ "0xfc44", &.{0x644,0x64a,} },
+.{ "0xfc45", &.{0x645,0x62c,} },
+.{ "0xfc46", &.{0x645,0x62d,} },
+.{ "0xfc47", &.{0x645,0x62e,} },
+.{ "0xfc48", &.{0x645,0x645,} },
+.{ "0xfc49", &.{0x645,0x649,} },
+.{ "0xfc4a", &.{0x645,0x64a,} },
+.{ "0xfc4b", &.{0x646,0x62c,} },
+.{ "0xfc4c", &.{0x646,0x62d,} },
+.{ "0xfc4d", &.{0x646,0x62e,} },
+.{ "0xfc4e", &.{0x646,0x645,} },
+.{ "0xfc4f", &.{0x646,0x649,} },
+.{ "0xfc50", &.{0x646,0x64a,} },
+.{ "0xfc51", &.{0x647,0x62c,} },
+.{ "0xfc52", &.{0x647,0x645,} },
+.{ "0xfc53", &.{0x647,0x649,} },
+.{ "0xfc54", &.{0x647,0x64a,} },
+.{ "0xfc55", &.{0x64a,0x62c,} },
+.{ "0xfc56", &.{0x64a,0x62d,} },
+.{ "0xfc57", &.{0x64a,0x62e,} },
+.{ "0xfc58", &.{0x64a,0x645,} },
+.{ "0xfc59", &.{0x64a,0x649,} },
+.{ "0xfc5a", &.{0x64a,0x64a,} },
+.{ "0xfc5b", &.{0x630,0x670,} },
+.{ "0xfc5c", &.{0x631,0x670,} },
+.{ "0xfc5d", &.{0x649,0x670,} },
+.{ "0xfc5e", &.{0x20,0x64c,0x651,} },
+.{ "0xfc5f", &.{0x20,0x64d,0x651,} },
+.{ "0xfc60", &.{0x20,0x64e,0x651,} },
+.{ "0xfc61", &.{0x20,0x64f,0x651,} },
+.{ "0xfc62", &.{0x20,0x650,0x651,} },
+.{ "0xfc63", &.{0x20,0x651,0x670,} },
+.{ "0xfc64", &.{0x626,0x631,} },
+.{ "0xfc65", &.{0x626,0x632,} },
+.{ "0xfc66", &.{0x626,0x645,} },
+.{ "0xfc67", &.{0x626,0x646,} },
+.{ "0xfc68", &.{0x626,0x649,} },
+.{ "0xfc69", &.{0x626,0x64a,} },
+.{ "0xfc6a", &.{0x628,0x631,} },
+.{ "0xfc6b", &.{0x628,0x632,} },
+.{ "0xfc6c", &.{0x628,0x645,} },
+.{ "0xfc6d", &.{0x628,0x646,} },
+.{ "0xfc6e", &.{0x628,0x649,} },
+.{ "0xfc6f", &.{0x628,0x64a,} },
+.{ "0xfc70", &.{0x62a,0x631,} },
+.{ "0xfc71", &.{0x62a,0x632,} },
+.{ "0xfc72", &.{0x62a,0x645,} },
+.{ "0xfc73", &.{0x62a,0x646,} },
+.{ "0xfc74", &.{0x62a,0x649,} },
+.{ "0xfc75", &.{0x62a,0x64a,} },
+.{ "0xfc76", &.{0x62b,0x631,} },
+.{ "0xfc77", &.{0x62b,0x632,} },
+.{ "0xfc78", &.{0x62b,0x645,} },
+.{ "0xfc79", &.{0x62b,0x646,} },
+.{ "0xfc7a", &.{0x62b,0x649,} },
+.{ "0xfc7b", &.{0x62b,0x64a,} },
+.{ "0xfc7c", &.{0x641,0x649,} },
+.{ "0xfc7d", &.{0x641,0x64a,} },
+.{ "0xfc7e", &.{0x642,0x649,} },
+.{ "0xfc7f", &.{0x642,0x64a,} },
+.{ "0xfc80", &.{0x643,0x627,} },
+.{ "0xfc81", &.{0x643,0x644,} },
+.{ "0xfc82", &.{0x643,0x645,} },
+.{ "0xfc83", &.{0x643,0x649,} },
+.{ "0xfc84", &.{0x643,0x64a,} },
+.{ "0xfc85", &.{0x644,0x645,} },
+.{ "0xfc86", &.{0x644,0x649,} },
+.{ "0xfc87", &.{0x644,0x64a,} },
+.{ "0xfc88", &.{0x645,0x627,} },
+.{ "0xfc89", &.{0x645,0x645,} },
+.{ "0xfc8a", &.{0x646,0x631,} },
+.{ "0xfc8b", &.{0x646,0x632,} },
+.{ "0xfc8c", &.{0x646,0x645,} },
+.{ "0xfc8d", &.{0x646,0x646,} },
+.{ "0xfc8e", &.{0x646,0x649,} },
+.{ "0xfc8f", &.{0x646,0x64a,} },
+.{ "0xfc90", &.{0x649,0x670,} },
+.{ "0xfc91", &.{0x64a,0x631,} },
+.{ "0xfc92", &.{0x64a,0x632,} },
+.{ "0xfc93", &.{0x64a,0x645,} },
+.{ "0xfc94", &.{0x64a,0x646,} },
+.{ "0xfc95", &.{0x64a,0x649,} },
+.{ "0xfc96", &.{0x64a,0x64a,} },
+.{ "0xfc97", &.{0x626,0x62c,} },
+.{ "0xfc98", &.{0x626,0x62d,} },
+.{ "0xfc99", &.{0x626,0x62e,} },
+.{ "0xfc9a", &.{0x626,0x645,} },
+.{ "0xfc9b", &.{0x626,0x647,} },
+.{ "0xfc9c", &.{0x628,0x62c,} },
+.{ "0xfc9d", &.{0x628,0x62d,} },
+.{ "0xfc9e", &.{0x628,0x62e,} },
+.{ "0xfc9f", &.{0x628,0x645,} },
+.{ "0xfca0", &.{0x628,0x647,} },
+.{ "0xfca1", &.{0x62a,0x62c,} },
+.{ "0xfca2", &.{0x62a,0x62d,} },
+.{ "0xfca3", &.{0x62a,0x62e,} },
+.{ "0xfca4", &.{0x62a,0x645,} },
+.{ "0xfca5", &.{0x62a,0x647,} },
+.{ "0xfca6", &.{0x62b,0x645,} },
+.{ "0xfca7", &.{0x62c,0x62d,} },
+.{ "0xfca8", &.{0x62c,0x645,} },
+.{ "0xfca9", &.{0x62d,0x62c,} },
+.{ "0xfcaa", &.{0x62d,0x645,} },
+.{ "0xfcab", &.{0x62e,0x62c,} },
+.{ "0xfcac", &.{0x62e,0x645,} },
+.{ "0xfcad", &.{0x633,0x62c,} },
+.{ "0xfcae", &.{0x633,0x62d,} },
+.{ "0xfcaf", &.{0x633,0x62e,} },
+.{ "0xfcb0", &.{0x633,0x645,} },
+.{ "0xfcb1", &.{0x635,0x62d,} },
+.{ "0xfcb2", &.{0x635,0x62e,} },
+.{ "0xfcb3", &.{0x635,0x645,} },
+.{ "0xfcb4", &.{0x636,0x62c,} },
+.{ "0xfcb5", &.{0x636,0x62d,} },
+.{ "0xfcb6", &.{0x636,0x62e,} },
+.{ "0xfcb7", &.{0x636,0x645,} },
+.{ "0xfcb8", &.{0x637,0x62d,} },
+.{ "0xfcb9", &.{0x638,0x645,} },
+.{ "0xfcba", &.{0x639,0x62c,} },
+.{ "0xfcbb", &.{0x639,0x645,} },
+.{ "0xfcbc", &.{0x63a,0x62c,} },
+.{ "0xfcbd", &.{0x63a,0x645,} },
+.{ "0xfcbe", &.{0x641,0x62c,} },
+.{ "0xfcbf", &.{0x641,0x62d,} },
+.{ "0xfcc0", &.{0x641,0x62e,} },
+.{ "0xfcc1", &.{0x641,0x645,} },
+.{ "0xfcc2", &.{0x642,0x62d,} },
+.{ "0xfcc3", &.{0x642,0x645,} },
+.{ "0xfcc4", &.{0x643,0x62c,} },
+.{ "0xfcc5", &.{0x643,0x62d,} },
+.{ "0xfcc6", &.{0x643,0x62e,} },
+.{ "0xfcc7", &.{0x643,0x644,} },
+.{ "0xfcc8", &.{0x643,0x645,} },
+.{ "0xfcc9", &.{0x644,0x62c,} },
+.{ "0xfcca", &.{0x644,0x62d,} },
+.{ "0xfccb", &.{0x644,0x62e,} },
+.{ "0xfccc", &.{0x644,0x645,} },
+.{ "0xfccd", &.{0x644,0x647,} },
+.{ "0xfcce", &.{0x645,0x62c,} },
+.{ "0xfccf", &.{0x645,0x62d,} },
+.{ "0xfcd0", &.{0x645,0x62e,} },
+.{ "0xfcd1", &.{0x645,0x645,} },
+.{ "0xfcd2", &.{0x646,0x62c,} },
+.{ "0xfcd3", &.{0x646,0x62d,} },
+.{ "0xfcd4", &.{0x646,0x62e,} },
+.{ "0xfcd5", &.{0x646,0x645,} },
+.{ "0xfcd6", &.{0x646,0x647,} },
+.{ "0xfcd7", &.{0x647,0x62c,} },
+.{ "0xfcd8", &.{0x647,0x645,} },
+.{ "0xfcd9", &.{0x647,0x670,} },
+.{ "0xfcda", &.{0x64a,0x62c,} },
+.{ "0xfcdb", &.{0x64a,0x62d,} },
+.{ "0xfcdc", &.{0x64a,0x62e,} },
+.{ "0xfcdd", &.{0x64a,0x645,} },
+.{ "0xfcde", &.{0x64a,0x647,} },
+.{ "0xfcdf", &.{0x626,0x645,} },
+.{ "0xfce0", &.{0x626,0x647,} },
+.{ "0xfce1", &.{0x628,0x645,} },
+.{ "0xfce2", &.{0x628,0x647,} },
+.{ "0xfce3", &.{0x62a,0x645,} },
+.{ "0xfce4", &.{0x62a,0x647,} },
+.{ "0xfce5", &.{0x62b,0x645,} },
+.{ "0xfce6", &.{0x62b,0x647,} },
+.{ "0xfce7", &.{0x633,0x645,} },
+.{ "0xfce8", &.{0x633,0x647,} },
+.{ "0xfce9", &.{0x634,0x645,} },
+.{ "0xfcea", &.{0x634,0x647,} },
+.{ "0xfceb", &.{0x643,0x644,} },
+.{ "0xfcec", &.{0x643,0x645,} },
+.{ "0xfced", &.{0x644,0x645,} },
+.{ "0xfcee", &.{0x646,0x645,} },
+.{ "0xfcef", &.{0x646,0x647,} },
+.{ "0xfcf0", &.{0x64a,0x645,} },
+.{ "0xfcf1", &.{0x64a,0x647,} },
+.{ "0xfcf2", &.{0x640,0x64e,0x651,} },
+.{ "0xfcf3", &.{0x640,0x64f,0x651,} },
+.{ "0xfcf4", &.{0x640,0x650,0x651,} },
+.{ "0xfcf5", &.{0x637,0x649,} },
+.{ "0xfcf6", &.{0x637,0x64a,} },
+.{ "0xfcf7", &.{0x639,0x649,} },
+.{ "0xfcf8", &.{0x639,0x64a,} },
+.{ "0xfcf9", &.{0x63a,0x649,} },
+.{ "0xfcfa", &.{0x63a,0x64a,} },
+.{ "0xfcfb", &.{0x633,0x649,} },
+.{ "0xfcfc", &.{0x633,0x64a,} },
+.{ "0xfcfd", &.{0x634,0x649,} },
+.{ "0xfcfe", &.{0x634,0x64a,} },
+.{ "0xfcff", &.{0x62d,0x649,} },
+.{ "0xfd00", &.{0x62d,0x64a,} },
+.{ "0xfd01", &.{0x62c,0x649,} },
+.{ "0xfd02", &.{0x62c,0x64a,} },
+.{ "0xfd03", &.{0x62e,0x649,} },
+.{ "0xfd04", &.{0x62e,0x64a,} },
+.{ "0xfd05", &.{0x635,0x649,} },
+.{ "0xfd06", &.{0x635,0x64a,} },
+.{ "0xfd07", &.{0x636,0x649,} },
+.{ "0xfd08", &.{0x636,0x64a,} },
+.{ "0xfd09", &.{0x634,0x62c,} },
+.{ "0xfd0a", &.{0x634,0x62d,} },
+.{ "0xfd0b", &.{0x634,0x62e,} },
+.{ "0xfd0c", &.{0x634,0x645,} },
+.{ "0xfd0d", &.{0x634,0x631,} },
+.{ "0xfd0e", &.{0x633,0x631,} },
+.{ "0xfd0f", &.{0x635,0x631,} },
+.{ "0xfd10", &.{0x636,0x631,} },
+.{ "0xfd11", &.{0x637,0x649,} },
+.{ "0xfd12", &.{0x637,0x64a,} },
+.{ "0xfd13", &.{0x639,0x649,} },
+.{ "0xfd14", &.{0x639,0x64a,} },
+.{ "0xfd15", &.{0x63a,0x649,} },
+.{ "0xfd16", &.{0x63a,0x64a,} },
+.{ "0xfd17", &.{0x633,0x649,} },
+.{ "0xfd18", &.{0x633,0x64a,} },
+.{ "0xfd19", &.{0x634,0x649,} },
+.{ "0xfd1a", &.{0x634,0x64a,} },
+.{ "0xfd1b", &.{0x62d,0x649,} },
+.{ "0xfd1c", &.{0x62d,0x64a,} },
+.{ "0xfd1d", &.{0x62c,0x649,} },
+.{ "0xfd1e", &.{0x62c,0x64a,} },
+.{ "0xfd1f", &.{0x62e,0x649,} },
+.{ "0xfd20", &.{0x62e,0x64a,} },
+.{ "0xfd21", &.{0x635,0x649,} },
+.{ "0xfd22", &.{0x635,0x64a,} },
+.{ "0xfd23", &.{0x636,0x649,} },
+.{ "0xfd24", &.{0x636,0x64a,} },
+.{ "0xfd25", &.{0x634,0x62c,} },
+.{ "0xfd26", &.{0x634,0x62d,} },
+.{ "0xfd27", &.{0x634,0x62e,} },
+.{ "0xfd28", &.{0x634,0x645,} },
+.{ "0xfd29", &.{0x634,0x631,} },
+.{ "0xfd2a", &.{0x633,0x631,} },
+.{ "0xfd2b", &.{0x635,0x631,} },
+.{ "0xfd2c", &.{0x636,0x631,} },
+.{ "0xfd2d", &.{0x634,0x62c,} },
+.{ "0xfd2e", &.{0x634,0x62d,} },
+.{ "0xfd2f", &.{0x634,0x62e,} },
+.{ "0xfd30", &.{0x634,0x645,} },
+.{ "0xfd31", &.{0x633,0x647,} },
+.{ "0xfd32", &.{0x634,0x647,} },
+.{ "0xfd33", &.{0x637,0x645,} },
+.{ "0xfd34", &.{0x633,0x62c,} },
+.{ "0xfd35", &.{0x633,0x62d,} },
+.{ "0xfd36", &.{0x633,0x62e,} },
+.{ "0xfd37", &.{0x634,0x62c,} },
+.{ "0xfd38", &.{0x634,0x62d,} },
+.{ "0xfd39", &.{0x634,0x62e,} },
+.{ "0xfd3a", &.{0x637,0x645,} },
+.{ "0xfd3b", &.{0x638,0x645,} },
+.{ "0xfd3c", &.{0x627,0x64b,} },
+.{ "0xfd3d", &.{0x627,0x64b,} },
+.{ "0xfd50", &.{0x62a,0x62c,0x645,} },
+.{ "0xfd51", &.{0x62a,0x62d,0x62c,} },
+.{ "0xfd52", &.{0x62a,0x62d,0x62c,} },
+.{ "0xfd53", &.{0x62a,0x62d,0x645,} },
+.{ "0xfd54", &.{0x62a,0x62e,0x645,} },
+.{ "0xfd55", &.{0x62a,0x645,0x62c,} },
+.{ "0xfd56", &.{0x62a,0x645,0x62d,} },
+.{ "0xfd57", &.{0x62a,0x645,0x62e,} },
+.{ "0xfd58", &.{0x62c,0x645,0x62d,} },
+.{ "0xfd59", &.{0x62c,0x645,0x62d,} },
+.{ "0xfd5a", &.{0x62d,0x645,0x64a,} },
+.{ "0xfd5b", &.{0x62d,0x645,0x649,} },
+.{ "0xfd5c", &.{0x633,0x62d,0x62c,} },
+.{ "0xfd5d", &.{0x633,0x62c,0x62d,} },
+.{ "0xfd5e", &.{0x633,0x62c,0x649,} },
+.{ "0xfd5f", &.{0x633,0x645,0x62d,} },
+.{ "0xfd60", &.{0x633,0x645,0x62d,} },
+.{ "0xfd61", &.{0x633,0x645,0x62c,} },
+.{ "0xfd62", &.{0x633,0x645,0x645,} },
+.{ "0xfd63", &.{0x633,0x645,0x645,} },
+.{ "0xfd64", &.{0x635,0x62d,0x62d,} },
+.{ "0xfd65", &.{0x635,0x62d,0x62d,} },
+.{ "0xfd66", &.{0x635,0x645,0x645,} },
+.{ "0xfd67", &.{0x634,0x62d,0x645,} },
+.{ "0xfd68", &.{0x634,0x62d,0x645,} },
+.{ "0xfd69", &.{0x634,0x62c,0x64a,} },
+.{ "0xfd6a", &.{0x634,0x645,0x62e,} },
+.{ "0xfd6b", &.{0x634,0x645,0x62e,} },
+.{ "0xfd6c", &.{0x634,0x645,0x645,} },
+.{ "0xfd6d", &.{0x634,0x645,0x645,} },
+.{ "0xfd6e", &.{0x636,0x62d,0x649,} },
+.{ "0xfd6f", &.{0x636,0x62e,0x645,} },
+.{ "0xfd70", &.{0x636,0x62e,0x645,} },
+.{ "0xfd71", &.{0x637,0x645,0x62d,} },
+.{ "0xfd72", &.{0x637,0x645,0x62d,} },
+.{ "0xfd73", &.{0x637,0x645,0x645,} },
+.{ "0xfd74", &.{0x637,0x645,0x64a,} },
+.{ "0xfd75", &.{0x639,0x62c,0x645,} },
+.{ "0xfd76", &.{0x639,0x645,0x645,} },
+.{ "0xfd77", &.{0x639,0x645,0x645,} },
+.{ "0xfd78", &.{0x639,0x645,0x649,} },
+.{ "0xfd79", &.{0x63a,0x645,0x645,} },
+.{ "0xfd7a", &.{0x63a,0x645,0x64a,} },
+.{ "0xfd7b", &.{0x63a,0x645,0x649,} },
+.{ "0xfd7c", &.{0x641,0x62e,0x645,} },
+.{ "0xfd7d", &.{0x641,0x62e,0x645,} },
+.{ "0xfd7e", &.{0x642,0x645,0x62d,} },
+.{ "0xfd7f", &.{0x642,0x645,0x645,} },
+.{ "0xfd80", &.{0x644,0x62d,0x645,} },
+.{ "0xfd81", &.{0x644,0x62d,0x64a,} },
+.{ "0xfd82", &.{0x644,0x62d,0x649,} },
+.{ "0xfd83", &.{0x644,0x62c,0x62c,} },
+.{ "0xfd84", &.{0x644,0x62c,0x62c,} },
+.{ "0xfd85", &.{0x644,0x62e,0x645,} },
+.{ "0xfd86", &.{0x644,0x62e,0x645,} },
+.{ "0xfd87", &.{0x644,0x645,0x62d,} },
+.{ "0xfd88", &.{0x644,0x645,0x62d,} },
+.{ "0xfd89", &.{0x645,0x62d,0x62c,} },
+.{ "0xfd8a", &.{0x645,0x62d,0x645,} },
+.{ "0xfd8b", &.{0x645,0x62d,0x64a,} },
+.{ "0xfd8c", &.{0x645,0x62c,0x62d,} },
+.{ "0xfd8d", &.{0x645,0x62c,0x645,} },
+.{ "0xfd8e", &.{0x645,0x62e,0x62c,} },
+.{ "0xfd8f", &.{0x645,0x62e,0x645,} },
+.{ "0xfd92", &.{0x645,0x62c,0x62e,} },
+.{ "0xfd93", &.{0x647,0x645,0x62c,} },
+.{ "0xfd94", &.{0x647,0x645,0x645,} },
+.{ "0xfd95", &.{0x646,0x62d,0x645,} },
+.{ "0xfd96", &.{0x646,0x62d,0x649,} },
+.{ "0xfd97", &.{0x646,0x62c,0x645,} },
+.{ "0xfd98", &.{0x646,0x62c,0x645,} },
+.{ "0xfd99", &.{0x646,0x62c,0x649,} },
+.{ "0xfd9a", &.{0x646,0x645,0x64a,} },
+.{ "0xfd9b", &.{0x646,0x645,0x649,} },
+.{ "0xfd9c", &.{0x64a,0x645,0x645,} },
+.{ "0xfd9d", &.{0x64a,0x645,0x645,} },
+.{ "0xfd9e", &.{0x628,0x62e,0x64a,} },
+.{ "0xfd9f", &.{0x62a,0x62c,0x64a,} },
+.{ "0xfda0", &.{0x62a,0x62c,0x649,} },
+.{ "0xfda1", &.{0x62a,0x62e,0x64a,} },
+.{ "0xfda2", &.{0x62a,0x62e,0x649,} },
+.{ "0xfda3", &.{0x62a,0x645,0x64a,} },
+.{ "0xfda4", &.{0x62a,0x645,0x649,} },
+.{ "0xfda5", &.{0x62c,0x645,0x64a,} },
+.{ "0xfda6", &.{0x62c,0x62d,0x649,} },
+.{ "0xfda7", &.{0x62c,0x645,0x649,} },
+.{ "0xfda8", &.{0x633,0x62e,0x649,} },
+.{ "0xfda9", &.{0x635,0x62d,0x64a,} },
+.{ "0xfdaa", &.{0x634,0x62d,0x64a,} },
+.{ "0xfdab", &.{0x636,0x62d,0x64a,} },
+.{ "0xfdac", &.{0x644,0x62c,0x64a,} },
+.{ "0xfdad", &.{0x644,0x645,0x64a,} },
+.{ "0xfdae", &.{0x64a,0x62d,0x64a,} },
+.{ "0xfdaf", &.{0x64a,0x62c,0x64a,} },
+.{ "0xfdb0", &.{0x64a,0x645,0x64a,} },
+.{ "0xfdb1", &.{0x645,0x645,0x64a,} },
+.{ "0xfdb2", &.{0x642,0x645,0x64a,} },
+.{ "0xfdb3", &.{0x646,0x62d,0x64a,} },
+.{ "0xfdb4", &.{0x642,0x645,0x62d,} },
+.{ "0xfdb5", &.{0x644,0x62d,0x645,} },
+.{ "0xfdb6", &.{0x639,0x645,0x64a,} },
+.{ "0xfdb7", &.{0x643,0x645,0x64a,} },
+.{ "0xfdb8", &.{0x646,0x62c,0x62d,} },
+.{ "0xfdb9", &.{0x645,0x62e,0x64a,} },
+.{ "0xfdba", &.{0x644,0x62c,0x645,} },
+.{ "0xfdbb", &.{0x643,0x645,0x645,} },
+.{ "0xfdbc", &.{0x644,0x62c,0x645,} },
+.{ "0xfdbd", &.{0x646,0x62c,0x62d,} },
+.{ "0xfdbe", &.{0x62c,0x62d,0x64a,} },
+.{ "0xfdbf", &.{0x62d,0x62c,0x64a,} },
+.{ "0xfdc0", &.{0x645,0x62c,0x64a,} },
+.{ "0xfdc1", &.{0x641,0x645,0x64a,} },
+.{ "0xfdc2", &.{0x628,0x62d,0x64a,} },
+.{ "0xfdc3", &.{0x643,0x645,0x645,} },
+.{ "0xfdc4", &.{0x639,0x62c,0x645,} },
+.{ "0xfdc5", &.{0x635,0x645,0x645,} },
+.{ "0xfdc6", &.{0x633,0x62e,0x64a,} },
+.{ "0xfdc7", &.{0x646,0x62c,0x64a,} },
+.{ "0xfdf0", &.{0x635,0x644,0x6d2,} },
+.{ "0xfdf1", &.{0x642,0x644,0x6d2,} },
+.{ "0xfdf2", &.{0x627,0x644,0x644,0x647,} },
+.{ "0xfdf3", &.{0x627,0x643,0x628,0x631,} },
+.{ "0xfdf4", &.{0x645,0x62d,0x645,0x62f,} },
+.{ "0xfdf5", &.{0x635,0x644,0x639,0x645,} },
+.{ "0xfdf6", &.{0x631,0x633,0x648,0x644,} },
+.{ "0xfdf7", &.{0x639,0x644,0x64a,0x647,} },
+.{ "0xfdf8", &.{0x648,0x633,0x644,0x645,} },
+.{ "0xfdf9", &.{0x635,0x644,0x649,} },
+.{ "0xfdfa", &.{0x635,0x644,0x649,0x20,0x627,0x644,0x644,0x647,0x20,0x639,0x644,0x64a,0x647,0x20,0x648,0x633,0x644,0x645,} },
+.{ "0xfdfb", &.{0x62c,0x644,0x20,0x62c,0x644,0x627,0x644,0x647,} },
+.{ "0xfdfc", &.{0x631,0x6cc,0x627,0x644,} },
+.{ "0xfe10", &.{0x2c,} },
+.{ "0xfe11", &.{0x3001,} },
+.{ "0xfe12", &.{0x3002,} },
+.{ "0xfe13", &.{0x3a,} },
+.{ "0xfe14", &.{0x3b,} },
+.{ "0xfe15", &.{0x21,} },
+.{ "0xfe16", &.{0x3f,} },
+.{ "0xfe17", &.{0x3016,} },
+.{ "0xfe18", &.{0x3017,} },
+.{ "0xfe19", &.{0x2026,} },
+.{ "0xfe30", &.{0x2025,} },
+.{ "0xfe31", &.{0x2014,} },
+.{ "0xfe32", &.{0x2013,} },
+.{ "0xfe33", &.{0x5f,} },
+.{ "0xfe34", &.{0x5f,} },
+.{ "0xfe35", &.{0x28,} },
+.{ "0xfe36", &.{0x29,} },
+.{ "0xfe37", &.{0x7b,} },
+.{ "0xfe38", &.{0x7d,} },
+.{ "0xfe39", &.{0x3014,} },
+.{ "0xfe3a", &.{0x3015,} },
+.{ "0xfe3b", &.{0x3010,} },
+.{ "0xfe3c", &.{0x3011,} },
+.{ "0xfe3d", &.{0x300a,} },
+.{ "0xfe3e", &.{0x300b,} },
+.{ "0xfe3f", &.{0x3008,} },
+.{ "0xfe40", &.{0x3009,} },
+.{ "0xfe41", &.{0x300c,} },
+.{ "0xfe42", &.{0x300d,} },
+.{ "0xfe43", &.{0x300e,} },
+.{ "0xfe44", &.{0x300f,} },
+.{ "0xfe47", &.{0x5b,} },
+.{ "0xfe48", &.{0x5d,} },
+.{ "0xfe49", &.{0x203e,} },
+.{ "0xfe4a", &.{0x203e,} },
+.{ "0xfe4b", &.{0x203e,} },
+.{ "0xfe4c", &.{0x203e,} },
+.{ "0xfe4d", &.{0x5f,} },
+.{ "0xfe4e", &.{0x5f,} },
+.{ "0xfe4f", &.{0x5f,} },
+.{ "0xfe50", &.{0x2c,} },
+.{ "0xfe51", &.{0x3001,} },
+.{ "0xfe52", &.{0x2e,} },
+.{ "0xfe54", &.{0x3b,} },
+.{ "0xfe55", &.{0x3a,} },
+.{ "0xfe56", &.{0x3f,} },
+.{ "0xfe57", &.{0x21,} },
+.{ "0xfe58", &.{0x2014,} },
+.{ "0xfe59", &.{0x28,} },
+.{ "0xfe5a", &.{0x29,} },
+.{ "0xfe5b", &.{0x7b,} },
+.{ "0xfe5c", &.{0x7d,} },
+.{ "0xfe5d", &.{0x3014,} },
+.{ "0xfe5e", &.{0x3015,} },
+.{ "0xfe5f", &.{0x23,} },
+.{ "0xfe60", &.{0x26,} },
+.{ "0xfe61", &.{0x2a,} },
+.{ "0xfe62", &.{0x2b,} },
+.{ "0xfe63", &.{0x2d,} },
+.{ "0xfe64", &.{0x3c,} },
+.{ "0xfe65", &.{0x3e,} },
+.{ "0xfe66", &.{0x3d,} },
+.{ "0xfe68", &.{0x5c,} },
+.{ "0xfe69", &.{0x24,} },
+.{ "0xfe6a", &.{0x25,} },
+.{ "0xfe6b", &.{0x40,} },
+.{ "0xfe70", &.{0x20,0x64b,} },
+.{ "0xfe71", &.{0x640,0x64b,} },
+.{ "0xfe72", &.{0x20,0x64c,} },
+.{ "0xfe74", &.{0x20,0x64d,} },
+.{ "0xfe76", &.{0x20,0x64e,} },
+.{ "0xfe77", &.{0x640,0x64e,} },
+.{ "0xfe78", &.{0x20,0x64f,} },
+.{ "0xfe79", &.{0x640,0x64f,} },
+.{ "0xfe7a", &.{0x20,0x650,} },
+.{ "0xfe7b", &.{0x640,0x650,} },
+.{ "0xfe7c", &.{0x20,0x651,} },
+.{ "0xfe7d", &.{0x640,0x651,} },
+.{ "0xfe7e", &.{0x20,0x652,} },
+.{ "0xfe7f", &.{0x640,0x652,} },
+.{ "0xfe80", &.{0x621,} },
+.{ "0xfe81", &.{0x622,} },
+.{ "0xfe82", &.{0x622,} },
+.{ "0xfe83", &.{0x623,} },
+.{ "0xfe84", &.{0x623,} },
+.{ "0xfe85", &.{0x624,} },
+.{ "0xfe86", &.{0x624,} },
+.{ "0xfe87", &.{0x625,} },
+.{ "0xfe88", &.{0x625,} },
+.{ "0xfe89", &.{0x626,} },
+.{ "0xfe8a", &.{0x626,} },
+.{ "0xfe8b", &.{0x626,} },
+.{ "0xfe8c", &.{0x626,} },
+.{ "0xfe8d", &.{0x627,} },
+.{ "0xfe8e", &.{0x627,} },
+.{ "0xfe8f", &.{0x628,} },
+.{ "0xfe90", &.{0x628,} },
+.{ "0xfe91", &.{0x628,} },
+.{ "0xfe92", &.{0x628,} },
+.{ "0xfe93", &.{0x629,} },
+.{ "0xfe94", &.{0x629,} },
+.{ "0xfe95", &.{0x62a,} },
+.{ "0xfe96", &.{0x62a,} },
+.{ "0xfe97", &.{0x62a,} },
+.{ "0xfe98", &.{0x62a,} },
+.{ "0xfe99", &.{0x62b,} },
+.{ "0xfe9a", &.{0x62b,} },
+.{ "0xfe9b", &.{0x62b,} },
+.{ "0xfe9c", &.{0x62b,} },
+.{ "0xfe9d", &.{0x62c,} },
+.{ "0xfe9e", &.{0x62c,} },
+.{ "0xfe9f", &.{0x62c,} },
+.{ "0xfea0", &.{0x62c,} },
+.{ "0xfea1", &.{0x62d,} },
+.{ "0xfea2", &.{0x62d,} },
+.{ "0xfea3", &.{0x62d,} },
+.{ "0xfea4", &.{0x62d,} },
+.{ "0xfea5", &.{0x62e,} },
+.{ "0xfea6", &.{0x62e,} },
+.{ "0xfea7", &.{0x62e,} },
+.{ "0xfea8", &.{0x62e,} },
+.{ "0xfea9", &.{0x62f,} },
+.{ "0xfeaa", &.{0x62f,} },
+.{ "0xfeab", &.{0x630,} },
+.{ "0xfeac", &.{0x630,} },
+.{ "0xfead", &.{0x631,} },
+.{ "0xfeae", &.{0x631,} },
+.{ "0xfeaf", &.{0x632,} },
+.{ "0xfeb0", &.{0x632,} },
+.{ "0xfeb1", &.{0x633,} },
+.{ "0xfeb2", &.{0x633,} },
+.{ "0xfeb3", &.{0x633,} },
+.{ "0xfeb4", &.{0x633,} },
+.{ "0xfeb5", &.{0x634,} },
+.{ "0xfeb6", &.{0x634,} },
+.{ "0xfeb7", &.{0x634,} },
+.{ "0xfeb8", &.{0x634,} },
+.{ "0xfeb9", &.{0x635,} },
+.{ "0xfeba", &.{0x635,} },
+.{ "0xfebb", &.{0x635,} },
+.{ "0xfebc", &.{0x635,} },
+.{ "0xfebd", &.{0x636,} },
+.{ "0xfebe", &.{0x636,} },
+.{ "0xfebf", &.{0x636,} },
+.{ "0xfec0", &.{0x636,} },
+.{ "0xfec1", &.{0x637,} },
+.{ "0xfec2", &.{0x637,} },
+.{ "0xfec3", &.{0x637,} },
+.{ "0xfec4", &.{0x637,} },
+.{ "0xfec5", &.{0x638,} },
+.{ "0xfec6", &.{0x638,} },
+.{ "0xfec7", &.{0x638,} },
+.{ "0xfec8", &.{0x638,} },
+.{ "0xfec9", &.{0x639,} },
+.{ "0xfeca", &.{0x639,} },
+.{ "0xfecb", &.{0x639,} },
+.{ "0xfecc", &.{0x639,} },
+.{ "0xfecd", &.{0x63a,} },
+.{ "0xfece", &.{0x63a,} },
+.{ "0xfecf", &.{0x63a,} },
+.{ "0xfed0", &.{0x63a,} },
+.{ "0xfed1", &.{0x641,} },
+.{ "0xfed2", &.{0x641,} },
+.{ "0xfed3", &.{0x641,} },
+.{ "0xfed4", &.{0x641,} },
+.{ "0xfed5", &.{0x642,} },
+.{ "0xfed6", &.{0x642,} },
+.{ "0xfed7", &.{0x642,} },
+.{ "0xfed8", &.{0x642,} },
+.{ "0xfed9", &.{0x643,} },
+.{ "0xfeda", &.{0x643,} },
+.{ "0xfedb", &.{0x643,} },
+.{ "0xfedc", &.{0x643,} },
+.{ "0xfedd", &.{0x644,} },
+.{ "0xfede", &.{0x644,} },
+.{ "0xfedf", &.{0x644,} },
+.{ "0xfee0", &.{0x644,} },
+.{ "0xfee1", &.{0x645,} },
+.{ "0xfee2", &.{0x645,} },
+.{ "0xfee3", &.{0x645,} },
+.{ "0xfee4", &.{0x645,} },
+.{ "0xfee5", &.{0x646,} },
+.{ "0xfee6", &.{0x646,} },
+.{ "0xfee7", &.{0x646,} },
+.{ "0xfee8", &.{0x646,} },
+.{ "0xfee9", &.{0x647,} },
+.{ "0xfeea", &.{0x647,} },
+.{ "0xfeeb", &.{0x647,} },
+.{ "0xfeec", &.{0x647,} },
+.{ "0xfeed", &.{0x648,} },
+.{ "0xfeee", &.{0x648,} },
+.{ "0xfeef", &.{0x649,} },
+.{ "0xfef0", &.{0x649,} },
+.{ "0xfef1", &.{0x64a,} },
+.{ "0xfef2", &.{0x64a,} },
+.{ "0xfef3", &.{0x64a,} },
+.{ "0xfef4", &.{0x64a,} },
+.{ "0xfef5", &.{0x644,0x622,} },
+.{ "0xfef6", &.{0x644,0x622,} },
+.{ "0xfef7", &.{0x644,0x623,} },
+.{ "0xfef8", &.{0x644,0x623,} },
+.{ "0xfef9", &.{0x644,0x625,} },
+.{ "0xfefa", &.{0x644,0x625,} },
+.{ "0xfefb", &.{0x644,0x627,} },
+.{ "0xfefc", &.{0x644,0x627,} },
+.{ "0xff01", &.{0x21,} },
+.{ "0xff02", &.{0x22,} },
+.{ "0xff03", &.{0x23,} },
+.{ "0xff04", &.{0x24,} },
+.{ "0xff05", &.{0x25,} },
+.{ "0xff06", &.{0x26,} },
+.{ "0xff07", &.{0x27,} },
+.{ "0xff08", &.{0x28,} },
+.{ "0xff09", &.{0x29,} },
+.{ "0xff0a", &.{0x2a,} },
+.{ "0xff0b", &.{0x2b,} },
+.{ "0xff0c", &.{0x2c,} },
+.{ "0xff0d", &.{0x2d,} },
+.{ "0xff0e", &.{0x2e,} },
+.{ "0xff0f", &.{0x2f,} },
+.{ "0xff10", &.{0x30,} },
+.{ "0xff11", &.{0x31,} },
+.{ "0xff12", &.{0x32,} },
+.{ "0xff13", &.{0x33,} },
+.{ "0xff14", &.{0x34,} },
+.{ "0xff15", &.{0x35,} },
+.{ "0xff16", &.{0x36,} },
+.{ "0xff17", &.{0x37,} },
+.{ "0xff18", &.{0x38,} },
+.{ "0xff19", &.{0x39,} },
+.{ "0xff1a", &.{0x3a,} },
+.{ "0xff1b", &.{0x3b,} },
+.{ "0xff1c", &.{0x3c,} },
+.{ "0xff1d", &.{0x3d,} },
+.{ "0xff1e", &.{0x3e,} },
+.{ "0xff1f", &.{0x3f,} },
+.{ "0xff20", &.{0x40,} },
+.{ "0xff21", &.{0x41,} },
+.{ "0xff22", &.{0x42,} },
+.{ "0xff23", &.{0x43,} },
+.{ "0xff24", &.{0x44,} },
+.{ "0xff25", &.{0x45,} },
+.{ "0xff26", &.{0x46,} },
+.{ "0xff27", &.{0x47,} },
+.{ "0xff28", &.{0x48,} },
+.{ "0xff29", &.{0x49,} },
+.{ "0xff2a", &.{0x4a,} },
+.{ "0xff2b", &.{0x4b,} },
+.{ "0xff2c", &.{0x4c,} },
+.{ "0xff2d", &.{0x4d,} },
+.{ "0xff2e", &.{0x4e,} },
+.{ "0xff2f", &.{0x4f,} },
+.{ "0xff30", &.{0x50,} },
+.{ "0xff31", &.{0x51,} },
+.{ "0xff32", &.{0x52,} },
+.{ "0xff33", &.{0x53,} },
+.{ "0xff34", &.{0x54,} },
+.{ "0xff35", &.{0x55,} },
+.{ "0xff36", &.{0x56,} },
+.{ "0xff37", &.{0x57,} },
+.{ "0xff38", &.{0x58,} },
+.{ "0xff39", &.{0x59,} },
+.{ "0xff3a", &.{0x5a,} },
+.{ "0xff3b", &.{0x5b,} },
+.{ "0xff3c", &.{0x5c,} },
+.{ "0xff3d", &.{0x5d,} },
+.{ "0xff3e", &.{0x5e,} },
+.{ "0xff3f", &.{0x5f,} },
+.{ "0xff40", &.{0x60,} },
+.{ "0xff41", &.{0x61,} },
+.{ "0xff42", &.{0x62,} },
+.{ "0xff43", &.{0x63,} },
+.{ "0xff44", &.{0x64,} },
+.{ "0xff45", &.{0x65,} },
+.{ "0xff46", &.{0x66,} },
+.{ "0xff47", &.{0x67,} },
+.{ "0xff48", &.{0x68,} },
+.{ "0xff49", &.{0x69,} },
+.{ "0xff4a", &.{0x6a,} },
+.{ "0xff4b", &.{0x6b,} },
+.{ "0xff4c", &.{0x6c,} },
+.{ "0xff4d", &.{0x6d,} },
+.{ "0xff4e", &.{0x6e,} },
+.{ "0xff4f", &.{0x6f,} },
+.{ "0xff50", &.{0x70,} },
+.{ "0xff51", &.{0x71,} },
+.{ "0xff52", &.{0x72,} },
+.{ "0xff53", &.{0x73,} },
+.{ "0xff54", &.{0x74,} },
+.{ "0xff55", &.{0x75,} },
+.{ "0xff56", &.{0x76,} },
+.{ "0xff57", &.{0x77,} },
+.{ "0xff58", &.{0x78,} },
+.{ "0xff59", &.{0x79,} },
+.{ "0xff5a", &.{0x7a,} },
+.{ "0xff5b", &.{0x7b,} },
+.{ "0xff5c", &.{0x7c,} },
+.{ "0xff5d", &.{0x7d,} },
+.{ "0xff5e", &.{0x7e,} },
+.{ "0xff5f", &.{0x2985,} },
+.{ "0xff60", &.{0x2986,} },
+.{ "0xff61", &.{0x3002,} },
+.{ "0xff62", &.{0x300c,} },
+.{ "0xff63", &.{0x300d,} },
+.{ "0xff64", &.{0x3001,} },
+.{ "0xff65", &.{0x30fb,} },
+.{ "0xff66", &.{0x30f2,} },
+.{ "0xff67", &.{0x30a1,} },
+.{ "0xff68", &.{0x30a3,} },
+.{ "0xff69", &.{0x30a5,} },
+.{ "0xff6a", &.{0x30a7,} },
+.{ "0xff6b", &.{0x30a9,} },
+.{ "0xff6c", &.{0x30e3,} },
+.{ "0xff6d", &.{0x30e5,} },
+.{ "0xff6e", &.{0x30e7,} },
+.{ "0xff6f", &.{0x30c3,} },
+.{ "0xff70", &.{0x30fc,} },
+.{ "0xff71", &.{0x30a2,} },
+.{ "0xff72", &.{0x30a4,} },
+.{ "0xff73", &.{0x30a6,} },
+.{ "0xff74", &.{0x30a8,} },
+.{ "0xff75", &.{0x30aa,} },
+.{ "0xff76", &.{0x30ab,} },
+.{ "0xff77", &.{0x30ad,} },
+.{ "0xff78", &.{0x30af,} },
+.{ "0xff79", &.{0x30b1,} },
+.{ "0xff7a", &.{0x30b3,} },
+.{ "0xff7b", &.{0x30b5,} },
+.{ "0xff7c", &.{0x30b7,} },
+.{ "0xff7d", &.{0x30b9,} },
+.{ "0xff7e", &.{0x30bb,} },
+.{ "0xff7f", &.{0x30bd,} },
+.{ "0xff80", &.{0x30bf,} },
+.{ "0xff81", &.{0x30c1,} },
+.{ "0xff82", &.{0x30c4,} },
+.{ "0xff83", &.{0x30c6,} },
+.{ "0xff84", &.{0x30c8,} },
+.{ "0xff85", &.{0x30ca,} },
+.{ "0xff86", &.{0x30cb,} },
+.{ "0xff87", &.{0x30cc,} },
+.{ "0xff88", &.{0x30cd,} },
+.{ "0xff89", &.{0x30ce,} },
+.{ "0xff8a", &.{0x30cf,} },
+.{ "0xff8b", &.{0x30d2,} },
+.{ "0xff8c", &.{0x30d5,} },
+.{ "0xff8d", &.{0x30d8,} },
+.{ "0xff8e", &.{0x30db,} },
+.{ "0xff8f", &.{0x30de,} },
+.{ "0xff90", &.{0x30df,} },
+.{ "0xff91", &.{0x30e0,} },
+.{ "0xff92", &.{0x30e1,} },
+.{ "0xff93", &.{0x30e2,} },
+.{ "0xff94", &.{0x30e4,} },
+.{ "0xff95", &.{0x30e6,} },
+.{ "0xff96", &.{0x30e8,} },
+.{ "0xff97", &.{0x30e9,} },
+.{ "0xff98", &.{0x30ea,} },
+.{ "0xff99", &.{0x30eb,} },
+.{ "0xff9a", &.{0x30ec,} },
+.{ "0xff9b", &.{0x30ed,} },
+.{ "0xff9c", &.{0x30ef,} },
+.{ "0xff9d", &.{0x30f3,} },
+.{ "0xff9e", &.{0x3099,} },
+.{ "0xff9f", &.{0x309a,} },
+.{ "0xffa0", &.{0x3164,} },
+.{ "0xffa1", &.{0x3131,} },
+.{ "0xffa2", &.{0x3132,} },
+.{ "0xffa3", &.{0x3133,} },
+.{ "0xffa4", &.{0x3134,} },
+.{ "0xffa5", &.{0x3135,} },
+.{ "0xffa6", &.{0x3136,} },
+.{ "0xffa7", &.{0x3137,} },
+.{ "0xffa8", &.{0x3138,} },
+.{ "0xffa9", &.{0x3139,} },
+.{ "0xffaa", &.{0x313a,} },
+.{ "0xffab", &.{0x313b,} },
+.{ "0xffac", &.{0x313c,} },
+.{ "0xffad", &.{0x313d,} },
+.{ "0xffae", &.{0x313e,} },
+.{ "0xffaf", &.{0x313f,} },
+.{ "0xffb0", &.{0x3140,} },
+.{ "0xffb1", &.{0x3141,} },
+.{ "0xffb2", &.{0x3142,} },
+.{ "0xffb3", &.{0x3143,} },
+.{ "0xffb4", &.{0x3144,} },
+.{ "0xffb5", &.{0x3145,} },
+.{ "0xffb6", &.{0x3146,} },
+.{ "0xffb7", &.{0x3147,} },
+.{ "0xffb8", &.{0x3148,} },
+.{ "0xffb9", &.{0x3149,} },
+.{ "0xffba", &.{0x314a,} },
+.{ "0xffbb", &.{0x314b,} },
+.{ "0xffbc", &.{0x314c,} },
+.{ "0xffbd", &.{0x314d,} },
+.{ "0xffbe", &.{0x314e,} },
+.{ "0xffc2", &.{0x314f,} },
+.{ "0xffc3", &.{0x3150,} },
+.{ "0xffc4", &.{0x3151,} },
+.{ "0xffc5", &.{0x3152,} },
+.{ "0xffc6", &.{0x3153,} },
+.{ "0xffc7", &.{0x3154,} },
+.{ "0xffca", &.{0x3155,} },
+.{ "0xffcb", &.{0x3156,} },
+.{ "0xffcc", &.{0x3157,} },
+.{ "0xffcd", &.{0x3158,} },
+.{ "0xffce", &.{0x3159,} },
+.{ "0xffcf", &.{0x315a,} },
+.{ "0xffd2", &.{0x315b,} },
+.{ "0xffd3", &.{0x315c,} },
+.{ "0xffd4", &.{0x315d,} },
+.{ "0xffd5", &.{0x315e,} },
+.{ "0xffd6", &.{0x315f,} },
+.{ "0xffd7", &.{0x3160,} },
+.{ "0xffda", &.{0x3161,} },
+.{ "0xffdb", &.{0x3162,} },
+.{ "0xffdc", &.{0x3163,} },
+.{ "0xffe0", &.{0xa2,} },
+.{ "0xffe1", &.{0xa3,} },
+.{ "0xffe2", &.{0xac,} },
+.{ "0xffe3", &.{0xaf,} },
+.{ "0xffe4", &.{0xa6,} },
+.{ "0xffe5", &.{0xa5,} },
+.{ "0xffe6", &.{0x20a9,} },
+.{ "0xffe8", &.{0x2502,} },
+.{ "0xffe9", &.{0x2190,} },
+.{ "0xffea", &.{0x2191,} },
+.{ "0xffeb", &.{0x2192,} },
+.{ "0xffec", &.{0x2193,} },
+.{ "0xffed", &.{0x25a0,} },
+.{ "0xffee", &.{0x25cb,} },
+.{ "0x10781", &.{0x2d0,} },
+.{ "0x10782", &.{0x2d1,} },
+.{ "0x10783", &.{0xe6,} },
+.{ "0x10784", &.{0x299,} },
+.{ "0x10785", &.{0x253,} },
+.{ "0x10787", &.{0x2a3,} },
+.{ "0x10788", &.{0xab66,} },
+.{ "0x10789", &.{0x2a5,} },
+.{ "0x1078a", &.{0x2a4,} },
+.{ "0x1078b", &.{0x256,} },
+.{ "0x1078c", &.{0x257,} },
+.{ "0x1078d", &.{0x1d91,} },
+.{ "0x1078e", &.{0x258,} },
+.{ "0x1078f", &.{0x25e,} },
+.{ "0x10790", &.{0x2a9,} },
+.{ "0x10791", &.{0x264,} },
+.{ "0x10792", &.{0x262,} },
+.{ "0x10793", &.{0x260,} },
+.{ "0x10794", &.{0x29b,} },
+.{ "0x10795", &.{0x127,} },
+.{ "0x10796", &.{0x29c,} },
+.{ "0x10797", &.{0x267,} },
+.{ "0x10798", &.{0x284,} },
+.{ "0x10799", &.{0x2aa,} },
+.{ "0x1079a", &.{0x2ab,} },
+.{ "0x1079b", &.{0x26c,} },
+.{ "0x1079c", &.{0x1df04,} },
+.{ "0x1079d", &.{0xa78e,} },
+.{ "0x1079e", &.{0x26e,} },
+.{ "0x1079f", &.{0x1df05,} },
+.{ "0x107a0", &.{0x28e,} },
+.{ "0x107a1", &.{0x1df06,} },
+.{ "0x107a2", &.{0xf8,} },
+.{ "0x107a3", &.{0x276,} },
+.{ "0x107a4", &.{0x277,} },
+.{ "0x107a5", &.{0x71,} },
+.{ "0x107a6", &.{0x27a,} },
+.{ "0x107a7", &.{0x1df08,} },
+.{ "0x107a8", &.{0x27d,} },
+.{ "0x107a9", &.{0x27e,} },
+.{ "0x107aa", &.{0x280,} },
+.{ "0x107ab", &.{0x2a8,} },
+.{ "0x107ac", &.{0x2a6,} },
+.{ "0x107ad", &.{0xab67,} },
+.{ "0x107ae", &.{0x2a7,} },
+.{ "0x107af", &.{0x288,} },
+.{ "0x107b0", &.{0x2c71,} },
+.{ "0x107b2", &.{0x28f,} },
+.{ "0x107b3", &.{0x2a1,} },
+.{ "0x107b4", &.{0x2a2,} },
+.{ "0x107b5", &.{0x298,} },
+.{ "0x107b6", &.{0x1c0,} },
+.{ "0x107b7", &.{0x1c1,} },
+.{ "0x107b8", &.{0x1c2,} },
+.{ "0x107b9", &.{0x1df0a,} },
+.{ "0x107ba", &.{0x1df1e,} },
+.{ "0x1ccd6", &.{0x41,} },
+.{ "0x1ccd7", &.{0x42,} },
+.{ "0x1ccd8", &.{0x43,} },
+.{ "0x1ccd9", &.{0x44,} },
+.{ "0x1ccda", &.{0x45,} },
+.{ "0x1ccdb", &.{0x46,} },
+.{ "0x1ccdc", &.{0x47,} },
+.{ "0x1ccdd", &.{0x48,} },
+.{ "0x1ccde", &.{0x49,} },
+.{ "0x1ccdf", &.{0x4a,} },
+.{ "0x1cce0", &.{0x4b,} },
+.{ "0x1cce1", &.{0x4c,} },
+.{ "0x1cce2", &.{0x4d,} },
+.{ "0x1cce3", &.{0x4e,} },
+.{ "0x1cce4", &.{0x4f,} },
+.{ "0x1cce5", &.{0x50,} },
+.{ "0x1cce6", &.{0x51,} },
+.{ "0x1cce7", &.{0x52,} },
+.{ "0x1cce8", &.{0x53,} },
+.{ "0x1cce9", &.{0x54,} },
+.{ "0x1ccea", &.{0x55,} },
+.{ "0x1cceb", &.{0x56,} },
+.{ "0x1ccec", &.{0x57,} },
+.{ "0x1cced", &.{0x58,} },
+.{ "0x1ccee", &.{0x59,} },
+.{ "0x1ccef", &.{0x5a,} },
+.{ "0x1ccf0", &.{0x30,} },
+.{ "0x1ccf1", &.{0x31,} },
+.{ "0x1ccf2", &.{0x32,} },
+.{ "0x1ccf3", &.{0x33,} },
+.{ "0x1ccf4", &.{0x34,} },
+.{ "0x1ccf5", &.{0x35,} },
+.{ "0x1ccf6", &.{0x36,} },
+.{ "0x1ccf7", &.{0x37,} },
+.{ "0x1ccf8", &.{0x38,} },
+.{ "0x1ccf9", &.{0x39,} },
+.{ "0x1d400", &.{0x41,} },
+.{ "0x1d401", &.{0x42,} },
+.{ "0x1d402", &.{0x43,} },
+.{ "0x1d403", &.{0x44,} },
+.{ "0x1d404", &.{0x45,} },
+.{ "0x1d405", &.{0x46,} },
+.{ "0x1d406", &.{0x47,} },
+.{ "0x1d407", &.{0x48,} },
+.{ "0x1d408", &.{0x49,} },
+.{ "0x1d409", &.{0x4a,} },
+.{ "0x1d40a", &.{0x4b,} },
+.{ "0x1d40b", &.{0x4c,} },
+.{ "0x1d40c", &.{0x4d,} },
+.{ "0x1d40d", &.{0x4e,} },
+.{ "0x1d40e", &.{0x4f,} },
+.{ "0x1d40f", &.{0x50,} },
+.{ "0x1d410", &.{0x51,} },
+.{ "0x1d411", &.{0x52,} },
+.{ "0x1d412", &.{0x53,} },
+.{ "0x1d413", &.{0x54,} },
+.{ "0x1d414", &.{0x55,} },
+.{ "0x1d415", &.{0x56,} },
+.{ "0x1d416", &.{0x57,} },
+.{ "0x1d417", &.{0x58,} },
+.{ "0x1d418", &.{0x59,} },
+.{ "0x1d419", &.{0x5a,} },
+.{ "0x1d41a", &.{0x61,} },
+.{ "0x1d41b", &.{0x62,} },
+.{ "0x1d41c", &.{0x63,} },
+.{ "0x1d41d", &.{0x64,} },
+.{ "0x1d41e", &.{0x65,} },
+.{ "0x1d41f", &.{0x66,} },
+.{ "0x1d420", &.{0x67,} },
+.{ "0x1d421", &.{0x68,} },
+.{ "0x1d422", &.{0x69,} },
+.{ "0x1d423", &.{0x6a,} },
+.{ "0x1d424", &.{0x6b,} },
+.{ "0x1d425", &.{0x6c,} },
+.{ "0x1d426", &.{0x6d,} },
+.{ "0x1d427", &.{0x6e,} },
+.{ "0x1d428", &.{0x6f,} },
+.{ "0x1d429", &.{0x70,} },
+.{ "0x1d42a", &.{0x71,} },
+.{ "0x1d42b", &.{0x72,} },
+.{ "0x1d42c", &.{0x73,} },
+.{ "0x1d42d", &.{0x74,} },
+.{ "0x1d42e", &.{0x75,} },
+.{ "0x1d42f", &.{0x76,} },
+.{ "0x1d430", &.{0x77,} },
+.{ "0x1d431", &.{0x78,} },
+.{ "0x1d432", &.{0x79,} },
+.{ "0x1d433", &.{0x7a,} },
+.{ "0x1d434", &.{0x41,} },
+.{ "0x1d435", &.{0x42,} },
+.{ "0x1d436", &.{0x43,} },
+.{ "0x1d437", &.{0x44,} },
+.{ "0x1d438", &.{0x45,} },
+.{ "0x1d439", &.{0x46,} },
+.{ "0x1d43a", &.{0x47,} },
+.{ "0x1d43b", &.{0x48,} },
+.{ "0x1d43c", &.{0x49,} },
+.{ "0x1d43d", &.{0x4a,} },
+.{ "0x1d43e", &.{0x4b,} },
+.{ "0x1d43f", &.{0x4c,} },
+.{ "0x1d440", &.{0x4d,} },
+.{ "0x1d441", &.{0x4e,} },
+.{ "0x1d442", &.{0x4f,} },
+.{ "0x1d443", &.{0x50,} },
+.{ "0x1d444", &.{0x51,} },
+.{ "0x1d445", &.{0x52,} },
+.{ "0x1d446", &.{0x53,} },
+.{ "0x1d447", &.{0x54,} },
+.{ "0x1d448", &.{0x55,} },
+.{ "0x1d449", &.{0x56,} },
+.{ "0x1d44a", &.{0x57,} },
+.{ "0x1d44b", &.{0x58,} },
+.{ "0x1d44c", &.{0x59,} },
+.{ "0x1d44d", &.{0x5a,} },
+.{ "0x1d44e", &.{0x61,} },
+.{ "0x1d44f", &.{0x62,} },
+.{ "0x1d450", &.{0x63,} },
+.{ "0x1d451", &.{0x64,} },
+.{ "0x1d452", &.{0x65,} },
+.{ "0x1d453", &.{0x66,} },
+.{ "0x1d454", &.{0x67,} },
+.{ "0x1d456", &.{0x69,} },
+.{ "0x1d457", &.{0x6a,} },
+.{ "0x1d458", &.{0x6b,} },
+.{ "0x1d459", &.{0x6c,} },
+.{ "0x1d45a", &.{0x6d,} },
+.{ "0x1d45b", &.{0x6e,} },
+.{ "0x1d45c", &.{0x6f,} },
+.{ "0x1d45d", &.{0x70,} },
+.{ "0x1d45e", &.{0x71,} },
+.{ "0x1d45f", &.{0x72,} },
+.{ "0x1d460", &.{0x73,} },
+.{ "0x1d461", &.{0x74,} },
+.{ "0x1d462", &.{0x75,} },
+.{ "0x1d463", &.{0x76,} },
+.{ "0x1d464", &.{0x77,} },
+.{ "0x1d465", &.{0x78,} },
+.{ "0x1d466", &.{0x79,} },
+.{ "0x1d467", &.{0x7a,} },
+.{ "0x1d468", &.{0x41,} },
+.{ "0x1d469", &.{0x42,} },
+.{ "0x1d46a", &.{0x43,} },
+.{ "0x1d46b", &.{0x44,} },
+.{ "0x1d46c", &.{0x45,} },
+.{ "0x1d46d", &.{0x46,} },
+.{ "0x1d46e", &.{0x47,} },
+.{ "0x1d46f", &.{0x48,} },
+.{ "0x1d470", &.{0x49,} },
+.{ "0x1d471", &.{0x4a,} },
+.{ "0x1d472", &.{0x4b,} },
+.{ "0x1d473", &.{0x4c,} },
+.{ "0x1d474", &.{0x4d,} },
+.{ "0x1d475", &.{0x4e,} },
+.{ "0x1d476", &.{0x4f,} },
+.{ "0x1d477", &.{0x50,} },
+.{ "0x1d478", &.{0x51,} },
+.{ "0x1d479", &.{0x52,} },
+.{ "0x1d47a", &.{0x53,} },
+.{ "0x1d47b", &.{0x54,} },
+.{ "0x1d47c", &.{0x55,} },
+.{ "0x1d47d", &.{0x56,} },
+.{ "0x1d47e", &.{0x57,} },
+.{ "0x1d47f", &.{0x58,} },
+.{ "0x1d480", &.{0x59,} },
+.{ "0x1d481", &.{0x5a,} },
+.{ "0x1d482", &.{0x61,} },
+.{ "0x1d483", &.{0x62,} },
+.{ "0x1d484", &.{0x63,} },
+.{ "0x1d485", &.{0x64,} },
+.{ "0x1d486", &.{0x65,} },
+.{ "0x1d487", &.{0x66,} },
+.{ "0x1d488", &.{0x67,} },
+.{ "0x1d489", &.{0x68,} },
+.{ "0x1d48a", &.{0x69,} },
+.{ "0x1d48b", &.{0x6a,} },
+.{ "0x1d48c", &.{0x6b,} },
+.{ "0x1d48d", &.{0x6c,} },
+.{ "0x1d48e", &.{0x6d,} },
+.{ "0x1d48f", &.{0x6e,} },
+.{ "0x1d490", &.{0x6f,} },
+.{ "0x1d491", &.{0x70,} },
+.{ "0x1d492", &.{0x71,} },
+.{ "0x1d493", &.{0x72,} },
+.{ "0x1d494", &.{0x73,} },
+.{ "0x1d495", &.{0x74,} },
+.{ "0x1d496", &.{0x75,} },
+.{ "0x1d497", &.{0x76,} },
+.{ "0x1d498", &.{0x77,} },
+.{ "0x1d499", &.{0x78,} },
+.{ "0x1d49a", &.{0x79,} },
+.{ "0x1d49b", &.{0x7a,} },
+.{ "0x1d49c", &.{0x41,} },
+.{ "0x1d49e", &.{0x43,} },
+.{ "0x1d49f", &.{0x44,} },
+.{ "0x1d4a2", &.{0x47,} },
+.{ "0x1d4a5", &.{0x4a,} },
+.{ "0x1d4a6", &.{0x4b,} },
+.{ "0x1d4a9", &.{0x4e,} },
+.{ "0x1d4aa", &.{0x4f,} },
+.{ "0x1d4ab", &.{0x50,} },
+.{ "0x1d4ac", &.{0x51,} },
+.{ "0x1d4ae", &.{0x53,} },
+.{ "0x1d4af", &.{0x54,} },
+.{ "0x1d4b0", &.{0x55,} },
+.{ "0x1d4b1", &.{0x56,} },
+.{ "0x1d4b2", &.{0x57,} },
+.{ "0x1d4b3", &.{0x58,} },
+.{ "0x1d4b4", &.{0x59,} },
+.{ "0x1d4b5", &.{0x5a,} },
+.{ "0x1d4b6", &.{0x61,} },
+.{ "0x1d4b7", &.{0x62,} },
+.{ "0x1d4b8", &.{0x63,} },
+.{ "0x1d4b9", &.{0x64,} },
+.{ "0x1d4bb", &.{0x66,} },
+.{ "0x1d4bd", &.{0x68,} },
+.{ "0x1d4be", &.{0x69,} },
+.{ "0x1d4bf", &.{0x6a,} },
+.{ "0x1d4c0", &.{0x6b,} },
+.{ "0x1d4c1", &.{0x6c,} },
+.{ "0x1d4c2", &.{0x6d,} },
+.{ "0x1d4c3", &.{0x6e,} },
+.{ "0x1d4c5", &.{0x70,} },
+.{ "0x1d4c6", &.{0x71,} },
+.{ "0x1d4c7", &.{0x72,} },
+.{ "0x1d4c8", &.{0x73,} },
+.{ "0x1d4c9", &.{0x74,} },
+.{ "0x1d4ca", &.{0x75,} },
+.{ "0x1d4cb", &.{0x76,} },
+.{ "0x1d4cc", &.{0x77,} },
+.{ "0x1d4cd", &.{0x78,} },
+.{ "0x1d4ce", &.{0x79,} },
+.{ "0x1d4cf", &.{0x7a,} },
+.{ "0x1d4d0", &.{0x41,} },
+.{ "0x1d4d1", &.{0x42,} },
+.{ "0x1d4d2", &.{0x43,} },
+.{ "0x1d4d3", &.{0x44,} },
+.{ "0x1d4d4", &.{0x45,} },
+.{ "0x1d4d5", &.{0x46,} },
+.{ "0x1d4d6", &.{0x47,} },
+.{ "0x1d4d7", &.{0x48,} },
+.{ "0x1d4d8", &.{0x49,} },
+.{ "0x1d4d9", &.{0x4a,} },
+.{ "0x1d4da", &.{0x4b,} },
+.{ "0x1d4db", &.{0x4c,} },
+.{ "0x1d4dc", &.{0x4d,} },
+.{ "0x1d4dd", &.{0x4e,} },
+.{ "0x1d4de", &.{0x4f,} },
+.{ "0x1d4df", &.{0x50,} },
+.{ "0x1d4e0", &.{0x51,} },
+.{ "0x1d4e1", &.{0x52,} },
+.{ "0x1d4e2", &.{0x53,} },
+.{ "0x1d4e3", &.{0x54,} },
+.{ "0x1d4e4", &.{0x55,} },
+.{ "0x1d4e5", &.{0x56,} },
+.{ "0x1d4e6", &.{0x57,} },
+.{ "0x1d4e7", &.{0x58,} },
+.{ "0x1d4e8", &.{0x59,} },
+.{ "0x1d4e9", &.{0x5a,} },
+.{ "0x1d4ea", &.{0x61,} },
+.{ "0x1d4eb", &.{0x62,} },
+.{ "0x1d4ec", &.{0x63,} },
+.{ "0x1d4ed", &.{0x64,} },
+.{ "0x1d4ee", &.{0x65,} },
+.{ "0x1d4ef", &.{0x66,} },
+.{ "0x1d4f0", &.{0x67,} },
+.{ "0x1d4f1", &.{0x68,} },
+.{ "0x1d4f2", &.{0x69,} },
+.{ "0x1d4f3", &.{0x6a,} },
+.{ "0x1d4f4", &.{0x6b,} },
+.{ "0x1d4f5", &.{0x6c,} },
+.{ "0x1d4f6", &.{0x6d,} },
+.{ "0x1d4f7", &.{0x6e,} },
+.{ "0x1d4f8", &.{0x6f,} },
+.{ "0x1d4f9", &.{0x70,} },
+.{ "0x1d4fa", &.{0x71,} },
+.{ "0x1d4fb", &.{0x72,} },
+.{ "0x1d4fc", &.{0x73,} },
+.{ "0x1d4fd", &.{0x74,} },
+.{ "0x1d4fe", &.{0x75,} },
+.{ "0x1d4ff", &.{0x76,} },
+.{ "0x1d500", &.{0x77,} },
+.{ "0x1d501", &.{0x78,} },
+.{ "0x1d502", &.{0x79,} },
+.{ "0x1d503", &.{0x7a,} },
+.{ "0x1d504", &.{0x41,} },
+.{ "0x1d505", &.{0x42,} },
+.{ "0x1d507", &.{0x44,} },
+.{ "0x1d508", &.{0x45,} },
+.{ "0x1d509", &.{0x46,} },
+.{ "0x1d50a", &.{0x47,} },
+.{ "0x1d50d", &.{0x4a,} },
+.{ "0x1d50e", &.{0x4b,} },
+.{ "0x1d50f", &.{0x4c,} },
+.{ "0x1d510", &.{0x4d,} },
+.{ "0x1d511", &.{0x4e,} },
+.{ "0x1d512", &.{0x4f,} },
+.{ "0x1d513", &.{0x50,} },
+.{ "0x1d514", &.{0x51,} },
+.{ "0x1d516", &.{0x53,} },
+.{ "0x1d517", &.{0x54,} },
+.{ "0x1d518", &.{0x55,} },
+.{ "0x1d519", &.{0x56,} },
+.{ "0x1d51a", &.{0x57,} },
+.{ "0x1d51b", &.{0x58,} },
+.{ "0x1d51c", &.{0x59,} },
+.{ "0x1d51e", &.{0x61,} },
+.{ "0x1d51f", &.{0x62,} },
+.{ "0x1d520", &.{0x63,} },
+.{ "0x1d521", &.{0x64,} },
+.{ "0x1d522", &.{0x65,} },
+.{ "0x1d523", &.{0x66,} },
+.{ "0x1d524", &.{0x67,} },
+.{ "0x1d525", &.{0x68,} },
+.{ "0x1d526", &.{0x69,} },
+.{ "0x1d527", &.{0x6a,} },
+.{ "0x1d528", &.{0x6b,} },
+.{ "0x1d529", &.{0x6c,} },
+.{ "0x1d52a", &.{0x6d,} },
+.{ "0x1d52b", &.{0x6e,} },
+.{ "0x1d52c", &.{0x6f,} },
+.{ "0x1d52d", &.{0x70,} },
+.{ "0x1d52e", &.{0x71,} },
+.{ "0x1d52f", &.{0x72,} },
+.{ "0x1d530", &.{0x73,} },
+.{ "0x1d531", &.{0x74,} },
+.{ "0x1d532", &.{0x75,} },
+.{ "0x1d533", &.{0x76,} },
+.{ "0x1d534", &.{0x77,} },
+.{ "0x1d535", &.{0x78,} },
+.{ "0x1d536", &.{0x79,} },
+.{ "0x1d537", &.{0x7a,} },
+.{ "0x1d538", &.{0x41,} },
+.{ "0x1d539", &.{0x42,} },
+.{ "0x1d53b", &.{0x44,} },
+.{ "0x1d53c", &.{0x45,} },
+.{ "0x1d53d", &.{0x46,} },
+.{ "0x1d53e", &.{0x47,} },
+.{ "0x1d540", &.{0x49,} },
+.{ "0x1d541", &.{0x4a,} },
+.{ "0x1d542", &.{0x4b,} },
+.{ "0x1d543", &.{0x4c,} },
+.{ "0x1d544", &.{0x4d,} },
+.{ "0x1d546", &.{0x4f,} },
+.{ "0x1d54a", &.{0x53,} },
+.{ "0x1d54b", &.{0x54,} },
+.{ "0x1d54c", &.{0x55,} },
+.{ "0x1d54d", &.{0x56,} },
+.{ "0x1d54e", &.{0x57,} },
+.{ "0x1d54f", &.{0x58,} },
+.{ "0x1d550", &.{0x59,} },
+.{ "0x1d552", &.{0x61,} },
+.{ "0x1d553", &.{0x62,} },
+.{ "0x1d554", &.{0x63,} },
+.{ "0x1d555", &.{0x64,} },
+.{ "0x1d556", &.{0x65,} },
+.{ "0x1d557", &.{0x66,} },
+.{ "0x1d558", &.{0x67,} },
+.{ "0x1d559", &.{0x68,} },
+.{ "0x1d55a", &.{0x69,} },
+.{ "0x1d55b", &.{0x6a,} },
+.{ "0x1d55c", &.{0x6b,} },
+.{ "0x1d55d", &.{0x6c,} },
+.{ "0x1d55e", &.{0x6d,} },
+.{ "0x1d55f", &.{0x6e,} },
+.{ "0x1d560", &.{0x6f,} },
+.{ "0x1d561", &.{0x70,} },
+.{ "0x1d562", &.{0x71,} },
+.{ "0x1d563", &.{0x72,} },
+.{ "0x1d564", &.{0x73,} },
+.{ "0x1d565", &.{0x74,} },
+.{ "0x1d566", &.{0x75,} },
+.{ "0x1d567", &.{0x76,} },
+.{ "0x1d568", &.{0x77,} },
+.{ "0x1d569", &.{0x78,} },
+.{ "0x1d56a", &.{0x79,} },
+.{ "0x1d56b", &.{0x7a,} },
+.{ "0x1d56c", &.{0x41,} },
+.{ "0x1d56d", &.{0x42,} },
+.{ "0x1d56e", &.{0x43,} },
+.{ "0x1d56f", &.{0x44,} },
+.{ "0x1d570", &.{0x45,} },
+.{ "0x1d571", &.{0x46,} },
+.{ "0x1d572", &.{0x47,} },
+.{ "0x1d573", &.{0x48,} },
+.{ "0x1d574", &.{0x49,} },
+.{ "0x1d575", &.{0x4a,} },
+.{ "0x1d576", &.{0x4b,} },
+.{ "0x1d577", &.{0x4c,} },
+.{ "0x1d578", &.{0x4d,} },
+.{ "0x1d579", &.{0x4e,} },
+.{ "0x1d57a", &.{0x4f,} },
+.{ "0x1d57b", &.{0x50,} },
+.{ "0x1d57c", &.{0x51,} },
+.{ "0x1d57d", &.{0x52,} },
+.{ "0x1d57e", &.{0x53,} },
+.{ "0x1d57f", &.{0x54,} },
+.{ "0x1d580", &.{0x55,} },
+.{ "0x1d581", &.{0x56,} },
+.{ "0x1d582", &.{0x57,} },
+.{ "0x1d583", &.{0x58,} },
+.{ "0x1d584", &.{0x59,} },
+.{ "0x1d585", &.{0x5a,} },
+.{ "0x1d586", &.{0x61,} },
+.{ "0x1d587", &.{0x62,} },
+.{ "0x1d588", &.{0x63,} },
+.{ "0x1d589", &.{0x64,} },
+.{ "0x1d58a", &.{0x65,} },
+.{ "0x1d58b", &.{0x66,} },
+.{ "0x1d58c", &.{0x67,} },
+.{ "0x1d58d", &.{0x68,} },
+.{ "0x1d58e", &.{0x69,} },
+.{ "0x1d58f", &.{0x6a,} },
+.{ "0x1d590", &.{0x6b,} },
+.{ "0x1d591", &.{0x6c,} },
+.{ "0x1d592", &.{0x6d,} },
+.{ "0x1d593", &.{0x6e,} },
+.{ "0x1d594", &.{0x6f,} },
+.{ "0x1d595", &.{0x70,} },
+.{ "0x1d596", &.{0x71,} },
+.{ "0x1d597", &.{0x72,} },
+.{ "0x1d598", &.{0x73,} },
+.{ "0x1d599", &.{0x74,} },
+.{ "0x1d59a", &.{0x75,} },
+.{ "0x1d59b", &.{0x76,} },
+.{ "0x1d59c", &.{0x77,} },
+.{ "0x1d59d", &.{0x78,} },
+.{ "0x1d59e", &.{0x79,} },
+.{ "0x1d59f", &.{0x7a,} },
+.{ "0x1d5a0", &.{0x41,} },
+.{ "0x1d5a1", &.{0x42,} },
+.{ "0x1d5a2", &.{0x43,} },
+.{ "0x1d5a3", &.{0x44,} },
+.{ "0x1d5a4", &.{0x45,} },
+.{ "0x1d5a5", &.{0x46,} },
+.{ "0x1d5a6", &.{0x47,} },
+.{ "0x1d5a7", &.{0x48,} },
+.{ "0x1d5a8", &.{0x49,} },
+.{ "0x1d5a9", &.{0x4a,} },
+.{ "0x1d5aa", &.{0x4b,} },
+.{ "0x1d5ab", &.{0x4c,} },
+.{ "0x1d5ac", &.{0x4d,} },
+.{ "0x1d5ad", &.{0x4e,} },
+.{ "0x1d5ae", &.{0x4f,} },
+.{ "0x1d5af", &.{0x50,} },
+.{ "0x1d5b0", &.{0x51,} },
+.{ "0x1d5b1", &.{0x52,} },
+.{ "0x1d5b2", &.{0x53,} },
+.{ "0x1d5b3", &.{0x54,} },
+.{ "0x1d5b4", &.{0x55,} },
+.{ "0x1d5b5", &.{0x56,} },
+.{ "0x1d5b6", &.{0x57,} },
+.{ "0x1d5b7", &.{0x58,} },
+.{ "0x1d5b8", &.{0x59,} },
+.{ "0x1d5b9", &.{0x5a,} },
+.{ "0x1d5ba", &.{0x61,} },
+.{ "0x1d5bb", &.{0x62,} },
+.{ "0x1d5bc", &.{0x63,} },
+.{ "0x1d5bd", &.{0x64,} },
+.{ "0x1d5be", &.{0x65,} },
+.{ "0x1d5bf", &.{0x66,} },
+.{ "0x1d5c0", &.{0x67,} },
+.{ "0x1d5c1", &.{0x68,} },
+.{ "0x1d5c2", &.{0x69,} },
+.{ "0x1d5c3", &.{0x6a,} },
+.{ "0x1d5c4", &.{0x6b,} },
+.{ "0x1d5c5", &.{0x6c,} },
+.{ "0x1d5c6", &.{0x6d,} },
+.{ "0x1d5c7", &.{0x6e,} },
+.{ "0x1d5c8", &.{0x6f,} },
+.{ "0x1d5c9", &.{0x70,} },
+.{ "0x1d5ca", &.{0x71,} },
+.{ "0x1d5cb", &.{0x72,} },
+.{ "0x1d5cc", &.{0x73,} },
+.{ "0x1d5cd", &.{0x74,} },
+.{ "0x1d5ce", &.{0x75,} },
+.{ "0x1d5cf", &.{0x76,} },
+.{ "0x1d5d0", &.{0x77,} },
+.{ "0x1d5d1", &.{0x78,} },
+.{ "0x1d5d2", &.{0x79,} },
+.{ "0x1d5d3", &.{0x7a,} },
+.{ "0x1d5d4", &.{0x41,} },
+.{ "0x1d5d5", &.{0x42,} },
+.{ "0x1d5d6", &.{0x43,} },
+.{ "0x1d5d7", &.{0x44,} },
+.{ "0x1d5d8", &.{0x45,} },
+.{ "0x1d5d9", &.{0x46,} },
+.{ "0x1d5da", &.{0x47,} },
+.{ "0x1d5db", &.{0x48,} },
+.{ "0x1d5dc", &.{0x49,} },
+.{ "0x1d5dd", &.{0x4a,} },
+.{ "0x1d5de", &.{0x4b,} },
+.{ "0x1d5df", &.{0x4c,} },
+.{ "0x1d5e0", &.{0x4d,} },
+.{ "0x1d5e1", &.{0x4e,} },
+.{ "0x1d5e2", &.{0x4f,} },
+.{ "0x1d5e3", &.{0x50,} },
+.{ "0x1d5e4", &.{0x51,} },
+.{ "0x1d5e5", &.{0x52,} },
+.{ "0x1d5e6", &.{0x53,} },
+.{ "0x1d5e7", &.{0x54,} },
+.{ "0x1d5e8", &.{0x55,} },
+.{ "0x1d5e9", &.{0x56,} },
+.{ "0x1d5ea", &.{0x57,} },
+.{ "0x1d5eb", &.{0x58,} },
+.{ "0x1d5ec", &.{0x59,} },
+.{ "0x1d5ed", &.{0x5a,} },
+.{ "0x1d5ee", &.{0x61,} },
+.{ "0x1d5ef", &.{0x62,} },
+.{ "0x1d5f0", &.{0x63,} },
+.{ "0x1d5f1", &.{0x64,} },
+.{ "0x1d5f2", &.{0x65,} },
+.{ "0x1d5f3", &.{0x66,} },
+.{ "0x1d5f4", &.{0x67,} },
+.{ "0x1d5f5", &.{0x68,} },
+.{ "0x1d5f6", &.{0x69,} },
+.{ "0x1d5f7", &.{0x6a,} },
+.{ "0x1d5f8", &.{0x6b,} },
+.{ "0x1d5f9", &.{0x6c,} },
+.{ "0x1d5fa", &.{0x6d,} },
+.{ "0x1d5fb", &.{0x6e,} },
+.{ "0x1d5fc", &.{0x6f,} },
+.{ "0x1d5fd", &.{0x70,} },
+.{ "0x1d5fe", &.{0x71,} },
+.{ "0x1d5ff", &.{0x72,} },
+.{ "0x1d600", &.{0x73,} },
+.{ "0x1d601", &.{0x74,} },
+.{ "0x1d602", &.{0x75,} },
+.{ "0x1d603", &.{0x76,} },
+.{ "0x1d604", &.{0x77,} },
+.{ "0x1d605", &.{0x78,} },
+.{ "0x1d606", &.{0x79,} },
+.{ "0x1d607", &.{0x7a,} },
+.{ "0x1d608", &.{0x41,} },
+.{ "0x1d609", &.{0x42,} },
+.{ "0x1d60a", &.{0x43,} },
+.{ "0x1d60b", &.{0x44,} },
+.{ "0x1d60c", &.{0x45,} },
+.{ "0x1d60d", &.{0x46,} },
+.{ "0x1d60e", &.{0x47,} },
+.{ "0x1d60f", &.{0x48,} },
+.{ "0x1d610", &.{0x49,} },
+.{ "0x1d611", &.{0x4a,} },
+.{ "0x1d612", &.{0x4b,} },
+.{ "0x1d613", &.{0x4c,} },
+.{ "0x1d614", &.{0x4d,} },
+.{ "0x1d615", &.{0x4e,} },
+.{ "0x1d616", &.{0x4f,} },
+.{ "0x1d617", &.{0x50,} },
+.{ "0x1d618", &.{0x51,} },
+.{ "0x1d619", &.{0x52,} },
+.{ "0x1d61a", &.{0x53,} },
+.{ "0x1d61b", &.{0x54,} },
+.{ "0x1d61c", &.{0x55,} },
+.{ "0x1d61d", &.{0x56,} },
+.{ "0x1d61e", &.{0x57,} },
+.{ "0x1d61f", &.{0x58,} },
+.{ "0x1d620", &.{0x59,} },
+.{ "0x1d621", &.{0x5a,} },
+.{ "0x1d622", &.{0x61,} },
+.{ "0x1d623", &.{0x62,} },
+.{ "0x1d624", &.{0x63,} },
+.{ "0x1d625", &.{0x64,} },
+.{ "0x1d626", &.{0x65,} },
+.{ "0x1d627", &.{0x66,} },
+.{ "0x1d628", &.{0x67,} },
+.{ "0x1d629", &.{0x68,} },
+.{ "0x1d62a", &.{0x69,} },
+.{ "0x1d62b", &.{0x6a,} },
+.{ "0x1d62c", &.{0x6b,} },
+.{ "0x1d62d", &.{0x6c,} },
+.{ "0x1d62e", &.{0x6d,} },
+.{ "0x1d62f", &.{0x6e,} },
+.{ "0x1d630", &.{0x6f,} },
+.{ "0x1d631", &.{0x70,} },
+.{ "0x1d632", &.{0x71,} },
+.{ "0x1d633", &.{0x72,} },
+.{ "0x1d634", &.{0x73,} },
+.{ "0x1d635", &.{0x74,} },
+.{ "0x1d636", &.{0x75,} },
+.{ "0x1d637", &.{0x76,} },
+.{ "0x1d638", &.{0x77,} },
+.{ "0x1d639", &.{0x78,} },
+.{ "0x1d63a", &.{0x79,} },
+.{ "0x1d63b", &.{0x7a,} },
+.{ "0x1d63c", &.{0x41,} },
+.{ "0x1d63d", &.{0x42,} },
+.{ "0x1d63e", &.{0x43,} },
+.{ "0x1d63f", &.{0x44,} },
+.{ "0x1d640", &.{0x45,} },
+.{ "0x1d641", &.{0x46,} },
+.{ "0x1d642", &.{0x47,} },
+.{ "0x1d643", &.{0x48,} },
+.{ "0x1d644", &.{0x49,} },
+.{ "0x1d645", &.{0x4a,} },
+.{ "0x1d646", &.{0x4b,} },
+.{ "0x1d647", &.{0x4c,} },
+.{ "0x1d648", &.{0x4d,} },
+.{ "0x1d649", &.{0x4e,} },
+.{ "0x1d64a", &.{0x4f,} },
+.{ "0x1d64b", &.{0x50,} },
+.{ "0x1d64c", &.{0x51,} },
+.{ "0x1d64d", &.{0x52,} },
+.{ "0x1d64e", &.{0x53,} },
+.{ "0x1d64f", &.{0x54,} },
+.{ "0x1d650", &.{0x55,} },
+.{ "0x1d651", &.{0x56,} },
+.{ "0x1d652", &.{0x57,} },
+.{ "0x1d653", &.{0x58,} },
+.{ "0x1d654", &.{0x59,} },
+.{ "0x1d655", &.{0x5a,} },
+.{ "0x1d656", &.{0x61,} },
+.{ "0x1d657", &.{0x62,} },
+.{ "0x1d658", &.{0x63,} },
+.{ "0x1d659", &.{0x64,} },
+.{ "0x1d65a", &.{0x65,} },
+.{ "0x1d65b", &.{0x66,} },
+.{ "0x1d65c", &.{0x67,} },
+.{ "0x1d65d", &.{0x68,} },
+.{ "0x1d65e", &.{0x69,} },
+.{ "0x1d65f", &.{0x6a,} },
+.{ "0x1d660", &.{0x6b,} },
+.{ "0x1d661", &.{0x6c,} },
+.{ "0x1d662", &.{0x6d,} },
+.{ "0x1d663", &.{0x6e,} },
+.{ "0x1d664", &.{0x6f,} },
+.{ "0x1d665", &.{0x70,} },
+.{ "0x1d666", &.{0x71,} },
+.{ "0x1d667", &.{0x72,} },
+.{ "0x1d668", &.{0x73,} },
+.{ "0x1d669", &.{0x74,} },
+.{ "0x1d66a", &.{0x75,} },
+.{ "0x1d66b", &.{0x76,} },
+.{ "0x1d66c", &.{0x77,} },
+.{ "0x1d66d", &.{0x78,} },
+.{ "0x1d66e", &.{0x79,} },
+.{ "0x1d66f", &.{0x7a,} },
+.{ "0x1d670", &.{0x41,} },
+.{ "0x1d671", &.{0x42,} },
+.{ "0x1d672", &.{0x43,} },
+.{ "0x1d673", &.{0x44,} },
+.{ "0x1d674", &.{0x45,} },
+.{ "0x1d675", &.{0x46,} },
+.{ "0x1d676", &.{0x47,} },
+.{ "0x1d677", &.{0x48,} },
+.{ "0x1d678", &.{0x49,} },
+.{ "0x1d679", &.{0x4a,} },
+.{ "0x1d67a", &.{0x4b,} },
+.{ "0x1d67b", &.{0x4c,} },
+.{ "0x1d67c", &.{0x4d,} },
+.{ "0x1d67d", &.{0x4e,} },
+.{ "0x1d67e", &.{0x4f,} },
+.{ "0x1d67f", &.{0x50,} },
+.{ "0x1d680", &.{0x51,} },
+.{ "0x1d681", &.{0x52,} },
+.{ "0x1d682", &.{0x53,} },
+.{ "0x1d683", &.{0x54,} },
+.{ "0x1d684", &.{0x55,} },
+.{ "0x1d685", &.{0x56,} },
+.{ "0x1d686", &.{0x57,} },
+.{ "0x1d687", &.{0x58,} },
+.{ "0x1d688", &.{0x59,} },
+.{ "0x1d689", &.{0x5a,} },
+.{ "0x1d68a", &.{0x61,} },
+.{ "0x1d68b", &.{0x62,} },
+.{ "0x1d68c", &.{0x63,} },
+.{ "0x1d68d", &.{0x64,} },
+.{ "0x1d68e", &.{0x65,} },
+.{ "0x1d68f", &.{0x66,} },
+.{ "0x1d690", &.{0x67,} },
+.{ "0x1d691", &.{0x68,} },
+.{ "0x1d692", &.{0x69,} },
+.{ "0x1d693", &.{0x6a,} },
+.{ "0x1d694", &.{0x6b,} },
+.{ "0x1d695", &.{0x6c,} },
+.{ "0x1d696", &.{0x6d,} },
+.{ "0x1d697", &.{0x6e,} },
+.{ "0x1d698", &.{0x6f,} },
+.{ "0x1d699", &.{0x70,} },
+.{ "0x1d69a", &.{0x71,} },
+.{ "0x1d69b", &.{0x72,} },
+.{ "0x1d69c", &.{0x73,} },
+.{ "0x1d69d", &.{0x74,} },
+.{ "0x1d69e", &.{0x75,} },
+.{ "0x1d69f", &.{0x76,} },
+.{ "0x1d6a0", &.{0x77,} },
+.{ "0x1d6a1", &.{0x78,} },
+.{ "0x1d6a2", &.{0x79,} },
+.{ "0x1d6a3", &.{0x7a,} },
+.{ "0x1d6a4", &.{0x131,} },
+.{ "0x1d6a5", &.{0x237,} },
+.{ "0x1d6a8", &.{0x391,} },
+.{ "0x1d6a9", &.{0x392,} },
+.{ "0x1d6aa", &.{0x393,} },
+.{ "0x1d6ab", &.{0x394,} },
+.{ "0x1d6ac", &.{0x395,} },
+.{ "0x1d6ad", &.{0x396,} },
+.{ "0x1d6ae", &.{0x397,} },
+.{ "0x1d6af", &.{0x398,} },
+.{ "0x1d6b0", &.{0x399,} },
+.{ "0x1d6b1", &.{0x39a,} },
+.{ "0x1d6b2", &.{0x39b,} },
+.{ "0x1d6b3", &.{0x39c,} },
+.{ "0x1d6b4", &.{0x39d,} },
+.{ "0x1d6b5", &.{0x39e,} },
+.{ "0x1d6b6", &.{0x39f,} },
+.{ "0x1d6b7", &.{0x3a0,} },
+.{ "0x1d6b8", &.{0x3a1,} },
+.{ "0x1d6b9", &.{0x3f4,} },
+.{ "0x1d6ba", &.{0x3a3,} },
+.{ "0x1d6bb", &.{0x3a4,} },
+.{ "0x1d6bc", &.{0x3a5,} },
+.{ "0x1d6bd", &.{0x3a6,} },
+.{ "0x1d6be", &.{0x3a7,} },
+.{ "0x1d6bf", &.{0x3a8,} },
+.{ "0x1d6c0", &.{0x3a9,} },
+.{ "0x1d6c1", &.{0x2207,} },
+.{ "0x1d6c2", &.{0x3b1,} },
+.{ "0x1d6c3", &.{0x3b2,} },
+.{ "0x1d6c4", &.{0x3b3,} },
+.{ "0x1d6c5", &.{0x3b4,} },
+.{ "0x1d6c6", &.{0x3b5,} },
+.{ "0x1d6c7", &.{0x3b6,} },
+.{ "0x1d6c8", &.{0x3b7,} },
+.{ "0x1d6c9", &.{0x3b8,} },
+.{ "0x1d6ca", &.{0x3b9,} },
+.{ "0x1d6cb", &.{0x3ba,} },
+.{ "0x1d6cc", &.{0x3bb,} },
+.{ "0x1d6cd", &.{0x3bc,} },
+.{ "0x1d6ce", &.{0x3bd,} },
+.{ "0x1d6cf", &.{0x3be,} },
+.{ "0x1d6d0", &.{0x3bf,} },
+.{ "0x1d6d1", &.{0x3c0,} },
+.{ "0x1d6d2", &.{0x3c1,} },
+.{ "0x1d6d3", &.{0x3c2,} },
+.{ "0x1d6d4", &.{0x3c3,} },
+.{ "0x1d6d5", &.{0x3c4,} },
+.{ "0x1d6d6", &.{0x3c5,} },
+.{ "0x1d6d7", &.{0x3c6,} },
+.{ "0x1d6d8", &.{0x3c7,} },
+.{ "0x1d6d9", &.{0x3c8,} },
+.{ "0x1d6da", &.{0x3c9,} },
+.{ "0x1d6db", &.{0x2202,} },
+.{ "0x1d6dc", &.{0x3f5,} },
+.{ "0x1d6dd", &.{0x3d1,} },
+.{ "0x1d6de", &.{0x3f0,} },
+.{ "0x1d6df", &.{0x3d5,} },
+.{ "0x1d6e0", &.{0x3f1,} },
+.{ "0x1d6e1", &.{0x3d6,} },
+.{ "0x1d6e2", &.{0x391,} },
+.{ "0x1d6e3", &.{0x392,} },
+.{ "0x1d6e4", &.{0x393,} },
+.{ "0x1d6e5", &.{0x394,} },
+.{ "0x1d6e6", &.{0x395,} },
+.{ "0x1d6e7", &.{0x396,} },
+.{ "0x1d6e8", &.{0x397,} },
+.{ "0x1d6e9", &.{0x398,} },
+.{ "0x1d6ea", &.{0x399,} },
+.{ "0x1d6eb", &.{0x39a,} },
+.{ "0x1d6ec", &.{0x39b,} },
+.{ "0x1d6ed", &.{0x39c,} },
+.{ "0x1d6ee", &.{0x39d,} },
+.{ "0x1d6ef", &.{0x39e,} },
+.{ "0x1d6f0", &.{0x39f,} },
+.{ "0x1d6f1", &.{0x3a0,} },
+.{ "0x1d6f2", &.{0x3a1,} },
+.{ "0x1d6f3", &.{0x3f4,} },
+.{ "0x1d6f4", &.{0x3a3,} },
+.{ "0x1d6f5", &.{0x3a4,} },
+.{ "0x1d6f6", &.{0x3a5,} },
+.{ "0x1d6f7", &.{0x3a6,} },
+.{ "0x1d6f8", &.{0x3a7,} },
+.{ "0x1d6f9", &.{0x3a8,} },
+.{ "0x1d6fa", &.{0x3a9,} },
+.{ "0x1d6fb", &.{0x2207,} },
+.{ "0x1d6fc", &.{0x3b1,} },
+.{ "0x1d6fd", &.{0x3b2,} },
+.{ "0x1d6fe", &.{0x3b3,} },
+.{ "0x1d6ff", &.{0x3b4,} },
+.{ "0x1d700", &.{0x3b5,} },
+.{ "0x1d701", &.{0x3b6,} },
+.{ "0x1d702", &.{0x3b7,} },
+.{ "0x1d703", &.{0x3b8,} },
+.{ "0x1d704", &.{0x3b9,} },
+.{ "0x1d705", &.{0x3ba,} },
+.{ "0x1d706", &.{0x3bb,} },
+.{ "0x1d707", &.{0x3bc,} },
+.{ "0x1d708", &.{0x3bd,} },
+.{ "0x1d709", &.{0x3be,} },
+.{ "0x1d70a", &.{0x3bf,} },
+.{ "0x1d70b", &.{0x3c0,} },
+.{ "0x1d70c", &.{0x3c1,} },
+.{ "0x1d70d", &.{0x3c2,} },
+.{ "0x1d70e", &.{0x3c3,} },
+.{ "0x1d70f", &.{0x3c4,} },
+.{ "0x1d710", &.{0x3c5,} },
+.{ "0x1d711", &.{0x3c6,} },
+.{ "0x1d712", &.{0x3c7,} },
+.{ "0x1d713", &.{0x3c8,} },
+.{ "0x1d714", &.{0x3c9,} },
+.{ "0x1d715", &.{0x2202,} },
+.{ "0x1d716", &.{0x3f5,} },
+.{ "0x1d717", &.{0x3d1,} },
+.{ "0x1d718", &.{0x3f0,} },
+.{ "0x1d719", &.{0x3d5,} },
+.{ "0x1d71a", &.{0x3f1,} },
+.{ "0x1d71b", &.{0x3d6,} },
+.{ "0x1d71c", &.{0x391,} },
+.{ "0x1d71d", &.{0x392,} },
+.{ "0x1d71e", &.{0x393,} },
+.{ "0x1d71f", &.{0x394,} },
+.{ "0x1d720", &.{0x395,} },
+.{ "0x1d721", &.{0x396,} },
+.{ "0x1d722", &.{0x397,} },
+.{ "0x1d723", &.{0x398,} },
+.{ "0x1d724", &.{0x399,} },
+.{ "0x1d725", &.{0x39a,} },
+.{ "0x1d726", &.{0x39b,} },
+.{ "0x1d727", &.{0x39c,} },
+.{ "0x1d728", &.{0x39d,} },
+.{ "0x1d729", &.{0x39e,} },
+.{ "0x1d72a", &.{0x39f,} },
+.{ "0x1d72b", &.{0x3a0,} },
+.{ "0x1d72c", &.{0x3a1,} },
+.{ "0x1d72d", &.{0x3f4,} },
+.{ "0x1d72e", &.{0x3a3,} },
+.{ "0x1d72f", &.{0x3a4,} },
+.{ "0x1d730", &.{0x3a5,} },
+.{ "0x1d731", &.{0x3a6,} },
+.{ "0x1d732", &.{0x3a7,} },
+.{ "0x1d733", &.{0x3a8,} },
+.{ "0x1d734", &.{0x3a9,} },
+.{ "0x1d735", &.{0x2207,} },
+.{ "0x1d736", &.{0x3b1,} },
+.{ "0x1d737", &.{0x3b2,} },
+.{ "0x1d738", &.{0x3b3,} },
+.{ "0x1d739", &.{0x3b4,} },
+.{ "0x1d73a", &.{0x3b5,} },
+.{ "0x1d73b", &.{0x3b6,} },
+.{ "0x1d73c", &.{0x3b7,} },
+.{ "0x1d73d", &.{0x3b8,} },
+.{ "0x1d73e", &.{0x3b9,} },
+.{ "0x1d73f", &.{0x3ba,} },
+.{ "0x1d740", &.{0x3bb,} },
+.{ "0x1d741", &.{0x3bc,} },
+.{ "0x1d742", &.{0x3bd,} },
+.{ "0x1d743", &.{0x3be,} },
+.{ "0x1d744", &.{0x3bf,} },
+.{ "0x1d745", &.{0x3c0,} },
+.{ "0x1d746", &.{0x3c1,} },
+.{ "0x1d747", &.{0x3c2,} },
+.{ "0x1d748", &.{0x3c3,} },
+.{ "0x1d749", &.{0x3c4,} },
+.{ "0x1d74a", &.{0x3c5,} },
+.{ "0x1d74b", &.{0x3c6,} },
+.{ "0x1d74c", &.{0x3c7,} },
+.{ "0x1d74d", &.{0x3c8,} },
+.{ "0x1d74e", &.{0x3c9,} },
+.{ "0x1d74f", &.{0x2202,} },
+.{ "0x1d750", &.{0x3f5,} },
+.{ "0x1d751", &.{0x3d1,} },
+.{ "0x1d752", &.{0x3f0,} },
+.{ "0x1d753", &.{0x3d5,} },
+.{ "0x1d754", &.{0x3f1,} },
+.{ "0x1d755", &.{0x3d6,} },
+.{ "0x1d756", &.{0x391,} },
+.{ "0x1d757", &.{0x392,} },
+.{ "0x1d758", &.{0x393,} },
+.{ "0x1d759", &.{0x394,} },
+.{ "0x1d75a", &.{0x395,} },
+.{ "0x1d75b", &.{0x396,} },
+.{ "0x1d75c", &.{0x397,} },
+.{ "0x1d75d", &.{0x398,} },
+.{ "0x1d75e", &.{0x399,} },
+.{ "0x1d75f", &.{0x39a,} },
+.{ "0x1d760", &.{0x39b,} },
+.{ "0x1d761", &.{0x39c,} },
+.{ "0x1d762", &.{0x39d,} },
+.{ "0x1d763", &.{0x39e,} },
+.{ "0x1d764", &.{0x39f,} },
+.{ "0x1d765", &.{0x3a0,} },
+.{ "0x1d766", &.{0x3a1,} },
+.{ "0x1d767", &.{0x3f4,} },
+.{ "0x1d768", &.{0x3a3,} },
+.{ "0x1d769", &.{0x3a4,} },
+.{ "0x1d76a", &.{0x3a5,} },
+.{ "0x1d76b", &.{0x3a6,} },
+.{ "0x1d76c", &.{0x3a7,} },
+.{ "0x1d76d", &.{0x3a8,} },
+.{ "0x1d76e", &.{0x3a9,} },
+.{ "0x1d76f", &.{0x2207,} },
+.{ "0x1d770", &.{0x3b1,} },
+.{ "0x1d771", &.{0x3b2,} },
+.{ "0x1d772", &.{0x3b3,} },
+.{ "0x1d773", &.{0x3b4,} },
+.{ "0x1d774", &.{0x3b5,} },
+.{ "0x1d775", &.{0x3b6,} },
+.{ "0x1d776", &.{0x3b7,} },
+.{ "0x1d777", &.{0x3b8,} },
+.{ "0x1d778", &.{0x3b9,} },
+.{ "0x1d779", &.{0x3ba,} },
+.{ "0x1d77a", &.{0x3bb,} },
+.{ "0x1d77b", &.{0x3bc,} },
+.{ "0x1d77c", &.{0x3bd,} },
+.{ "0x1d77d", &.{0x3be,} },
+.{ "0x1d77e", &.{0x3bf,} },
+.{ "0x1d77f", &.{0x3c0,} },
+.{ "0x1d780", &.{0x3c1,} },
+.{ "0x1d781", &.{0x3c2,} },
+.{ "0x1d782", &.{0x3c3,} },
+.{ "0x1d783", &.{0x3c4,} },
+.{ "0x1d784", &.{0x3c5,} },
+.{ "0x1d785", &.{0x3c6,} },
+.{ "0x1d786", &.{0x3c7,} },
+.{ "0x1d787", &.{0x3c8,} },
+.{ "0x1d788", &.{0x3c9,} },
+.{ "0x1d789", &.{0x2202,} },
+.{ "0x1d78a", &.{0x3f5,} },
+.{ "0x1d78b", &.{0x3d1,} },
+.{ "0x1d78c", &.{0x3f0,} },
+.{ "0x1d78d", &.{0x3d5,} },
+.{ "0x1d78e", &.{0x3f1,} },
+.{ "0x1d78f", &.{0x3d6,} },
+.{ "0x1d790", &.{0x391,} },
+.{ "0x1d791", &.{0x392,} },
+.{ "0x1d792", &.{0x393,} },
+.{ "0x1d793", &.{0x394,} },
+.{ "0x1d794", &.{0x395,} },
+.{ "0x1d795", &.{0x396,} },
+.{ "0x1d796", &.{0x397,} },
+.{ "0x1d797", &.{0x398,} },
+.{ "0x1d798", &.{0x399,} },
+.{ "0x1d799", &.{0x39a,} },
+.{ "0x1d79a", &.{0x39b,} },
+.{ "0x1d79b", &.{0x39c,} },
+.{ "0x1d79c", &.{0x39d,} },
+.{ "0x1d79d", &.{0x39e,} },
+.{ "0x1d79e", &.{0x39f,} },
+.{ "0x1d79f", &.{0x3a0,} },
+.{ "0x1d7a0", &.{0x3a1,} },
+.{ "0x1d7a1", &.{0x3f4,} },
+.{ "0x1d7a2", &.{0x3a3,} },
+.{ "0x1d7a3", &.{0x3a4,} },
+.{ "0x1d7a4", &.{0x3a5,} },
+.{ "0x1d7a5", &.{0x3a6,} },
+.{ "0x1d7a6", &.{0x3a7,} },
+.{ "0x1d7a7", &.{0x3a8,} },
+.{ "0x1d7a8", &.{0x3a9,} },
+.{ "0x1d7a9", &.{0x2207,} },
+.{ "0x1d7aa", &.{0x3b1,} },
+.{ "0x1d7ab", &.{0x3b2,} },
+.{ "0x1d7ac", &.{0x3b3,} },
+.{ "0x1d7ad", &.{0x3b4,} },
+.{ "0x1d7ae", &.{0x3b5,} },
+.{ "0x1d7af", &.{0x3b6,} },
+.{ "0x1d7b0", &.{0x3b7,} },
+.{ "0x1d7b1", &.{0x3b8,} },
+.{ "0x1d7b2", &.{0x3b9,} },
+.{ "0x1d7b3", &.{0x3ba,} },
+.{ "0x1d7b4", &.{0x3bb,} },
+.{ "0x1d7b5", &.{0x3bc,} },
+.{ "0x1d7b6", &.{0x3bd,} },
+.{ "0x1d7b7", &.{0x3be,} },
+.{ "0x1d7b8", &.{0x3bf,} },
+.{ "0x1d7b9", &.{0x3c0,} },
+.{ "0x1d7ba", &.{0x3c1,} },
+.{ "0x1d7bb", &.{0x3c2,} },
+.{ "0x1d7bc", &.{0x3c3,} },
+.{ "0x1d7bd", &.{0x3c4,} },
+.{ "0x1d7be", &.{0x3c5,} },
+.{ "0x1d7bf", &.{0x3c6,} },
+.{ "0x1d7c0", &.{0x3c7,} },
+.{ "0x1d7c1", &.{0x3c8,} },
+.{ "0x1d7c2", &.{0x3c9,} },
+.{ "0x1d7c3", &.{0x2202,} },
+.{ "0x1d7c4", &.{0x3f5,} },
+.{ "0x1d7c5", &.{0x3d1,} },
+.{ "0x1d7c6", &.{0x3f0,} },
+.{ "0x1d7c7", &.{0x3d5,} },
+.{ "0x1d7c8", &.{0x3f1,} },
+.{ "0x1d7c9", &.{0x3d6,} },
+.{ "0x1d7ca", &.{0x3dc,} },
+.{ "0x1d7cb", &.{0x3dd,} },
+.{ "0x1d7ce", &.{0x30,} },
+.{ "0x1d7cf", &.{0x31,} },
+.{ "0x1d7d0", &.{0x32,} },
+.{ "0x1d7d1", &.{0x33,} },
+.{ "0x1d7d2", &.{0x34,} },
+.{ "0x1d7d3", &.{0x35,} },
+.{ "0x1d7d4", &.{0x36,} },
+.{ "0x1d7d5", &.{0x37,} },
+.{ "0x1d7d6", &.{0x38,} },
+.{ "0x1d7d7", &.{0x39,} },
+.{ "0x1d7d8", &.{0x30,} },
+.{ "0x1d7d9", &.{0x31,} },
+.{ "0x1d7da", &.{0x32,} },
+.{ "0x1d7db", &.{0x33,} },
+.{ "0x1d7dc", &.{0x34,} },
+.{ "0x1d7dd", &.{0x35,} },
+.{ "0x1d7de", &.{0x36,} },
+.{ "0x1d7df", &.{0x37,} },
+.{ "0x1d7e0", &.{0x38,} },
+.{ "0x1d7e1", &.{0x39,} },
+.{ "0x1d7e2", &.{0x30,} },
+.{ "0x1d7e3", &.{0x31,} },
+.{ "0x1d7e4", &.{0x32,} },
+.{ "0x1d7e5", &.{0x33,} },
+.{ "0x1d7e6", &.{0x34,} },
+.{ "0x1d7e7", &.{0x35,} },
+.{ "0x1d7e8", &.{0x36,} },
+.{ "0x1d7e9", &.{0x37,} },
+.{ "0x1d7ea", &.{0x38,} },
+.{ "0x1d7eb", &.{0x39,} },
+.{ "0x1d7ec", &.{0x30,} },
+.{ "0x1d7ed", &.{0x31,} },
+.{ "0x1d7ee", &.{0x32,} },
+.{ "0x1d7ef", &.{0x33,} },
+.{ "0x1d7f0", &.{0x34,} },
+.{ "0x1d7f1", &.{0x35,} },
+.{ "0x1d7f2", &.{0x36,} },
+.{ "0x1d7f3", &.{0x37,} },
+.{ "0x1d7f4", &.{0x38,} },
+.{ "0x1d7f5", &.{0x39,} },
+.{ "0x1d7f6", &.{0x30,} },
+.{ "0x1d7f7", &.{0x31,} },
+.{ "0x1d7f8", &.{0x32,} },
+.{ "0x1d7f9", &.{0x33,} },
+.{ "0x1d7fa", &.{0x34,} },
+.{ "0x1d7fb", &.{0x35,} },
+.{ "0x1d7fc", &.{0x36,} },
+.{ "0x1d7fd", &.{0x37,} },
+.{ "0x1d7fe", &.{0x38,} },
+.{ "0x1d7ff", &.{0x39,} },
+.{ "0x1e030", &.{0x430,} },
+.{ "0x1e031", &.{0x431,} },
+.{ "0x1e032", &.{0x432,} },
+.{ "0x1e033", &.{0x433,} },
+.{ "0x1e034", &.{0x434,} },
+.{ "0x1e035", &.{0x435,} },
+.{ "0x1e036", &.{0x436,} },
+.{ "0x1e037", &.{0x437,} },
+.{ "0x1e038", &.{0x438,} },
+.{ "0x1e039", &.{0x43a,} },
+.{ "0x1e03a", &.{0x43b,} },
+.{ "0x1e03b", &.{0x43c,} },
+.{ "0x1e03c", &.{0x43e,} },
+.{ "0x1e03d", &.{0x43f,} },
+.{ "0x1e03e", &.{0x440,} },
+.{ "0x1e03f", &.{0x441,} },
+.{ "0x1e040", &.{0x442,} },
+.{ "0x1e041", &.{0x443,} },
+.{ "0x1e042", &.{0x444,} },
+.{ "0x1e043", &.{0x445,} },
+.{ "0x1e044", &.{0x446,} },
+.{ "0x1e045", &.{0x447,} },
+.{ "0x1e046", &.{0x448,} },
+.{ "0x1e047", &.{0x44b,} },
+.{ "0x1e048", &.{0x44d,} },
+.{ "0x1e049", &.{0x44e,} },
+.{ "0x1e04a", &.{0xa689,} },
+.{ "0x1e04b", &.{0x4d9,} },
+.{ "0x1e04c", &.{0x456,} },
+.{ "0x1e04d", &.{0x458,} },
+.{ "0x1e04e", &.{0x4e9,} },
+.{ "0x1e04f", &.{0x4af,} },
+.{ "0x1e050", &.{0x4cf,} },
+.{ "0x1e051", &.{0x430,} },
+.{ "0x1e052", &.{0x431,} },
+.{ "0x1e053", &.{0x432,} },
+.{ "0x1e054", &.{0x433,} },
+.{ "0x1e055", &.{0x434,} },
+.{ "0x1e056", &.{0x435,} },
+.{ "0x1e057", &.{0x436,} },
+.{ "0x1e058", &.{0x437,} },
+.{ "0x1e059", &.{0x438,} },
+.{ "0x1e05a", &.{0x43a,} },
+.{ "0x1e05b", &.{0x43b,} },
+.{ "0x1e05c", &.{0x43e,} },
+.{ "0x1e05d", &.{0x43f,} },
+.{ "0x1e05e", &.{0x441,} },
+.{ "0x1e05f", &.{0x443,} },
+.{ "0x1e060", &.{0x444,} },
+.{ "0x1e061", &.{0x445,} },
+.{ "0x1e062", &.{0x446,} },
+.{ "0x1e063", &.{0x447,} },
+.{ "0x1e064", &.{0x448,} },
+.{ "0x1e065", &.{0x44a,} },
+.{ "0x1e066", &.{0x44b,} },
+.{ "0x1e067", &.{0x491,} },
+.{ "0x1e068", &.{0x456,} },
+.{ "0x1e069", &.{0x455,} },
+.{ "0x1e06a", &.{0x45f,} },
+.{ "0x1e06b", &.{0x4ab,} },
+.{ "0x1e06c", &.{0xa651,} },
+.{ "0x1e06d", &.{0x4b1,} },
+.{ "0x1ee00", &.{0x627,} },
+.{ "0x1ee01", &.{0x628,} },
+.{ "0x1ee02", &.{0x62c,} },
+.{ "0x1ee03", &.{0x62f,} },
+.{ "0x1ee05", &.{0x648,} },
+.{ "0x1ee06", &.{0x632,} },
+.{ "0x1ee07", &.{0x62d,} },
+.{ "0x1ee08", &.{0x637,} },
+.{ "0x1ee09", &.{0x64a,} },
+.{ "0x1ee0a", &.{0x643,} },
+.{ "0x1ee0b", &.{0x644,} },
+.{ "0x1ee0c", &.{0x645,} },
+.{ "0x1ee0d", &.{0x646,} },
+.{ "0x1ee0e", &.{0x633,} },
+.{ "0x1ee0f", &.{0x639,} },
+.{ "0x1ee10", &.{0x641,} },
+.{ "0x1ee11", &.{0x635,} },
+.{ "0x1ee12", &.{0x642,} },
+.{ "0x1ee13", &.{0x631,} },
+.{ "0x1ee14", &.{0x634,} },
+.{ "0x1ee15", &.{0x62a,} },
+.{ "0x1ee16", &.{0x62b,} },
+.{ "0x1ee17", &.{0x62e,} },
+.{ "0x1ee18", &.{0x630,} },
+.{ "0x1ee19", &.{0x636,} },
+.{ "0x1ee1a", &.{0x638,} },
+.{ "0x1ee1b", &.{0x63a,} },
+.{ "0x1ee1c", &.{0x66e,} },
+.{ "0x1ee1d", &.{0x6ba,} },
+.{ "0x1ee1e", &.{0x6a1,} },
+.{ "0x1ee1f", &.{0x66f,} },
+.{ "0x1ee21", &.{0x628,} },
+.{ "0x1ee22", &.{0x62c,} },
+.{ "0x1ee24", &.{0x647,} },
+.{ "0x1ee27", &.{0x62d,} },
+.{ "0x1ee29", &.{0x64a,} },
+.{ "0x1ee2a", &.{0x643,} },
+.{ "0x1ee2b", &.{0x644,} },
+.{ "0x1ee2c", &.{0x645,} },
+.{ "0x1ee2d", &.{0x646,} },
+.{ "0x1ee2e", &.{0x633,} },
+.{ "0x1ee2f", &.{0x639,} },
+.{ "0x1ee30", &.{0x641,} },
+.{ "0x1ee31", &.{0x635,} },
+.{ "0x1ee32", &.{0x642,} },
+.{ "0x1ee34", &.{0x634,} },
+.{ "0x1ee35", &.{0x62a,} },
+.{ "0x1ee36", &.{0x62b,} },
+.{ "0x1ee37", &.{0x62e,} },
+.{ "0x1ee39", &.{0x636,} },
+.{ "0x1ee3b", &.{0x63a,} },
+.{ "0x1ee42", &.{0x62c,} },
+.{ "0x1ee47", &.{0x62d,} },
+.{ "0x1ee49", &.{0x64a,} },
+.{ "0x1ee4b", &.{0x644,} },
+.{ "0x1ee4d", &.{0x646,} },
+.{ "0x1ee4e", &.{0x633,} },
+.{ "0x1ee4f", &.{0x639,} },
+.{ "0x1ee51", &.{0x635,} },
+.{ "0x1ee52", &.{0x642,} },
+.{ "0x1ee54", &.{0x634,} },
+.{ "0x1ee57", &.{0x62e,} },
+.{ "0x1ee59", &.{0x636,} },
+.{ "0x1ee5b", &.{0x63a,} },
+.{ "0x1ee5d", &.{0x6ba,} },
+.{ "0x1ee5f", &.{0x66f,} },
+.{ "0x1ee61", &.{0x628,} },
+.{ "0x1ee62", &.{0x62c,} },
+.{ "0x1ee64", &.{0x647,} },
+.{ "0x1ee67", &.{0x62d,} },
+.{ "0x1ee68", &.{0x637,} },
+.{ "0x1ee69", &.{0x64a,} },
+.{ "0x1ee6a", &.{0x643,} },
+.{ "0x1ee6c", &.{0x645,} },
+.{ "0x1ee6d", &.{0x646,} },
+.{ "0x1ee6e", &.{0x633,} },
+.{ "0x1ee6f", &.{0x639,} },
+.{ "0x1ee70", &.{0x641,} },
+.{ "0x1ee71", &.{0x635,} },
+.{ "0x1ee72", &.{0x642,} },
+.{ "0x1ee74", &.{0x634,} },
+.{ "0x1ee75", &.{0x62a,} },
+.{ "0x1ee76", &.{0x62b,} },
+.{ "0x1ee77", &.{0x62e,} },
+.{ "0x1ee79", &.{0x636,} },
+.{ "0x1ee7a", &.{0x638,} },
+.{ "0x1ee7b", &.{0x63a,} },
+.{ "0x1ee7c", &.{0x66e,} },
+.{ "0x1ee7e", &.{0x6a1,} },
+.{ "0x1ee80", &.{0x627,} },
+.{ "0x1ee81", &.{0x628,} },
+.{ "0x1ee82", &.{0x62c,} },
+.{ "0x1ee83", &.{0x62f,} },
+.{ "0x1ee84", &.{0x647,} },
+.{ "0x1ee85", &.{0x648,} },
+.{ "0x1ee86", &.{0x632,} },
+.{ "0x1ee87", &.{0x62d,} },
+.{ "0x1ee88", &.{0x637,} },
+.{ "0x1ee89", &.{0x64a,} },
+.{ "0x1ee8b", &.{0x644,} },
+.{ "0x1ee8c", &.{0x645,} },
+.{ "0x1ee8d", &.{0x646,} },
+.{ "0x1ee8e", &.{0x633,} },
+.{ "0x1ee8f", &.{0x639,} },
+.{ "0x1ee90", &.{0x641,} },
+.{ "0x1ee91", &.{0x635,} },
+.{ "0x1ee92", &.{0x642,} },
+.{ "0x1ee93", &.{0x631,} },
+.{ "0x1ee94", &.{0x634,} },
+.{ "0x1ee95", &.{0x62a,} },
+.{ "0x1ee96", &.{0x62b,} },
+.{ "0x1ee97", &.{0x62e,} },
+.{ "0x1ee98", &.{0x630,} },
+.{ "0x1ee99", &.{0x636,} },
+.{ "0x1ee9a", &.{0x638,} },
+.{ "0x1ee9b", &.{0x63a,} },
+.{ "0x1eea1", &.{0x628,} },
+.{ "0x1eea2", &.{0x62c,} },
+.{ "0x1eea3", &.{0x62f,} },
+.{ "0x1eea5", &.{0x648,} },
+.{ "0x1eea6", &.{0x632,} },
+.{ "0x1eea7", &.{0x62d,} },
+.{ "0x1eea8", &.{0x637,} },
+.{ "0x1eea9", &.{0x64a,} },
+.{ "0x1eeab", &.{0x644,} },
+.{ "0x1eeac", &.{0x645,} },
+.{ "0x1eead", &.{0x646,} },
+.{ "0x1eeae", &.{0x633,} },
+.{ "0x1eeaf", &.{0x639,} },
+.{ "0x1eeb0", &.{0x641,} },
+.{ "0x1eeb1", &.{0x635,} },
+.{ "0x1eeb2", &.{0x642,} },
+.{ "0x1eeb3", &.{0x631,} },
+.{ "0x1eeb4", &.{0x634,} },
+.{ "0x1eeb5", &.{0x62a,} },
+.{ "0x1eeb6", &.{0x62b,} },
+.{ "0x1eeb7", &.{0x62e,} },
+.{ "0x1eeb8", &.{0x630,} },
+.{ "0x1eeb9", &.{0x636,} },
+.{ "0x1eeba", &.{0x638,} },
+.{ "0x1eebb", &.{0x63a,} },
+.{ "0x1f100", &.{0x30,0x2e,} },
+.{ "0x1f101", &.{0x30,0x2c,} },
+.{ "0x1f102", &.{0x31,0x2c,} },
+.{ "0x1f103", &.{0x32,0x2c,} },
+.{ "0x1f104", &.{0x33,0x2c,} },
+.{ "0x1f105", &.{0x34,0x2c,} },
+.{ "0x1f106", &.{0x35,0x2c,} },
+.{ "0x1f107", &.{0x36,0x2c,} },
+.{ "0x1f108", &.{0x37,0x2c,} },
+.{ "0x1f109", &.{0x38,0x2c,} },
+.{ "0x1f10a", &.{0x39,0x2c,} },
+.{ "0x1f110", &.{0x28,0x41,0x29,} },
+.{ "0x1f111", &.{0x28,0x42,0x29,} },
+.{ "0x1f112", &.{0x28,0x43,0x29,} },
+.{ "0x1f113", &.{0x28,0x44,0x29,} },
+.{ "0x1f114", &.{0x28,0x45,0x29,} },
+.{ "0x1f115", &.{0x28,0x46,0x29,} },
+.{ "0x1f116", &.{0x28,0x47,0x29,} },
+.{ "0x1f117", &.{0x28,0x48,0x29,} },
+.{ "0x1f118", &.{0x28,0x49,0x29,} },
+.{ "0x1f119", &.{0x28,0x4a,0x29,} },
+.{ "0x1f11a", &.{0x28,0x4b,0x29,} },
+.{ "0x1f11b", &.{0x28,0x4c,0x29,} },
+.{ "0x1f11c", &.{0x28,0x4d,0x29,} },
+.{ "0x1f11d", &.{0x28,0x4e,0x29,} },
+.{ "0x1f11e", &.{0x28,0x4f,0x29,} },
+.{ "0x1f11f", &.{0x28,0x50,0x29,} },
+.{ "0x1f120", &.{0x28,0x51,0x29,} },
+.{ "0x1f121", &.{0x28,0x52,0x29,} },
+.{ "0x1f122", &.{0x28,0x53,0x29,} },
+.{ "0x1f123", &.{0x28,0x54,0x29,} },
+.{ "0x1f124", &.{0x28,0x55,0x29,} },
+.{ "0x1f125", &.{0x28,0x56,0x29,} },
+.{ "0x1f126", &.{0x28,0x57,0x29,} },
+.{ "0x1f127", &.{0x28,0x58,0x29,} },
+.{ "0x1f128", &.{0x28,0x59,0x29,} },
+.{ "0x1f129", &.{0x28,0x5a,0x29,} },
+.{ "0x1f12a", &.{0x3014,0x53,0x3015,} },
+.{ "0x1f12b", &.{0x43,} },
+.{ "0x1f12c", &.{0x52,} },
+.{ "0x1f12d", &.{0x43,0x44,} },
+.{ "0x1f12e", &.{0x57,0x5a,} },
+.{ "0x1f130", &.{0x41,} },
+.{ "0x1f131", &.{0x42,} },
+.{ "0x1f132", &.{0x43,} },
+.{ "0x1f133", &.{0x44,} },
+.{ "0x1f134", &.{0x45,} },
+.{ "0x1f135", &.{0x46,} },
+.{ "0x1f136", &.{0x47,} },
+.{ "0x1f137", &.{0x48,} },
+.{ "0x1f138", &.{0x49,} },
+.{ "0x1f139", &.{0x4a,} },
+.{ "0x1f13a", &.{0x4b,} },
+.{ "0x1f13b", &.{0x4c,} },
+.{ "0x1f13c", &.{0x4d,} },
+.{ "0x1f13d", &.{0x4e,} },
+.{ "0x1f13e", &.{0x4f,} },
+.{ "0x1f13f", &.{0x50,} },
+.{ "0x1f140", &.{0x51,} },
+.{ "0x1f141", &.{0x52,} },
+.{ "0x1f142", &.{0x53,} },
+.{ "0x1f143", &.{0x54,} },
+.{ "0x1f144", &.{0x55,} },
+.{ "0x1f145", &.{0x56,} },
+.{ "0x1f146", &.{0x57,} },
+.{ "0x1f147", &.{0x58,} },
+.{ "0x1f148", &.{0x59,} },
+.{ "0x1f149", &.{0x5a,} },
+.{ "0x1f14a", &.{0x48,0x56,} },
+.{ "0x1f14b", &.{0x4d,0x56,} },
+.{ "0x1f14c", &.{0x53,0x44,} },
+.{ "0x1f14d", &.{0x53,0x53,} },
+.{ "0x1f14e", &.{0x50,0x50,0x56,} },
+.{ "0x1f14f", &.{0x57,0x43,} },
+.{ "0x1f16a", &.{0x4d,0x43,} },
+.{ "0x1f16b", &.{0x4d,0x44,} },
+.{ "0x1f16c", &.{0x4d,0x52,} },
+.{ "0x1f190", &.{0x44,0x4a,} },
+.{ "0x1f200", &.{0x307b,0x304b,} },
+.{ "0x1f201", &.{0x30b3,0x30b3,} },
+.{ "0x1f202", &.{0x30b5,} },
+.{ "0x1f210", &.{0x624b,} },
+.{ "0x1f211", &.{0x5b57,} },
+.{ "0x1f212", &.{0x53cc,} },
+.{ "0x1f213", &.{0x30c7,} },
+.{ "0x1f214", &.{0x4e8c,} },
+.{ "0x1f215", &.{0x591a,} },
+.{ "0x1f216", &.{0x89e3,} },
+.{ "0x1f217", &.{0x5929,} },
+.{ "0x1f218", &.{0x4ea4,} },
+.{ "0x1f219", &.{0x6620,} },
+.{ "0x1f21a", &.{0x7121,} },
+.{ "0x1f21b", &.{0x6599,} },
+.{ "0x1f21c", &.{0x524d,} },
+.{ "0x1f21d", &.{0x5f8c,} },
+.{ "0x1f21e", &.{0x518d,} },
+.{ "0x1f21f", &.{0x65b0,} },
+.{ "0x1f220", &.{0x521d,} },
+.{ "0x1f221", &.{0x7d42,} },
+.{ "0x1f222", &.{0x751f,} },
+.{ "0x1f223", &.{0x8ca9,} },
+.{ "0x1f224", &.{0x58f0,} },
+.{ "0x1f225", &.{0x5439,} },
+.{ "0x1f226", &.{0x6f14,} },
+.{ "0x1f227", &.{0x6295,} },
+.{ "0x1f228", &.{0x6355,} },
+.{ "0x1f229", &.{0x4e00,} },
+.{ "0x1f22a", &.{0x4e09,} },
+.{ "0x1f22b", &.{0x904a,} },
+.{ "0x1f22c", &.{0x5de6,} },
+.{ "0x1f22d", &.{0x4e2d,} },
+.{ "0x1f22e", &.{0x53f3,} },
+.{ "0x1f22f", &.{0x6307,} },
+.{ "0x1f230", &.{0x8d70,} },
+.{ "0x1f231", &.{0x6253,} },
+.{ "0x1f232", &.{0x7981,} },
+.{ "0x1f233", &.{0x7a7a,} },
+.{ "0x1f234", &.{0x5408,} },
+.{ "0x1f235", &.{0x6e80,} },
+.{ "0x1f236", &.{0x6709,} },
+.{ "0x1f237", &.{0x6708,} },
+.{ "0x1f238", &.{0x7533,} },
+.{ "0x1f239", &.{0x5272,} },
+.{ "0x1f23a", &.{0x55b6,} },
+.{ "0x1f23b", &.{0x914d,} },
+.{ "0x1f240", &.{0x3014,0x672c,0x3015,} },
+.{ "0x1f241", &.{0x3014,0x4e09,0x3015,} },
+.{ "0x1f242", &.{0x3014,0x4e8c,0x3015,} },
+.{ "0x1f243", &.{0x3014,0x5b89,0x3015,} },
+.{ "0x1f244", &.{0x3014,0x70b9,0x3015,} },
+.{ "0x1f245", &.{0x3014,0x6253,0x3015,} },
+.{ "0x1f246", &.{0x3014,0x76d7,0x3015,} },
+.{ "0x1f247", &.{0x3014,0x52dd,0x3015,} },
+.{ "0x1f248", &.{0x3014,0x6557,0x3015,} },
+.{ "0x1f250", &.{0x5f97,} },
+.{ "0x1f251", &.{0x53ef,} },
+.{ "0x1fbf0", &.{0x30,} },
+.{ "0x1fbf1", &.{0x31,} },
+.{ "0x1fbf2", &.{0x32,} },
+.{ "0x1fbf3", &.{0x33,} },
+.{ "0x1fbf4", &.{0x34,} },
+.{ "0x1fbf5", &.{0x35,} },
+.{ "0x1fbf6", &.{0x36,} },
+.{ "0x1fbf7", &.{0x37,} },
+.{ "0x1fbf8", &.{0x38,} },
+.{ "0x1fbf9", &.{0x39,} },
 };

@@ -6,6 +6,7 @@ pub const Error = error{
     OutOfMemory,
     Utf8CannotEncodeSurrogateHalf,
     CodepointTooLarge,
+    NoSpaceLeft,
 };
 
 pub const Normalizer = struct {
@@ -98,7 +99,10 @@ pub const Normalizer = struct {
         cp: u21,
         out: *std.ArrayList(u8),
     ) !void {
-        for (tables.compat_decomp[cp]) |v| {
+        var buff: [16]u8 = undefined;
+        const slice = try std.fmt.bufPrint(&buff, "0x{x}", .{cp});
+        const decomp = tables.compat_decomp.get(slice) orelse &.{cp};
+        for (decomp) |v| {
             try self.appendCodepoint(out, v);
         }
     }

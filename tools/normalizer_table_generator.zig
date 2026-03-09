@@ -38,7 +38,16 @@ pub fn main() !void {
     var writer = generated_file.writerStreaming(&file_write_buf);
     const writer_interface = &writer.interface;
 
-    try writer_interface.writeAll("pub const compat_decomp = [_]struct {cp: u21, decomp: []const u21}{\n");
+    try writer_interface.writeAll(
+        \\const std = @import("std");
+        \\
+        \\const DecompositionMap =  std.StaticStringMap([]const u21);
+        \\
+        \\pub const compat_decomp = DecompositionMap.initComptime(decomp_entries);
+        \\
+        \\pub const decomp_entries = .{
+        \\
+    );
 
     var max_dest_i: usize = 0;
 
@@ -90,7 +99,7 @@ pub fn main() !void {
             );
         }
 
-        try writer_interface.print(".{{ .cp = 0x{x}, .decomp = &.{{", .{cp});
+        try writer_interface.print(".{{ \"0x{x}\", &.{{", .{cp});
         for (dest[0..dest_i]) |v| {
             try writer_interface.print("0x{x},", .{v});
         }
