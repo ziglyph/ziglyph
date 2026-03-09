@@ -77,3 +77,19 @@ export fn normalizer_nfkc(
 
     return 0;
 }
+
+test "containsHomoglyph true" {
+    const testing = std.testing;
+    // ℓ = script small l
+    const input = "paypaℓ";
+
+    try testing.expect(try containsHomoglyph(input));
+}
+
+test "containsHomoglyph false" {
+    const testing = std.testing;
+    // ℓ = script small l
+    const input = "paypal";
+
+    try testing.expect(!try containsHomoglyph(input));
+}
