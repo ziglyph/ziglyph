@@ -97,3 +97,15 @@ test "basic skeleton mapping apple" {
 
     try testing.expect(std.mem.eql(u8, result, "apple"));
 }
+
+test "cyrillic" {
+    var sk = Skeleton.init(std.testing.allocator);
+    defer sk.deinit();
+
+    const input = "жй";
+
+    const out = try sk.compute(input);
+    defer std.testing.allocator.free(out);
+
+    try std.testing.expectEqualStrings(input, out);
+}
