@@ -1,7 +1,20 @@
+const std = @import("std");
+
 pub const skeleton = @import("skeleton.zig");
 pub const detector = @import("detector.zig");
 pub const normalizer = @import("normalizer.zig");
 pub const cleaner = @import("cleaner.zig");
+
+pub fn containsHomoglyph(input: []const u8) !bool {
+    var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+
+    var dt = detector.Detector.init(allocator);
+    defer dt.deinit();
+
+    return dt.detect(input);
+}
 
 export fn skeleton_compute(
     input_ptr: [*]const u8,
@@ -10,8 +23,6 @@ export fn skeleton_compute(
     output_len: usize,
     written: *usize,
 ) callconv(.c) i32 {
-    const std = @import("std");
-
     const input = input_ptr[0..input_len];
 
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
@@ -43,8 +54,6 @@ export fn normalizer_nfkc(
     output_len: usize,
     written: *usize,
 ) callconv(.c) i32 {
-    const std = @import("std");
-
     const input = input_ptr[0..input_len];
 
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
