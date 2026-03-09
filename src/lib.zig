@@ -1,6 +1,7 @@
 pub const skeleton = @import("skeleton.zig");
 pub const detector = @import("detector.zig");
 pub const normalizer = @import("normalizer.zig");
+pub const cleaner = @import("cleaner.zig");
 
 export fn skeleton_compute(
     input_ptr: [*]const u8,

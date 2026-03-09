@@ -39,7 +39,7 @@ pub const Detector = struct {
     }
 };
 
-test "nfkc: utf8 multi byte preserved" {
+test "Detector: utf8 multi byte preserved" {
     const testing = std.testing;
 
     var dt = Detector.init(testing.allocator);
