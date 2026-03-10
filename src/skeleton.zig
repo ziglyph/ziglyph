@@ -66,9 +66,7 @@ pub const Skeleton = struct {
 };
 
 fn mapCodepoint(cp: u21) !u21 {
-    var buff: [16]u8 = undefined;
-    const slice = try std.fmt.bufPrint(&buff, "0x{x}", .{cp});
-    const res = lookup.get(slice) orelse cp;
+    const res = lookup.get(cp) orelse cp;
     return res;
 }
 
