@@ -26,18 +26,18 @@ pub fn main() !void {
     } else {
         input_file = try std.fs.cwd().openFile(args[2], .{ .mode = .read_only });
     }
+    var input_buff: [4096]u8 = undefined;
+    var input_reader = input_file.reader(&input_buff);
 
-    const input = "paypal";
-
-    var app = zgl.init(allocator);
+    var app = zgl.init(allocator, &input_reader.interface, out);
     defer app.deinit();
 
     if (std.mem.startsWith(u8, "skeleton", cmd)) {
-        try app.run_skeleton(input);
+        try app.run_skeleton();
     } else if (std.mem.startsWith(u8, "normalizer", cmd)) {
-        try app.run_normalizer(input);
-    } else if (std.mem.eql(u8, "detector", cmd)) {
-        try app.run_detector(input);
+        try app.run_normalizer();
+    } else if (std.mem.startsWith(u8, "detector", cmd)) {
+        try app.run_detector();
     } else {
         try out.print("Unknown command: {s}\n", .{cmd});
         try print_usage(out);
