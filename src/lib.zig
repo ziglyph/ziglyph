@@ -64,3 +64,14 @@ export fn normalizer_nfkc(
 
     return 0;
 }
+
+pub fn containsHomoglyph(input: []const u8) !bool {
+    var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+
+    var app = ziglyph.init(allocator);
+    defer app.deinit();
+
+    return app.containsHomoglyph(input);
+}

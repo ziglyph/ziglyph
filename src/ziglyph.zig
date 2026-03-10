@@ -82,12 +82,11 @@ pub const Ziglyph = struct {
         std.debug.print("Detector finished.\n", .{});
     }
 
-    pub fn containsHomoglyph(input: []const u8) !bool {
-        var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
-        defer arena.deinit();
-        const allocator = arena.allocator();
-
-        var dt = Detector.init(allocator);
+    pub fn containsHomoglyph(
+        self: *Ziglyph,
+        input: []const u8,
+    ) !bool {
+        var dt = Detector.init(self.allocator);
         defer dt.deinit();
 
         return dt.detect(input);
