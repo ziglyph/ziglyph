@@ -7,9 +7,19 @@ pub const Cleaner = @import("cleaner.zig").Cleaner;
 
 pub const Ziglyph = struct {
     allocator: std.mem.Allocator,
+    input: *std.Io.Reader,
+    out: *std.Io.Writer,
 
-    pub fn init(allocator: std.mem.Allocator) Ziglyph {
-        return .{ .allocator = allocator };
+    pub fn init(
+        allocator: std.mem.Allocator,
+        input: *std.Io.Reader,
+        out: *std.Io.Writer,
+    ) Ziglyph {
+        return .{
+            .allocator = allocator,
+            .input = input,
+            .out = out,
+        };
     }
 
     pub fn deinit(self: *Ziglyph) void {
@@ -18,38 +28,52 @@ pub const Ziglyph = struct {
 
     pub fn run_skeleton(
         self: *Ziglyph,
-        input: []const u8,
     ) !void {
         var sk = Skeleton.init(self.allocator);
         defer sk.deinit();
 
-        std.debug.print("Running skeleton...\n", .{});
-        const result = try sk.compute(input);
+        while (try self.input.takeDelimiter('\n')) |raw_line| {
+            const line = std.mem.trim(u8, raw_line, " \t\r");
+            if (line.len == 0) continue;
 
-        std.debug.print(
-            \\{s}
-            \\{s}
-            \\
-        , .{ input, result });
-        std.debug.print("Skeleton finished.\n", .{});
+            try self.out.print("{s}\n", .{line});
+
+            var it = std.mem.splitScalar(u8, line, ' ');
+            while (it.next()) |word| {
+                const result = try sk.compute(word);
+                try self.out.print("{s} ", .{result});
+            }
+
+            try self.out.writeAll("\n");
+            try self.out.flush();
+        }
+
+        try self.out.flush();
     }
 
     pub fn run_normalizer(
         self: *Ziglyph,
-        input: []const u8,
     ) !void {
         var nm = Normalizer.init(self.allocator);
         defer nm.deinit();
 
-        std.debug.print("Running normalizer...\n", .{});
-        const result = try nm.nfkc(input);
+        while (try self.input.takeDelimiter('\n')) |raw_line| {
+            const line = std.mem.trim(u8, raw_line, " \t\r");
+            if (line.len == 0) continue;
 
-        std.debug.print(
-            \\{s}
-            \\{s}
-            \\
-        , .{ input, result });
-        std.debug.print("Normalizer finished.\n", .{});
+            try self.out.print("{s}\n", .{line});
+
+            var it = std.mem.splitScalar(u8, line, ' ');
+            while (it.next()) |word| {
+                const result = try nm.nfkc(word);
+                try self.out.print("{s} ", .{result});
+            }
+
+            try self.out.writeAll("\n");
+            try self.out.flush();
+        }
+
+        try self.out.flush();
     }
 
     pub fn run_cleaner(
@@ -72,17 +96,26 @@ pub const Ziglyph = struct {
 
     pub fn run_detector(
         self: *Ziglyph,
-        input: []const u8,
     ) !void {
-        std.debug.print("Running detector...\n", .{});
-        const result = try self.containsHomoglyph(input);
+        var line_counter: usize = 0;
 
-        if (result) {
-            std.debug.print("{s} contains a homoglyph\n", .{input});
-        } else {
-            std.debug.print("{s} does not contain a homoglyph\n", .{input});
+        while (try self.input.takeDelimiter('\n')) |raw_line| : (line_counter += 1) {
+            const line = std.mem.trim(u8, raw_line, " \t\r");
+            if (line.len == 0) continue;
+
+            var is_detected: bool = false;
+
+            var it = std.mem.splitScalar(u8, line, ' ');
+            while (it.next()) |word| {
+                const result = try self.containsHomoglyph(word);
+                is_detected = result or is_detected;
+            }
+
+            if (is_detected) {
+                try self.out.print("{d}: {s}\n", .{ line_counter, line });
+                try self.out.flush();
+            }
         }
-        std.debug.print("Detector finished.\n", .{});
     }
 
     pub fn containsHomoglyph(

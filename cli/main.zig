@@ -11,25 +11,33 @@ pub fn main() !void {
     const out = &stdout.interface;
 
     const args = try std.process.argsAlloc(allocator);
-    if (args.len < 3) {
+    if (args.len < 2) {
         try print_usage(out);
         return;
     }
 
     const cmd = args[1];
-    const input = args[2];
 
-    var app = zgl.init(allocator);
+    var input_file: std.fs.File = undefined;
+    defer input_file.close();
+
+    if (args.len == 2) {
+        input_file = std.fs.File.stdin();
+    } else {
+        input_file = try std.fs.cwd().openFile(args[2], .{ .mode = .read_only });
+    }
+    var input_buff: [4096]u8 = undefined;
+    var input_reader = input_file.reader(&input_buff);
+
+    var app = zgl.init(allocator, &input_reader.interface, out);
     defer app.deinit();
 
-    if (std.mem.eql(u8, cmd, "skeleton") or std.mem.eql(u8, cmd, "s")) {
-        try app.run_skeleton(input);
-    } else if (std.mem.eql(u8, cmd, "normalizer") or std.mem.eql(u8, cmd, "n")) {
-        try app.run_normalizer(input);
-    } else if (std.mem.eql(u8, cmd, "detector") or std.mem.eql(u8, cmd, "d")) {
-        try app.run_detector(input);
-    } else if (std.mem.eql(u8, cmd, "cleaner") or std.mem.eql(u8, cmd, "c")) {
-        try app.run_cleaner(input);
+    if (std.mem.startsWith(u8, "skeleton", cmd)) {
+        try app.run_skeleton();
+    } else if (std.mem.startsWith(u8, "normalizer", cmd)) {
+        try app.run_normalizer();
+    } else if (std.mem.startsWith(u8, "detector", cmd)) {
+        try app.run_detector();
     } else {
         try out.print("Unknown command: {s}\n", .{cmd});
         try print_usage(out);
@@ -37,10 +45,11 @@ pub fn main() !void {
 }
 
 fn print_usage(out: *std.Io.Writer) !void {
-    try out.print(
-        \\Usage: zgl <command> <string>
+    std.debug.print(
+        \\Usage: zgl s|n|d [filename]
         \\Commands:
         \\  skeleton    Run skeleton module
+        \\  normalizer  Run normalizer module
         \\  detector    Run detector module
         \\
     , .{});
