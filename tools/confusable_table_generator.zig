@@ -40,12 +40,10 @@ pub fn main() !void {
     // try writer_interface.print("pub const table: [_]u21 = .{{\n", .{});
     try writer_interface.writeAll(
         \\const std = @import("std");
+        \\const expect = std.testing.expect;
+        \\const expectEqualSlices = std.testing.expectEqualSlices;
         \\
-        \\const DecompositionMap =  std.StaticStringMap(u21);
-        \\
-        \\pub const confusables = DecompositionMap.initComptime(confusables_entries);
-        \\
-        \\pub const confusables_entries = .{
+        \\const raw_entries = [_]struct { u21, u21 }{
         \\
     );
 
@@ -73,12 +71,70 @@ pub fn main() !void {
                 , .{ trimmed, err });
                 return err;
             };
-            try writer_interface.print(".{{ \"0x{x}\", 0x{x} }},\n", .{ src_cp, dst_cp });
+            try writer_interface.print(".{{ 0x{x}, 0x{x} }},\n", .{ src_cp, dst_cp });
             break; // only first codepoint matters for skeleton
         }
     }
 
-    try writer_interface.writeAll("};\n");
+    try writer_interface.writeAll(
+        \\};
+        \\
+        \\pub const UnicodeData = struct {
+        \\    keys: [raw_entries.len]u21,
+        \\    values: [raw_entries.len]u21,
+        \\
+        \\    fn compare(context: u21, item: u21) std.math.Order {
+        \\        return std.math.order(context, item);
+        \\    }
+        \\
+        \\    pub fn get(self: @This(), code: u21) ?u21 {
+        \\        const index = std.sort.binarySearch(u21, &self.keys, code, compare) orelse return null;
+        \\
+        \\        return self.values[index];
+        \\    }
+        \\};
+        \\
+        \\pub const confusables = blk: {
+        \\    @setEvalBranchQuota(1_200_000);
+        \\    const EntryType = struct { u21, u21 };
+        \\    var data: [raw_entries.len]EntryType = raw_entries;
+        \\
+        \\    const sortFn = struct {
+        \\        fn lessThan(_: void, lhs: EntryType, rhs: EntryType) bool {
+        \\            return lhs[0] < rhs[0];
+        \\        }
+        \\    }.lessThan;
+        \\
+        \\    std.sort.pdq(EntryType, &data, {}, sortFn);
+        \\
+        \\    var keys: [data.len]u21 = undefined;
+        \\    var values: [data.len]u21 = undefined;
+        \\
+        \\    for (data, 0..) |item, i| {
+        \\        if (i > 0 and item[0] == data[i - 1][0]) {
+        \\            @compileError(std.fmt.comptimePrint("Duplicate Unicode key found: 0x{X}", .{item[0]}));
+        \\        }
+        \\        keys[i] = item[0];
+        \\        values[i] = item[1];
+        \\    }
+        \\
+        \\    break :blk UnicodeData{
+        \\        .keys = keys,
+        \\        .values = values,
+        \\    };
+        \\};
+        \\
+        \\test "confusables lookup" {
+        \\    const result1 = confusables.get(0x00AA);
+        \\    try expect(result1 == null);
+        \\
+        \\    const result2 = confusables.get(0x00A8);
+        \\    try expect(result2 == null);
+        \\
+        \\    const result_none = confusables.get(0xFFFF);
+        \\    try expect(result_none == null);
+        \\}
+    );
     try writer_interface.flush();
 }
 
