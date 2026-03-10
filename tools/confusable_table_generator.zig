@@ -149,6 +149,7 @@ pub fn main() !void {
         \\    const result_none = confusables.get(0xFFFF);
         \\    try expect(result_none == null);
         \\}
+        \\
     );
     try writer_interface.flush();
 }
