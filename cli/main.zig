@@ -1,97 +1,48 @@
 const std = @import("std");
-const zgl = @import("ziglyph");
+const zgl = @import("ziglyph").ziglyph;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
 
+    var out_buff: [4096]u8 = undefined;
+    var stdout = std.fs.File.stdout().writer(&out_buff);
+    const out = &stdout.interface;
+
     const args = try std.process.argsAlloc(allocator);
     if (args.len < 3) {
-        print_usage();
+        try print_usage(out);
         return;
     }
 
     const cmd = args[1];
     const input = args[2];
 
+    var app = zgl.init(allocator);
+    defer app.deinit();
+
     if (std.mem.eql(u8, cmd, "skeleton") or std.mem.eql(u8, cmd, "s")) {
-        try run_skeleton(allocator, input);
+        try app.run_skeleton(input);
     } else if (std.mem.eql(u8, cmd, "normalizer") or std.mem.eql(u8, cmd, "n")) {
-        try run_normalizer(allocator, input);
+        try app.run_normalizer(input);
     } else if (std.mem.eql(u8, cmd, "detector") or std.mem.eql(u8, cmd, "d")) {
-        try run_detector(input);
+        try zgl.run_detector(input);
     } else if (std.mem.eql(u8, cmd, "cleaner") or std.mem.eql(u8, cmd, "c")) {
-        try run_cleaner(allocator, input);
+        try app.run_cleaner(input);
     } else {
-        std.debug.print("Unknown command: {s}\n", .{cmd});
-        print_usage();
+        try out.print("Unknown command: {s}\n", .{cmd});
+        try print_usage(out);
     }
 }
 
-fn print_usage() void {
-    std.debug.print(
+fn print_usage(out: *std.Io.Writer) !void {
+    try out.print(
         \\Usage: zgl <command> <string>
         \\Commands:
         \\  skeleton    Run skeleton module
         \\  detector    Run detector module
         \\
     , .{});
-}
-
-fn run_skeleton(allocator: std.mem.Allocator, input: []const u8) !void {
-    var sk = zgl.skeleton.Skeleton.init(allocator);
-    defer sk.deinit();
-
-    std.debug.print("Running skeleton...\n", .{});
-    const result = try sk.compute(input);
-
-    std.debug.print(
-        \\{s}
-        \\{s}
-        \\
-    , .{ input, result });
-    std.debug.print("Skeleton finished.\n", .{});
-}
-
-fn run_normalizer(allocator: std.mem.Allocator, input: []const u8) !void {
-    var nm = zgl.normalizer.Normalizer.init(allocator);
-    defer nm.deinit();
-
-    std.debug.print("Running normalizer...\n", .{});
-    const result = try nm.nfkc(input);
-
-    std.debug.print(
-        \\{s}
-        \\{s}
-        \\
-    , .{ input, result });
-    std.debug.print("Normalizer finished.\n", .{});
-}
-
-fn run_detector(input: []const u8) !void {
-    std.debug.print("Running detector...\n", .{});
-    const result = try zgl.containsHomoglyph(input);
-
-    if (result) {
-        std.debug.print("{s} contains a homoglyph\n", .{input});
-    } else {
-        std.debug.print("{s} does not contain a homoglyph\n", .{input});
-    }
-    std.debug.print("Detector finished.\n", .{});
-}
-
-fn run_cleaner(allocator: std.mem.Allocator, input: []const u8) !void {
-    var cl = zgl.cleaner.Cleaner.init(allocator);
-    defer cl.deinit();
-
-    std.debug.print("Running cleaner...\n", .{});
-    const result = try cl.clean(input);
-
-    std.debug.print(
-        \\{s}
-        \\{s}
-        \\
-    , .{ input, result });
-    std.debug.print("Cleaner finished.\n", .{});
+    try out.flush();
 }
