@@ -189,3 +189,15 @@ test "nfkc: invalid utf8" {
         nm.nfkc(input),
     );
 }
+
+test "nfkc: cyrillic" {
+    var nm = Normalizer.init(std.testing.allocator);
+    defer nm.deinit();
+
+    const input = "кафе";
+
+    const out = try nm.nfkc(input);
+    defer std.testing.allocator.free(out);
+
+    try std.testing.expectEqualStrings(input, out);
+}
