@@ -2,7 +2,6 @@ const std = @import("std");
 const tools = @import("tools.zig");
 
 const debug = false;
-const MAX = 0x110000;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.smp_allocator);
