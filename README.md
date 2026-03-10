@@ -112,11 +112,6 @@ pub fn main() !void {
     ├── build.zig.zon
     ├── cli
     │   └── main.zig
-    ├── docs
-    │   ├── index.html
-    │   ├── main.js
-    │   ├── main.wasm
-    │   └── sources.tar
     ├── LICENSE
     ├── README.md
     ├── src

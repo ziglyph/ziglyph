@@ -19,6 +19,8 @@ pub const Script = enum {
     Katakana,
     Han,
     Emoticons,
+    Whitespace,
+    Punctuation,
     Miscellaneous,
     Unknown,
 
@@ -42,6 +44,8 @@ pub const Script = enum {
             .Katakana => "Katakana (Japanese)",
             .Han => "Han (Chinese, Japanese, Korean)",
             .Emoticons => "Emoticons/Symbols",
+            .Whitespace => "Whitespace Symbols",
+            .Punctuation => "Punctuation Symbols",
             .Miscellaneous => "Miscellaneous Symbols",
             .Unknown => "Unknown Script",
         };
@@ -50,11 +54,42 @@ pub const Script = enum {
 
 pub fn detectScriptFromCodePoint(codepoint: u21) Script {
     return switch (codepoint) {
+        // Blank Spaces
+        0x0009...0x000D => .Whitespace, // Tab, LF, VT, FF, CR
+        0x0020 => .Whitespace, // Space
+        0x00A0 => .Whitespace, // Non-breaking space
+        0x2000...0x200A => .Whitespace, // En space, Em space, etc.
+        0x2028...0x2029 => .Whitespace, // Line/Paragraph separator
+        0x202F => .Whitespace, // Narrow no-break space
+        0x3000 => .Whitespace, // Ideographic space
+
+        // ASCII Punctuation (U+0021 - U+002F, U+003A - U+0040, U+005B - U+0060, U+007B - U+007E)
+        0x0021...0x002F => .Punctuation, // ! " # $ % & ' ( ) * + , - . /
+        0x003A...0x0040 => .Punctuation, // : ; < = > ? @
+        0x005B...0x0060 => .Punctuation, // [ \ ] ^ _ `
+        0x007B...0x007E => .Punctuation, // { | } ~
+
+        // General Punctuation (U+2000 - U+206F)
+        0x2010...0x2027 => .Punctuation, // Hyphens, dashes, quotes, ellipsis, etc.
+        0x2030...0x205E => .Punctuation, // Per mille, primes, brackets, etc.
+
+        // Supplemental Punctuation (U+2E00 - U+2E7F)
+        0x2E00...0x2E7F => .Punctuation,
+
+        // CJK Symbols and Punctuation (U+3000 - U+303F)
+        0x3001...0x303F => .Punctuation, // CJK punctuation marks
+
         // Basic Latin (U+0000 - U+007F)
-        0x0000...0x007F => .BasicLatin,
+        0x0000...0x0008 => .BasicLatin,
+        0x000E...0x001F => .BasicLatin,
+        0x0030...0x0030 => .BasicLatin,
+        0x0041...0x005A => .BasicLatin,
+        0x0061...0x007A => .BasicLatin,
+        0x007F => .BasicLatin,
 
         // Latin-1 Supplement (U+0080 - U+00FF)
-        0x0080...0x00FF => .Latin1Supplement,
+        0x0080...0x009F => .Latin1Supplement,
+        0x00A1...0x00FF => .Latin1Supplement,
 
         // Latin Extended-A (U+0100 - U+017F)
         0x0100...0x017F => .LatinExtendedA,
@@ -162,10 +197,10 @@ pub fn analyzeText(text: []const u8) !void {
 
     var iter_counts = script_counts.iterator();
     while (iter_counts.next()) |entry| {
-        const script = entry.value;
-        const count = entry.value;
-        const percentage = @as(f32, @floatFromInt(count.*)) / @as(f32, @floatFromInt(total_chars)) * 100;
-        try out.print("  {d}: {} ({d:.1}%)\n", .{ script.*, count, percentage });
+        const script = entry.key;
+        const count = entry.value.*;
+        const percentage = @as(f32, @floatFromInt(count)) / @as(f32, @floatFromInt(total_chars)) * 100;
+        try out.print("  {s}: {} ({d:.1}%)\n", .{ script.toString(), count, percentage });
     }
     try out.flush();
 }
