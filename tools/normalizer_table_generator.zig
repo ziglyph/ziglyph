@@ -40,12 +40,10 @@ pub fn main() !void {
 
     try writer_interface.writeAll(
         \\const std = @import("std");
+        \\const expect = std.testing.expect;
+        \\const expectEqualSlices = std.testing.expectEqualSlices;
         \\
-        \\const DecompositionMap =  std.StaticStringMap([]const u21);
-        \\
-        \\pub const compat_decomp = DecompositionMap.initComptime(decomp_entries);
-        \\
-        \\pub const decomp_entries = .{
+        \\const raw_entries = [_]struct { u21, []const u21 }{
         \\
     );
 
@@ -99,14 +97,74 @@ pub fn main() !void {
             );
         }
 
-        try writer_interface.print(".{{ \"0x{x}\", &.{{", .{cp});
+        try writer_interface.print(".{{ 0x{x}, &.{{", .{cp});
         for (dest[0..dest_i]) |v| {
             try writer_interface.print("0x{x},", .{v});
         }
         try writer_interface.writeAll("} },\n");
     }
 
-    try writer_interface.writeAll("};\n");
+    try writer_interface.writeAll(
+        \\};
+        \\pub const UnicodeData = struct {
+        \\    keys: [raw_entries.len]u21,
+        \\    values: [raw_entries.len][]const u21,
+        \\
+        \\    fn compare(context: u21, item: u21) std.math.Order {
+        \\        return std.math.order(context, item);
+        \\    }
+        \\
+        \\    pub fn get(self: @This(), code: u21) ?[]const u21 {
+        \\        const index = std.sort.binarySearch(u21, &self.keys, code, compare) orelse return null;
+        \\
+        \\        return self.values[index];
+        \\    }
+        \\};
+        \\
+        \\pub const compat_decomp = blk: {
+        \\    @setEvalBranchQuota(20_000);
+        \\    const EntryType = struct { u21, []const u21 };
+        \\    var data: [raw_entries.len]EntryType = raw_entries;
+        \\
+        \\    const sortFn = struct {
+        \\        fn lessThan(_: void, lhs: EntryType, rhs: EntryType) bool {
+        \\            return lhs[0] < rhs[0];
+        \\        }
+        \\    }.lessThan;
+        \\
+        \\    std.sort.pdq(EntryType, &data, {}, sortFn);
+        \\
+        \\    var keys: [data.len]u21 = undefined;
+        \\    var values: [data.len][]const u21 = undefined;
+        \\
+        \\    for (data, 0..) |item, i| {
+        \\        if (i > 0 and item[0] == data[i - 1][0]) {
+        \\            @compileError(std.fmt.comptimePrint("Duplicate Unicode key found: 0x{X}", .{item[0]}));
+        \\        }
+        \\        keys[i] = item[0];
+        \\        values[i] = item[1];
+        \\    }
+        \\
+        \\    break :blk UnicodeData{
+        \\        .keys = keys,
+        \\        .values = values,
+        \\    };
+        \\};
+        \\
+        \\test "unicode decomposition lookup" {
+        \\    const result1 = compat_decomp.get(0x00AA);
+        \\    try expect(result1 != null);
+        \\    try expectEqualSlices(u21, &.{0x0061}, result1.?);
+        \\
+        \\    const result2 = compat_decomp.get(0x00A8);
+        \\    try expect(result2 != null);
+        \\    try expectEqualSlices(u21, &.{ 0x0020, 0x0308 }, result2.?);
+        \\
+        \\    const result_none = compat_decomp.get(0xFFFF);
+        \\    try expect(result_none == null);
+        \\}
+        \\
+    );
     try writer_interface.flush();
 }
 
