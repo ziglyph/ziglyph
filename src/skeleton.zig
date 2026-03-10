@@ -54,21 +54,33 @@ pub const Skeleton = struct {
         var it = std.unicode.Utf8Iterator{ .bytes = input, .i = 0 };
 
         while (it.nextCodepoint()) |cp| {
-            var buf: [4]u8 = undefined;
-            const mapped = try mapCodepoint(cp);
-            const len = try std.unicode.utf8Encode(mapped, &buf);
-
-            try out.appendSlice(self.allocator, buf[0..len]);
+            try self.decompose(cp, &out);
         }
 
         return out.toOwnedSlice(self.allocator);
     }
-};
 
-fn mapCodepoint(cp: u21) !u21 {
-    const res = lookup.get(cp) orelse cp;
-    return res;
-}
+    fn decompose(
+        self: *Skeleton,
+        cp: u21,
+        out: *std.ArrayList(u8),
+    ) !void {
+        const decomp = lookup.get(cp) orelse &.{cp};
+        for (decomp) |v| {
+            try self.appendCodepoint(out, v);
+        }
+    }
+
+    fn appendCodepoint(
+        self: *Skeleton,
+        out: *std.ArrayList(u8),
+        cp: u21,
+    ) !void {
+        var buf: [25]u8 = undefined;
+        const len = try std.unicode.utf8Encode(cp, &buf);
+        try out.appendSlice(self.allocator, buf[0..len]);
+    }
+};
 
 test "basic skeleton mapping paypal" {
     const testing = std.testing;

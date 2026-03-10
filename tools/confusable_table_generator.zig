@@ -43,9 +43,11 @@ pub fn main() !void {
         \\const expect = std.testing.expect;
         \\const expectEqualSlices = std.testing.expectEqualSlices;
         \\
-        \\const raw_entries = [_]struct { u21, u21 }{
+        \\const raw_entries = [_]struct { u21, []const u21 }{
         \\
     );
+
+    var max_dest_i: usize = 0;
 
     while (try read_file_interface.takeDelimiter('\n')) |line| {
         if (line.len == 0) continue;
@@ -59,21 +61,34 @@ pub fn main() !void {
         const src_cp = try std.fmt.parseInt(u32, src, 16);
 
         var dst_parts = std.mem.splitScalar(u8, dst, ' ');
-        while (dst_parts.next()) |cp_str| {
-            const trimmed = std.mem.trim(u8, cp_str, " \t");
+
+        var dest: [25]u21 = undefined;
+        var dest_i: usize = 0;
+        while (dst_parts.next()) |p| {
+            const trimmed = std.mem.trim(u8, p, " \t");
             if (trimmed.len == 0) continue;
 
-            const dst_cp = std.fmt.parseInt(u32, trimmed, 16) catch |err| {
-                std.debug.print(
-                    \\Cannot parse int: {s}
-                    \\Error: {}
-                    \\
-                , .{ trimmed, err });
-                return err;
-            };
-            try writer_interface.print(".{{ 0x{x}, 0x{x} }},\n", .{ src_cp, dst_cp });
-            break; // only first codepoint matters for skeleton
+            const v = try std.fmt.parseInt(u21, trimmed, 16);
+            dest[dest_i] = v;
+            dest_i += 1;
         }
+
+        if (debug and dest_i > max_dest_i) {
+            max_dest_i = dest_i;
+            std.debug.print(
+                \\{s}
+                \\{s}, max_dest_i: {d}
+                \\
+            ,
+                .{ line, dst, max_dest_i },
+            );
+        }
+
+        try writer_interface.print(".{{ 0x{x}, &.{{", .{src_cp});
+        for (dest[0..dest_i]) |v| {
+            try writer_interface.print("0x{x},", .{v});
+        }
+        try writer_interface.writeAll("} },\n");
     }
 
     try writer_interface.writeAll(
@@ -81,13 +96,13 @@ pub fn main() !void {
         \\
         \\pub const UnicodeData = struct {
         \\    keys: [raw_entries.len]u21,
-        \\    values: [raw_entries.len]u21,
+        \\    values: [raw_entries.len][]const u21,
         \\
         \\    fn compare(context: u21, item: u21) std.math.Order {
         \\        return std.math.order(context, item);
         \\    }
         \\
-        \\    pub fn get(self: @This(), code: u21) ?u21 {
+        \\    pub fn get(self: @This(), code: u21) ?[]const u21 {
         \\        const index = std.sort.binarySearch(u21, &self.keys, code, compare) orelse return null;
         \\
         \\        return self.values[index];
@@ -96,7 +111,7 @@ pub fn main() !void {
         \\
         \\pub const confusables = blk: {
         \\    @setEvalBranchQuota(1_200_000);
-        \\    const EntryType = struct { u21, u21 };
+        \\    const EntryType = struct { u21, []const u21 };
         \\    var data: [raw_entries.len]EntryType = raw_entries;
         \\
         \\    const sortFn = struct {
@@ -108,7 +123,7 @@ pub fn main() !void {
         \\    std.sort.pdq(EntryType, &data, {}, sortFn);
         \\
         \\    var keys: [data.len]u21 = undefined;
-        \\    var values: [data.len]u21 = undefined;
+        \\    var values: [data.len][]const u21 = undefined;
         \\
         \\    for (data, 0..) |item, i| {
         \\        if (i > 0 and item[0] == data[i - 1][0]) {
