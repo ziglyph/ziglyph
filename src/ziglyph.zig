@@ -70,9 +70,12 @@ pub const Ziglyph = struct {
         std.debug.print("Cleaner finished.\n", .{});
     }
 
-    pub fn run_detector(input: []const u8) !void {
+    pub fn run_detector(
+        self: *Ziglyph,
+        input: []const u8,
+    ) !void {
         std.debug.print("Running detector...\n", .{});
-        const result = try containsHomoglyph(input);
+        const result = try self.containsHomoglyph(input);
 
         if (result) {
             std.debug.print("{s} contains a homoglyph\n", .{input});

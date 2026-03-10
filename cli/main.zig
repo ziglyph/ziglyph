@@ -27,7 +27,7 @@ pub fn main() !void {
     } else if (std.mem.eql(u8, cmd, "normalizer") or std.mem.eql(u8, cmd, "n")) {
         try app.run_normalizer(input);
     } else if (std.mem.eql(u8, cmd, "detector") or std.mem.eql(u8, cmd, "d")) {
-        try zgl.run_detector(input);
+        try app.run_detector(input);
     } else if (std.mem.eql(u8, cmd, "cleaner") or std.mem.eql(u8, cmd, "c")) {
         try app.run_cleaner(input);
     } else {
