@@ -1,4 +1,5 @@
 const std = @import("std");
+const Error = @import("errors.zig").Error;
 const lookup = @import("confusables.zig").confusables;
 
 pub const Skeleton = struct {
@@ -47,7 +48,11 @@ pub const Skeleton = struct {
     /// const output = try skeleton.compute(input);
     /// defer allocator.free(output);
     /// ```
-    pub fn compute(self: *Skeleton, input: []const u8) ![]u8 {
+    pub fn compute(self: *Skeleton, input: []const u8) Error![]u8 {
+        if (!std.unicode.utf8ValidateSlice(input)) {
+            return Error.InvalidUtf8;
+        }
+
         var out = try std.ArrayList(u8).initCapacity(self.allocator, input.len);
         defer out.deinit(self.allocator);
 
