@@ -1,13 +1,6 @@
 const std = @import("std");
+const Error = @import("errors.zig").Error;
 const tables = @import("unicode_table.zig");
-
-pub const Error = error{
-    InvalidUtf8,
-    OutOfMemory,
-    Utf8CannotEncodeSurrogateHalf,
-    CodepointTooLarge,
-    NoSpaceLeft,
-};
 
 pub const Normalizer = struct {
     allocator: std.mem.Allocator,

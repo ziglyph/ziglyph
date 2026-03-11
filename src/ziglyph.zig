@@ -32,7 +32,7 @@ pub const Ziglyph = struct {
         var sk = Skeleton.init(self.allocator);
         defer sk.deinit();
 
-        while (try self.input.takeDelimiter('\n')) |raw_line| {
+        line: while (try self.input.takeDelimiter('\n')) |raw_line| {
             const line = std.mem.trim(u8, raw_line, " \t\r");
             if (line.len == 0) continue;
 
@@ -40,12 +40,16 @@ pub const Ziglyph = struct {
 
             var it = std.mem.splitScalar(u8, line, ' ');
             while (it.next()) |word| {
-                const result = try sk.compute(word);
+                const result = sk.compute(word) catch |err| switch (err) {
+                    error.InvalidUtf8 => {
+                        continue :line;
+                    },
+                    else => return err,
+                };
                 try self.out.print("{s} ", .{result});
             }
 
             try self.out.writeAll("\n");
-            try self.out.flush();
         }
 
         try self.out.flush();
@@ -57,7 +61,7 @@ pub const Ziglyph = struct {
         var nm = Normalizer.init(self.allocator);
         defer nm.deinit();
 
-        while (try self.input.takeDelimiter('\n')) |raw_line| {
+        line: while (try self.input.takeDelimiter('\n')) |raw_line| {
             const line = std.mem.trim(u8, raw_line, " \t\r");
             if (line.len == 0) continue;
 
@@ -65,12 +69,16 @@ pub const Ziglyph = struct {
 
             var it = std.mem.splitScalar(u8, line, ' ');
             while (it.next()) |word| {
-                const result = try nm.nfkc(word);
+                const result = nm.nfkc(word) catch |err| switch (err) {
+                    error.InvalidUtf8 => {
+                        continue :line;
+                    },
+                    else => return err,
+                };
                 try self.out.print("{s} ", .{result});
             }
 
             try self.out.writeAll("\n");
-            try self.out.flush();
         }
 
         try self.out.flush();
@@ -97,23 +105,24 @@ pub const Ziglyph = struct {
     pub fn run_detector(
         self: *Ziglyph,
     ) !void {
-        var line_counter: usize = 0;
+        var line_counter: usize = 1;
 
-        while (try self.input.takeDelimiter('\n')) |raw_line| : (line_counter += 1) {
+        line: while (try self.input.takeDelimiter('\n')) |raw_line| : (line_counter += 1) {
             const line = std.mem.trim(u8, raw_line, " \t\r");
             if (line.len == 0) continue;
 
-            var is_detected: bool = false;
-
             var it = std.mem.splitScalar(u8, line, ' ');
             while (it.next()) |word| {
-                const result = try self.containsHomoglyph(word);
-                is_detected = result or is_detected;
-            }
+                const result = self.containsHomoglyph(word) catch |err| switch (err) {
+                    error.InvalidUtf8 => {
+                        continue :line;
+                    },
+                    else => return err,
+                };
 
-            if (is_detected) {
-                try self.out.print("{d}: {s}\n", .{ line_counter, line });
-                try self.out.flush();
+                if (result) {
+                    try self.out.print("{d}: {s}\n", .{ line_counter, line });
+                }
             }
         }
     }

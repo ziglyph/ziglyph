@@ -6,7 +6,7 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    var out_buff: [4096]u8 = undefined;
+    var out_buff: [8192]u8 = undefined;
     var stdout = std.fs.File.stdout().writer(&out_buff);
     const out = &stdout.interface;
 
@@ -26,8 +26,8 @@ pub fn main() !void {
     } else {
         input_file = try std.fs.cwd().openFile(args[2], .{ .mode = .read_only });
     }
-    var input_buff: [4096]u8 = undefined;
-    var input_reader = input_file.reader(&input_buff);
+    var input_buff: [8192]u8 = undefined;
+    var input_reader = input_file.readerStreaming(&input_buff);
 
     var app = zgl.init(allocator, &input_reader.interface, out);
     defer app.deinit();
