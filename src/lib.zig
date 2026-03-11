@@ -75,3 +75,19 @@ pub fn containsHomoglyph(input: []const u8) !bool {
 
     return app.containsHomoglyph(input);
 }
+
+test "containsHomoglyph true" {
+    const testing = std.testing;
+    // ℓ = script small l
+    const input = "paypaℓ";
+
+    try testing.expect(try containsHomoglyph(input));
+}
+
+test "containsHomoglyph false" {
+    const testing = std.testing;
+    // ℓ = script small l
+    const input = "paypal";
+
+    try testing.expect(!try containsHomoglyph(input));
+}

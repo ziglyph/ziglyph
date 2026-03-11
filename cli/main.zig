@@ -29,7 +29,7 @@ pub fn main() !void {
     var input_buff: [8192]u8 = undefined;
     var input_reader = input_file.readerStreaming(&input_buff);
 
-    var app = zgl.init(allocator, &input_reader.interface, out);
+    var app = zgl.initStreaming(allocator, &input_reader.interface, out);
     defer app.deinit();
 
     if (std.mem.startsWith(u8, "skeleton", cmd)) {

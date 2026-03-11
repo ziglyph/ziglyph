@@ -10,7 +10,7 @@ pub const Ziglyph = struct {
     input: *std.Io.Reader,
     out: *std.Io.Writer,
 
-    pub fn init(
+    pub fn initStreaming(
         allocator: std.mem.Allocator,
         input: *std.Io.Reader,
         out: *std.Io.Writer,
@@ -19,6 +19,16 @@ pub const Ziglyph = struct {
             .allocator = allocator,
             .input = input,
             .out = out,
+        };
+    }
+
+    pub fn init(
+        allocator: std.mem.Allocator,
+    ) Ziglyph {
+        return .{
+            .allocator = allocator,
+            .input = undefined,
+            .out = undefined,
         };
     }
 
@@ -137,19 +147,3 @@ pub const Ziglyph = struct {
         return dt.detect(input);
     }
 };
-
-test "containsHomoglyph true" {
-    const testing = std.testing;
-    // ℓ = script small l
-    const input = "paypaℓ";
-
-    try testing.expect(try Ziglyph.containsHomoglyph(input));
-}
-
-test "containsHomoglyph false" {
-    const testing = std.testing;
-    // ℓ = script small l
-    const input = "paypal";
-
-    try testing.expect(!try Ziglyph.containsHomoglyph(input));
-}
