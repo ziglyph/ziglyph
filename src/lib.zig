@@ -86,7 +86,6 @@ test "containsHomoglyph true" {
 
 test "containsHomoglyph false" {
     const testing = std.testing;
-    // ℓ = script small l
     const input = "paypal";
 
     try testing.expect(!try containsHomoglyph(input));
