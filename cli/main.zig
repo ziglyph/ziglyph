@@ -18,16 +18,14 @@ pub fn main() !void {
 
     const cmd = args[1];
 
-    var input_file: std.fs.File = undefined;
+    var input_file: std.fs.File = if (args.len == 2)
+        std.fs.File.stdin()
+    else
+        try std.fs.cwd().openFile(args[2], .{ .mode = .read_only });
     defer input_file.close();
 
-    if (args.len == 2) {
-        input_file = std.fs.File.stdin();
-    } else {
-        input_file = try std.fs.cwd().openFile(args[2], .{ .mode = .read_only });
-    }
     var input_buff: [8192]u8 = undefined;
-    var input_reader = input_file.readerStreaming(&input_buff);
+    var input_reader = input_file.reader(&input_buff);
 
     var app = zgl.initStreaming(allocator, &input_reader.interface, out);
     defer app.deinit();
