@@ -1,5 +1,5 @@
 const std = @import("std");
-const helpers = @import("core_utils.zig");
+const core_utils = @import("core_utils.zig");
 
 pub const Skeleton = @import("skeleton.zig").Skeleton;
 pub const Detector = @import("detector.zig").Detector;
@@ -43,7 +43,7 @@ pub const Ziglyph = struct {
         var sk = Skeleton.init(self.allocator);
         defer sk.deinit();
 
-        line: while (try helpers.takeDelimiter(self.input, '\n')) |raw_line| {
+        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |raw_line| {
             const line = std.mem.trim(u8, raw_line, " \t\r");
             if (line.len == 0) continue;
 
@@ -72,7 +72,7 @@ pub const Ziglyph = struct {
         var nm = Normalizer.init(self.allocator);
         defer nm.deinit();
 
-        line: while (try helpers.takeDelimiter(self.input, '\n')) |raw_line| {
+        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |raw_line| {
             const line = std.mem.trim(u8, raw_line, " \t\r");
             if (line.len == 0) continue;
 
