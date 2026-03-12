@@ -43,8 +43,7 @@ pub const Ziglyph = struct {
         var sk = Skeleton.init(self.allocator);
         defer sk.deinit();
 
-        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |raw_line| {
-            const line = std.mem.trim(u8, raw_line, " \t\r");
+        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |line| {
             if (line.len == 0) continue;
 
             try self.out.print("{s}\n", .{line});
@@ -72,8 +71,7 @@ pub const Ziglyph = struct {
         var nm = Normalizer.init(self.allocator);
         defer nm.deinit();
 
-        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |raw_line| {
-            const line = std.mem.trim(u8, raw_line, " \t\r");
+        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |line| {
             if (line.len == 0) continue;
 
             try self.out.print("{s}\n", .{line});
@@ -118,8 +116,7 @@ pub const Ziglyph = struct {
     ) !void {
         var line_counter: usize = 1;
 
-        line: while (try self.input.takeDelimiter('\n')) |raw_line| : (line_counter += 1) {
-            const line = std.mem.trim(u8, raw_line, " \t\r");
+        line: while (try core_utils.takeUntilDelimiterOrEnd(self.input, '\n')) |line| : (line_counter += 1) {
             if (line.len == 0) continue;
 
             var it = std.mem.splitScalar(u8, line, ' ');
