@@ -1,6 +1,6 @@
 .{
     .name = .ziglyph,
-    .version = "0.0.1",
+    .version = "0.1.2",
     .fingerprint = 0x971b2e2c3a4da8a0, // Changing this has security and trust implications.
     .minimum_zig_version = "0.15.2",
     .dependencies = .{},
