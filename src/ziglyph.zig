@@ -1,5 +1,6 @@
 const std = @import("std");
 const core_utils = @import("core_utils.zig");
+const Color = @import("color.zig").Color;
 
 pub const Skeleton = @import("skeleton.zig").Skeleton;
 pub const Detector = @import("detector.zig").Detector;
@@ -100,15 +101,14 @@ pub const Ziglyph = struct {
         var cl = Cleaner.init(self.allocator);
         defer cl.deinit();
 
-        std.debug.print("Running cleaner...\n", .{});
         const result = try cl.clean(input);
 
-        std.debug.print(
+        self.out.print(
             \\{s}
             \\{s}
             \\
         , .{ input, result });
-        std.debug.print("Cleaner finished.\n", .{});
+        try self.out.flush();
     }
 
     pub fn run_detector(
@@ -129,10 +129,12 @@ pub const Ziglyph = struct {
                 };
 
                 if (result) {
-                    try self.out.print("{d}: {s}\n", .{ line_counter, line });
+                    try self.out.print("{s}{d}:{s} {s}\n", .{ Color.yellow.code(), line_counter, Color.reset.code(), line });
                 }
             }
         }
+        try self.out.writeAll(Color.reset.code());
+        try self.out.flush();
     }
 
     pub fn containsHomoglyph(

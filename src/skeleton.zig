@@ -1,6 +1,7 @@
 const std = @import("std");
 const Error = @import("errors.zig").Error;
 const lookup = @import("confusables.zig").confusables;
+const Color = @import("color.zig").Color;
 
 pub const Skeleton = struct {
     allocator: std.mem.Allocator,
