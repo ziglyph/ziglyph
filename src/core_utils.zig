@@ -106,3 +106,18 @@ test "end-of-stream with no remaining bytes: returns null" {
     try std.testing.expect(out == null);
     try std.testing.expectEqual(@as(usize, 0), reader.seek);
 }
+
+test "creates a line longer than a buffer and checks that all symbols returned" {
+    var buf = [_]u8{'a'} ** 1000000;
+    var reader = std.io.Reader.fixed(&buf);
+
+    var total_length: usize = 0;
+    while (try takeUntilDelimiterOrEnd(&reader, ',')) |out| {
+        // try std.testing.expect(out != null);
+        total_length += out.len;
+        std.debug.print("Total length: {d}\n", .{total_length});
+    }
+    try std.testing.expect(buf.len == total_length);
+    // try std.testing.expectEqualStrings("abc", out.?);
+    // try std.testing.expectEqual(@as(usize, 4), reader.seek); // consumed "abc,"
+}
